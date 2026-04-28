@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Cargar los datos de .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -115,3 +121,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Config for connection to MySQL
+DB_CONFIG = {
+    # Si tenemos un problema al obtener la info de .env
+    # le pasamos un segundo parametro para que use ese dato.
+    "HOST": os.getenv('DB_HOST', '127.0.0.1'),
+    "USER": os.getenv('DB_USER'),
+    "PASSWORD": os.getenv('DB_PASS'),
+    "NAME": os.getenv('DB_NAME'),
+    # Nos aseguramos que reciba un tipo de dato INT.
+    "PORT": int(os.getenv('DB_PORT', 3306)),
+}
