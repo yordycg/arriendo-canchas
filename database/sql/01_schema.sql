@@ -1,8 +1,8 @@
-CREATE DATABASE arriendo_canchas_db;
+CREATE DATABASE IF NOT EXISTS arriendo_canchas_db;
 
 USE arriendo_canchas_db;
 
--- 
+--
 CREATE TABLE estados_usuarios (
   estado_usuario_id INT PRIMARY KEY AUTO_INCREMENT,
   nombre VARCHAR(30) NOT NULL UNIQUE,
@@ -60,7 +60,7 @@ CREATE TABLE tipos_penalizaciones (
   is_active BOOLEAN DEFAULT TRUE
 );
 
----
+--
 CREATE TABLE canchas (
   cancha_id INT PRIMARY KEY AUTO_INCREMENT,
   nombre VARCHAR(100) NOT NULL,
@@ -193,8 +193,8 @@ CREATE TABLE partidos (
   CONSTRAINT ck_partido_equipos CHECK (equipo_1_id <> equipo_2_id),
   CONSTRAINT ck_walkover_equipo CHECK (equipo_perdedor_id IS NULL OR equipo_perdedor_id IN (equipo_1_id, equipo_2_id)),
   CONSTRAINT ck_walkover_resultado CHECK (
-    es_walkover = FALSE OR 
-    (resultado_equipo_1 = 3 AND resultado_equipo_2 = 0) OR 
+    es_walkover = FALSE OR
+    (resultado_equipo_1 = 3 AND resultado_equipo_2 = 0) OR
     (resultado_equipo_1 = 0 AND resultado_equipo_2 = 3)
   )
 );
