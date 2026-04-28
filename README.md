@@ -10,10 +10,11 @@ Sistema integral para la gestión de arriendo de canchas, quinchos, organizació
 - **Módulo de Torneos:** Gestión de ligas, equipos (incluyendo invitados) y resultados con reglas de Walkover (W.O.).
 - **Infraestructura Dockerizada:** Entorno de desarrollo consistente y listo para usar.
 
-## Stack Tecnológico
+## 🛠️ Stack Tecnológico
 
-- **Backend:** Python / Django (en proceso)
-- **Base de Datos:** MySQL 8.0
+- **Backend:** Python / Django 6.x
+- **Frontend:** Bootstrap 5 & jQuery
+- **Base de Datos:** MySQL 8.x / 9.x (via PyMySQL)
 - **Infraestructura:** Docker / Docker Compose
 - **Documentación:** DBML, Diagramas SVG y Markdown
 
