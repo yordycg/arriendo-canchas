@@ -31,7 +31,10 @@ Sistema de gestión deportiva para arriendo de canchas y quinchos, con un fuerte
   - `docs:` para cambios en documentación.
   - `infra:` para cambios en Docker o configuración de entorno.
   - `db:` para cambios en esquemas o semillas SQL.
-- **Ramas:** El desarrollo se realiza en `develop`. `main` solo para versiones estables.
+- **Ramas:** 
+  - `main`: Solo para versiones estables y producción.
+  - `develop`: Rama principal de integración y desarrollo.
+  - `feature/nombre-tarea`: Las nuevas funcionalidades o apps DEBEN desarrollarse en ramas independientes y luego integrarse a `develop` mediante un Pull Request o merge.
 
 ### 2. Base de Datos
 - **Sincronización:** Cualquier cambio en `database/sql/01_schema.sql` DEBE ser reflejado inmediatamente en:
