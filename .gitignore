@@ -1,6 +1,34 @@
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 
-# Security
-.env
-
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Security (CRITICAL)
+.env
+.envrc
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Docker logs
+.docker-compose.logs
