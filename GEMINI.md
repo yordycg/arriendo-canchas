@@ -45,6 +45,9 @@ Sistema de gestión deportiva para arriendo de canchas y quinchos, con un fuerte
 - Documentar clases y métodos complejos con Docstrings.
 
 ## 🤖 Instrucciones para el Agente
-- **Investigación:** Antes de proponer un cambio, analiza las reglas de negocio en `docs/database/reglas.md`.
+- **Investigación:** Antes de proponer un cambio, analiza:
+  - Las reglas de negocio en `docs/database/reglas.md`.
+  - La especificación funcional en `docs/requerimientos.md`.
+  - La estructura definida en `docs/arquitectura.md`.
 - **Validación:** Siempre que se agregue una funcionalidad, proponer o crear el test unitario correspondiente.
 - **Brevidad:** Mantener las explicaciones técnicas directas y concisas.
