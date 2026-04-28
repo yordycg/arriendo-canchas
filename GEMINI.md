@@ -44,6 +44,7 @@ Sistema de gestión deportiva para arriendo de canchas y quinchos, con un fuerte
 
 ### 3. Estilo de Código (Python/Django)
 - Seguir **PEP 8**.
+- **Capa de Datos:** Se utilizará **SQL Manual** a través de la clase `ConnectionDB` (`pymysql`) para todas las operaciones de base de datos, omitiendo el uso del ORM de Django para el núcleo de la lógica de negocio.
 - Usar **Type Hints** en todas las funciones y métodos.
 - Documentar clases y métodos complejos con Docstrings.
 
