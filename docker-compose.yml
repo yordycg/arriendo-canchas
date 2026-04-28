@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   db:
     image: mysql:latest
@@ -13,5 +13,6 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./database/sql:/docker-entrypoint-initdb.d
 volumes:
   mysql_data:
