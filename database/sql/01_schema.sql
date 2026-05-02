@@ -34,8 +34,8 @@ CREATE TABLE roles (
 CREATE TABLE membresias (
   membresia_id INT PRIMARY KEY AUTO_INCREMENT,
   nombre VARCHAR(30) NOT NULL UNIQUE,
-  porcentaje_descuento INT NOT NULL CHECK (porcentaje_descuento BETWEEN 0 AND 100),
-  costo_mensual DECIMAL(12, 2) NOT NULL CHECK (costo_mensual >= 0),
+  porcentaje_descuento INT NOT NULL DEFAULT 0 CHECK (porcentaje_descuento BETWEEN 0 AND 100),
+  costo_mensual DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (costo_mensual >= 0),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_active BOOLEAN DEFAULT TRUE
@@ -53,8 +53,8 @@ CREATE TABLE tipos_penalizaciones (
   tipo_penalizacion_id INT PRIMARY KEY AUTO_INCREMENT,
   nombre VARCHAR(50) NOT NULL UNIQUE,
   descripcion TEXT,
-  valor_multa DECIMAL(12, 2) NOT NULL CHECK (valor_multa >= 0),
-  dias_bloqueo INT CHECK (dias_bloqueo >= 0),
+  valor_multa DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_multa >= 0),
+  dias_bloqueo INT DEFAULT 0 CHECK (dias_bloqueo >= 0),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_active BOOLEAN DEFAULT TRUE
@@ -64,7 +64,7 @@ CREATE TABLE tipos_penalizaciones (
 CREATE TABLE canchas (
   cancha_id INT PRIMARY KEY AUTO_INCREMENT,
   nombre VARCHAR(100) NOT NULL,
-  valor_hora DECIMAL(12, 2) NOT NULL CHECK (valor_hora >= 0),
+  valor_hora DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_hora >= 0),
   tipo_superficie VARCHAR(50) NOT NULL CHECK (tipo_superficie IN ('Pasto Sintético', 'Pasto Natural', 'Arcilla', 'Cemento', 'Parquet', 'Baldosa')),
   tipo_recinto VARCHAR(50) NOT NULL CHECK (tipo_recinto IN ('Abierto', 'Semi-techado', 'Cerrado')),
   tipo_cancha_id INT NOT NULL, -- FK tipos_canchas.tipo_cancha_id
@@ -92,15 +92,15 @@ CREATE TABLE usuarios (
   nombres VARCHAR(100) NOT NULL,
   apellido_p VARCHAR(100),
   apellido_m VARCHAR(100),
-  sexo CHAR(1) CHECK (sexo IN ('M', 'F', 'O')),
+  sexo CHAR(1) DEFAULT 'O' CHECK (sexo IN ('M', 'F', 'O')),
   telefono VARCHAR(15),
   email VARCHAR(150) UNIQUE,
   password VARCHAR(255),
   intentos_fallidos INT DEFAULT 0,
   contador_faltas INT DEFAULT 0,
-  estado_usuario_id INT NOT NULL, -- FK estados_usuarios.estado_usuario_id
-  rol_id INT NOT NULL, -- FK roles.rol_id
-  membresia_id INT, -- FK membresias.membresia_id
+  estado_usuario_id INT NOT NULL DEFAULT 1, -- FK estados_usuarios.estado_usuario_id
+  rol_id INT NOT NULL DEFAULT 3, -- FK roles.rol_id
+  membresia_id INT DEFAULT 1, -- FK membresias.membresia_id
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -112,9 +112,9 @@ CREATE TABLE usuarios (
 CREATE TABLE quinchos (
   quincho_id INT PRIMARY KEY AUTO_INCREMENT,
   nombre VARCHAR(100) NOT NULL,
-  valor_reserva DECIMAL(12, 2) NOT NULL CHECK (valor_reserva >= 0),
-  solo_vip BOOLEAN NOT NULL,
-  estado_quincho_id INT NOT NULL, -- FK estados_quinchos.estado_quincho_id
+  valor_reserva DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_reserva >= 0),
+  solo_vip BOOLEAN NOT NULL DEFAULT FALSE,
+  estado_quincho_id INT NOT NULL DEFAULT 1, -- FK estados_quinchos.estado_quincho_id
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -125,8 +125,8 @@ CREATE TABLE reservas_canchas (
   reserva_cancha_id INT PRIMARY KEY AUTO_INCREMENT,
   fecha DATE NOT NULL,
   hora TIME NOT NULL,
-  valor_pagado DECIMAL(12, 2) NOT NULL CHECK (valor_pagado >= 0),
-  estado_id INT NOT NULL, -- FK estados_reservas.estado_reserva_id
+  valor_pagado DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_pagado >= 0),
+  estado_id INT NOT NULL DEFAULT 1, -- FK estados_reservas.estado_reserva_id
   cancha_id INT NOT NULL, -- FK canchas.cancha_id
   usuario_rut VARCHAR(12) NOT NULL, -- FK usuarios.rut
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -141,8 +141,8 @@ CREATE TABLE reservas_quinchos (
   reserva_quincho_id INT PRIMARY KEY AUTO_INCREMENT,
   fecha DATE NOT NULL,
   hora TIME NOT NULL,
-  valor_pagado DECIMAL(12, 2) NOT NULL CHECK (valor_pagado >= 0),
-  estado_id INT NOT NULL, -- FK estados_reservas.estado_reserva_id
+  valor_pagado DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_pagado >= 0),
+  estado_id INT NOT NULL DEFAULT 1, -- FK estados_reservas.estado_reserva_id
   quincho_id INT NOT NULL, -- FK quinchos.quincho_id
   usuario_rut VARCHAR(12) NOT NULL, -- FK usuarios.rut
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -203,7 +203,7 @@ CREATE TABLE usuarios_penalizaciones (
   usuario_penalizado_id INT PRIMARY KEY AUTO_INCREMENT,
   usuario_rut VARCHAR(12) NOT NULL, -- FK usuarios.rut
   tipo_penalizacion_id INT NOT NULL, -- FK tipos_penalizaciones.tipo_penalizacion_id
-  fecha DATE NOT NULL,
+  fecha DATE NOT NULL DEFAULT (CURRENT_DATE),
   pagada BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
