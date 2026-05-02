@@ -21,7 +21,8 @@ pip-delete-this-directory.txt
 .envrc
 
 # IDEs
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo

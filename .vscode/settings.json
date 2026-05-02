@@ -1,0 +1,22 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+
+  "[html]": {
+    "editor.defaultFormatter": "monosans.djlint",
+    "editor.tabSize": 2
+  },
+
+  "[django-html]": {
+    "editor.defaultFormatter": "monosans.djlint",
+    "editor.tabSize": 2
+  }
+}
