@@ -3,59 +3,59 @@
 Table estados_usuarios {
   estado_usuario_id int [pk, increment]
   nombre varchar(30) [unique, not null]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table estados_reservas {
   estado_reserva_id int [pk, increment]
   nombre varchar(30) [unique, not null]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table estados_quinchos {
   estado_quincho_id int [pk, increment]
   nombre varchar(30) [unique, not null]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table roles {
   rol_id int [pk, increment]
   nombre varchar(30) [unique, not null]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table membresias {
   membresia_id int [pk, increment]
   nombre varchar(30) [unique, not null]
-  porcentaje_descuento int [not null]
-  costo_mensual decimal(12,2) [not null]
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  porcentaje_descuento int [not null, default: 0]
+  costo_mensual decimal(12,2) [not null, default: 0.00]
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table tipos_canchas {
   tipo_cancha_id int [pk, increment]
   nombre varchar(50) [unique, not null]
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table canchas {
   cancha_id int [pk, increment]
   nombre varchar(100) [not null]
-  valor_hora decimal(12,2) [not null]
+  valor_hora decimal(12,2) [not null, default: 0.00]
   tipo_superficie varchar(50) [not null]
   tipo_recinto varchar(50) [not null]
   tipo_cancha_id int [not null]
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table torneos {
@@ -64,9 +64,9 @@ Table torneos {
   fecha_inicio date [not null]
   fecha_fin date [not null]
   tipo_cancha_id int [not null]
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table usuarios {
@@ -74,69 +74,69 @@ Table usuarios {
   nombres varchar(100) [not null]
   apellido_p varchar(100)
   apellido_m varchar(100)
-  sexo char(1)
+  sexo char(1) [default: 'O']
   telefono varchar(15)
   email varchar(150) [unique]
   password varchar(255)
-  intentos_fallidos int
-  contador_faltas int
-  estado_usuario_id int [not null]
-  rol_id int [not null]
-  membresia_id int
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  intentos_fallidos int [default: 0]
+  contador_faltas int [default: 0]
+  estado_usuario_id int [not null, default: 1]
+  rol_id int [not null, default: 3]
+  membresia_id int [default: 1]
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table quinchos {
   quincho_id int [pk, increment]
   nombre varchar(100) [not null]
-  valor_reserva decimal(12,2) [not null]
-  solo_vip boolean [not null]
-  estado_quincho_id int [not null]
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  valor_reserva decimal(12,2) [not null, default: 0.00]
+  solo_vip boolean [not null, default: false]
+  estado_quincho_id int [not null, default: 1]
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table reservas_canchas {
   reserva_cancha_id int [pk, increment]
   fecha date [not null]
   hora time [not null]
-  valor_pagado decimal(12,2) [not null]
-  estado_id int [not null]
+  valor_pagado decimal(12,2) [not null, default: 0.00]
+  estado_id int [not null, default: 1]
   cancha_id int [not null]
   usuario_rut varchar(12) [not null]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table reservas_quinchos {
   reserva_quincho_id int [pk, increment]
   fecha date [not null]
   hora time [not null]
-  valor_pagado decimal(12,2) [not null]
-  estado_id int [not null]
+  valor_pagado decimal(12,2) [not null, default: 0.00]
+  estado_id int [not null, default: 1]
   quincho_id int [not null]
   usuario_rut varchar(12) [not null]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table equipos {
   equipo_id int [pk, increment]
   nombre varchar(100) [not null]
   capitan_id varchar(12) [not null]
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table equipos_usuarios {
   equipo_id int [pk]
   usuario_rut varchar(12) [pk]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table partidos {
@@ -149,29 +149,29 @@ Table partidos {
   resultado_equipo_2 int [default: 0]
   es_walkover boolean [default: false]
   equipo_perdedor_id int
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table tipos_penalizaciones {
   tipo_penalizacion_id int [pk, increment]
   nombre varchar(50) [unique, not null]
   descripcion text
-  valor_multa decimal(12,2) [not null]
-  dias_bloqueo int
-  is_active boolean
-  created_at timestamp
-  updated_at timestamp
+  valor_multa decimal(12,2) [not null, default: 0.00]
+  dias_bloqueo int [default: 0]
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 Table usuarios_penalizaciones {
   usuario_penalizado_id int [pk, increment]
   usuario_rut varchar(12) [not null]
   tipo_penalizacion_id int [not null]
-  fecha date [not null]
+  fecha date [not null, default: `CURRENT_DATE`]
   pagada boolean [default: false]
-  created_at timestamp
-  updated_at timestamp
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
 // Relaciones

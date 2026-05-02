@@ -32,15 +32,15 @@ _Ocurre cuando muchos registros de una tabla se relacionan con muchos de otra. R
 
 ### usuarios <---> equipos
 
-- **Tabla Intermedia:** `equipo_usuarios`
+- **Tabla Intermedia:** `equipos_usuarios`
 - **Lógica:** Un usuario puede pertenecer a varios equipos, y un equipo está compuesto por varios usuarios.
+- **Trazabilidad:** La tabla intermedia incluye `created_at` y `updated_at` para registrar cuándo un usuario se unió a un equipo.
 
 ## 3. Relaciones Uno a Uno (1:1)
 
 _En este diseño actual, no se han definido relaciones 1:1 obligatorias, ya que se prefiere la flexibilidad de 1:N._
-_(Nota: El Capitán de un equipo se maneja como 1:N porque un usuario puede ser capitán de varios equipos distintos)._
 
 ## 4. Resumen de Integridad Referencial (FKs)
 
-- **Recomendacion:** Se recomienda usar `PROTECT` en la mayoría de las FKs de configuración (como roles o tipos de cancha) para evitar borrar datos que dejen registros huérfanos.
-- **Auditoría:** Todas las tablas de relación cuentan con `created_at` y `updated_at` para trazabilidad.
+- **Restricción por Defecto:** Se utiliza `ON DELETE RESTRICT` en todas las llaves foráneas para prevenir la eliminación accidental de datos maestros (como roles o tipos de cancha) que tengan registros vinculados.
+- **Auditoría:** Todas las tablas, incluidas las de relación, cuentan con `created_at` y `updated_at` (TIMESTAMP) para una trazabilidad completa de los cambios.
