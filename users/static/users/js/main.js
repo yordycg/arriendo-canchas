@@ -37,7 +37,7 @@ $(document).ready(function () {
             </div>
             `;
 
-        // $("#indicators-list").html(html + html);
+        $("#indicators-list").html(html + html + html + html);
         // Duplicamos para efecto infinito si fuera necesario
       },
       error: function () {

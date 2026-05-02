@@ -2,25 +2,23 @@
 <html lang="es">
   <head>
     {% load static %}
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lista de Usuarios - Arriendo Canchas</title>
     <link rel="stylesheet" href="{% static 'users/css/bootstrap.min.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <script src="{% static 'users/js/jquery-4.0.0.min.js' %}"></script>
+    <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'users/js/main.js' %}"></script>
   </head>
   <body class="bg-light">
     <!-- Ticker de Indicadores Económicos -->
-    <div
-      class="bg-primary text-white py-1 shadow-sm overflow-hidden"
-      style="font-size: 0.85rem"
-    >
+    <div class="bg-primary text-white py-1 shadow-sm overflow-hidden"
+         style="font-size: 0.85rem">
       <div id="ticker-container" class="d-flex align-items-center">
-        <div
-          class="px-3 border-end border-white border-opacity-25 fw-bold text-nowrap"
-        >
+        <div class="px-3 border-end border-white border-opacity-25 fw-bold text-nowrap">
           <i class="bi bi-graph-up-arrow me-1"></i> Indicadores Hoy:
         </div>
         <div id="indicators-list" class="d-flex align-items-center flex-grow-1">
@@ -40,13 +38,12 @@
         </div>
       </div>
     </nav>
-
     <div class="container-fluid px-4">
       <div class="card shadow border-0">
-        <div
-          class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
-        >
-          <h5 class="mb-0 text-primary fw-bold">Gestión de Usuarios</h5>
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h5 class="mb-0 text-primary fw-bold">
+            Gestión de Usuarios
+          </h5>
           <a href="/users/form/" class="btn btn-primary btn-sm">
             <i class="bi bi-person-plus-fill me-1"></i> Nuevo Usuario
           </a>
@@ -56,73 +53,91 @@
             <table class="table table-hover align-middle">
               <thead class="table-light">
                 <tr>
-                  <th>RUT</th>
-                  <th>Nombre Completo</th>
-                  <th>Email</th>
-                  <th>Sexo</th>
-                  <th>Teléfono</th>
-                  <th>Estado</th>
-                  <th>Rol</th>
-                  <th>Membresía</th>
-                  <th class="text-center">Acciones</th>
+                  <th>
+                    RUT
+                  </th>
+                  <th>
+                    Nombre Completo
+                  </th>
+                  <th>
+                    Email
+                  </th>
+                  <th>
+                    Sexo
+                  </th>
+                  <th>
+                    Teléfono
+                  </th>
+                  <th>
+                    Estado
+                  </th>
+                  <th>
+                    Rol
+                  </th>
+                  <th>
+                    Membresía
+                  </th>
+                  <th class="text-center">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {% for u in usuarios %}
-                <tr>
-                  <td class="fw-bold">{{ u.rut }}</td>
-                  <td>{{ u.nombres }} {{ u.apellido_p }} {{ u.apellido_m|default:"" }}</td>
-                  <td>{{ u.email|default:"---" }}</td>
-                  <td>
-                    {% if u.sexo == 'M' %}
-                    <span class="badge bg-primary">Masculino</span>
-                    {% elif u.sexo == 'F' %}
-                    <span
-                      class="badge bg-danger"
-                      style="background-color: #e83e8c !important"
-                    >
-                      Femenino
-                    </span>
-                    {% else %}
-                    <span class="badge bg-secondary">Otro</span>
-                    {% endif %}
-                  </td>
-                  <td>{{ u.telefono|default:"---" }}</td>
-                  <td>
-                    <span
-                      class="badge rounded-pill {% if u.estado_usuario == 'Activo' %}bg-success{% else %}bg-warning text-dark{% endif %}"
-                    >
-                      {{ u.estado_usuario }}
-                    </span>
-                  </td>
-                  <td>{{ u.rol }}</td>
-                  <td>
-                    <small class="text-muted fw-bold">{{ u.membresia }}</small>
-                  </td>
-                  <td class="text-center">
-                    <div class="btn-group shadow-sm">
-                      <button
-                        class="btn btn-outline-warning btn-sm"
-                        title="Editar"
-                      >
-                        <i class="bi bi-pencil-square"></i>
-                      </button>
-                      <button
-                        class="btn btn-outline-danger btn-sm"
-                        title="Eliminar"
-                      >
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                  <tr>
+                    <td class="fw-bold">
+                      {{ u.rut }}
+                    </td>
+                    <td>
+                      {{ u.nombres }} {{ u.apellido_p }} {{
+                      u.apellido_m|default:"" }}
+                    </td>
+                    <td>
+                      {{ u.email|default:"---" }}
+                    </td>
+                    <td>
+                      {% if u.sexo == 'M' %}
+                        <span class="badge bg-primary">Masculino</span>
+                      {% elif u.sexo == 'F' %}
+                        <span class="badge bg-danger" style="background-color: #e83e8c !important">
+                          Femenino
+                        </span>
+                      {% else %}
+                        <span class="badge bg-secondary">Otro</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {{ u.telefono|default:"---" }}
+                    </td>
+                    <td>
+                      <span class="badge rounded-pill {% if u.estado_usuario == 'Activo' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                        {{ u.estado_usuario }}
+                      </span>
+                    </td>
+                    <td>
+                      {{ u.rol }}
+                    </td>
+                    <td>
+                      <small class="text-muted fw-bold">{{ u.membresia }}</small>
+                    </td>
+                    <td class="text-center">
+                      <div class="btn-group shadow-sm">
+                        <button class="btn btn-outline-warning btn-sm" title="Editar">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" title="Eliminar">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 {% empty %}
-                <tr>
-                  <td colspan="9" class="text-center py-5 text-muted">
-                    <i class="bi bi-people mb-2 d-block fs-1"></i>
-                    No se encontraron usuarios registrados.
-                  </td>
-                </tr>
+                  <tr>
+                    <td colspan="9" class="text-center py-5 text-muted">
+                      <i class="bi bi-people mb-2 d-block fs-1"></i>
+                      No se encontraron usuarios registrados.
+                    </td>
+                  </tr>
                 {% endfor %}
               </tbody>
             </table>
@@ -130,9 +145,5 @@
         </div>
       </div>
     </div>
-
-    <script src="{% static 'users/js/jquery-4.0.0.min.js' %}"></script>
-    <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'users/js/main.js' %}"></script>
   </body>
 </html>

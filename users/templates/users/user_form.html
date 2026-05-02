@@ -1,7 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
   <head>
     {% load static %}
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registrar Usuario - Arriendo Canchas</title>
@@ -18,215 +19,192 @@
         </div>
       </div>
     </nav>
-
     <section class="container">
       <div class="row justify-content-center">
         <div class="col-md-8">
           {% if error %}
-          <div
-            class="alert alert-danger alert-dismissible fade show"
-            role="alert"
-          >
-            <strong>Error!</strong> {{ error }}
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            ></button>
-          </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error!</strong> {{ error }}
+              <button type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                      aria-label="Close">
+              </button>
+            </div>
           {% endif %}
-
           <div class="card shadow border-0">
             <div class="card-header bg-primary text-white py-3">
-              <h4 class="mb-0">Registrar Nuevo Usuario</h4>
+              <h4 class="mb-0">
+                Registrar Nuevo Usuario
+              </h4>
             </div>
             <div class="card-body p-4">
-              <form method="GET" action="/users/add/">
+              <form method="get" action="/users/add/">
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="rut" class="form-label fw-bold">RUT</label>
-                    <input
-                      type="text"
-                      name="rut"
-                      id="rut"
-                      class="form-control"
-                      placeholder="12.345.678-9"
-                      required
-                    />
+                    <label for="rut" class="form-label fw-bold">
+                      RUT
+                    </label>
+                    <input type="text"
+                           name="rut"
+                           id="rut"
+                           class="form-control"
+                           placeholder="12.345.678-9"
+                           required />
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label for="nombres" class="form-label fw-bold"
-                      >Nombres</label
-                    >
-                    <input
-                      type="text"
-                      name="nombres"
-                      id="nombre"
-                      class="form-control"
-                      placeholder="Ej: Juan Andres"
-                      required
-                    />
+                    <label for="nombres" class="form-label fw-bold">
+                      Nombres
+                    </label>
+                    <input type="text"
+                           name="nombres"
+                           id="nombre"
+                           class="form-control"
+                           placeholder="Ej: Nicolas Yordy"
+                           required />
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="apellido_p" class="form-label fw-bold"
-                      >Apellido Paterno</label
-                    >
-                    <input
-                      type="text"
-                      name="apellido_p"
-                      id="apellido_p"
-                      class="form-control"
-                      placeholder="Perez"
-                    />
+                    <label for="apellido_p" class="form-label fw-bold">
+                      Apellido Paterno
+                    </label>
+                    <input type="text"
+                           name="apellido_p"
+                           id="apellido_p"
+                           class="form-control"
+                           placeholder="Gonzalez" />
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label for="apellido_m" class="form-label fw-bold"
-                      >Apellido Materno</label
-                    >
-                    <input
-                      type="text"
-                      name="apellido_m"
-                      id="apellido_m"
-                      class="form-control"
-                      placeholder="Gonzalez"
-                    />
+                    <label for="apellido_m" class="form-label fw-bold">
+                      Apellido Materno
+                    </label>
+                    <input type="text"
+                           name="apellido_m"
+                           id="apellido_m"
+                           class="form-control"
+                           placeholder="Carmona" />
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="email" class="form-label fw-bold">Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      class="form-control"
-                      placeholder="ejemplo@email.cl"
-                    />
+                    <label for="email" class="form-label fw-bold">
+                      Email
+                    </label>
+                    <input type="email"
+                           name="email"
+                           id="email"
+                           class="form-control"
+                           placeholder="nicolas@ipvg.cl" />
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label for="password" class="form-label fw-bold"
-                      >Contraseña</label
-                    >
-                    <input
-                      type="password"
-                      name="password"
-                      id="password"
-                      class="form-control"
-                      placeholder="********"
-                    />
+                    <label for="password" class="form-label fw-bold">
+                      Contraseña
+                    </label>
+                    <input type="password"
+                           name="password"
+                           id="password"
+                           class="form-control"
+                           placeholder="********" />
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label class="form-label d-block fw-bold">Sexo</label>
+                    <label class="form-label d-block fw-bold">
+                      Sexo
+                    </label>
                     <div class="form-check form-check-inline mt-2">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="sexo"
-                        id="sexoM"
-                        value="M"
-                        checked
-                      />
-                      <label class="form-check-label" for="sexoM"
-                        >Masculino</label
-                      >
+                      <input class="form-check-input"
+                             type="radio"
+                             name="sexo"
+                             id="sexoM"
+                             value="M" />
+                      <label class="form-check-label" for="sexoM">
+                        Masculino
+                      </label>
                     </div>
                     <div class="form-check form-check-inline">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="sexo"
-                        id="sexoF"
-                        value="F"
-                      />
-                      <label class="form-check-label" for="sexoF"
-                        >Femenino</label
-                      >
+                      <input class="form-check-input"
+                             type="radio"
+                             name="sexo"
+                             id="sexoF"
+                             value="F" />
+                      <label class="form-check-label" for="sexoF">
+                        Femenino
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input"
+                             type="radio"
+                             name="sexo"
+                             id="sexoO"
+                             value="O"
+                             checked />
+                      <label class="form-check-label" for="sexoO">
+                        Otro
+                      </label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label for="telefono" class="form-label fw-bold"
-                      >Teléfono</label
-                    >
-                    <input
-                      type="tel"
-                      name="telefono"
-                      id="telefono"
-                      class="form-control"
-                      placeholder="+569 1234 5678"
-                    />
+                    <label for="telefono" class="form-label fw-bold">
+                      Teléfono
+                    </label>
+                    <input type="tel"
+                           name="telefono"
+                           id="telefono"
+                           class="form-control"
+                           placeholder="+569 1234 5678" />
                   </div>
                 </div>
-
                 <hr class="my-4" />
-
                 <div class="row">
                   <div class="col-md-4 mb-3">
-                    <label for="estado_usuario_id" class="form-label fw-bold"
-                      >Estado</label
-                    >
-                    <select
-                      name="estado_usuario_id"
-                      id="estado_usuario_id"
-                      class="form-select"
-                      required
-                    >
-                      <option value="" selected disabled>Seleccione...</option>
+                    <label for="estado_usuario_id" class="form-label fw-bold">
+                      Estado
+                    </label>
+                    <select name="estado_usuario_id"
+                            id="estado_usuario_id"
+                            class="form-select"
+                            required>
                       {% for estado in estados %}
-                      <option value="{{ estado.estado_usuario_id }}">
-                        {{ estado.nombre }}
-                      </option>
+                        <option value="{{ estado.estado_usuario_id }}"
+                                {% if estado.estado_usuario_id == 1 %}selected{% endif %}>
+                          {{ estado.nombre }}
+                        </option>
                       {% endfor %}
                     </select>
                   </div>
                   <div class="col-md-4 mb-3">
-                    <label for="rol_id" class="form-label fw-bold">Rol</label>
-                    <select
-                      name="rol_id"
-                      id="rol_id"
-                      class="form-select"
-                      required
-                    >
-                      <option value="" selected disabled>Seleccione...</option>
+                    <label for="rol_id" class="form-label fw-bold">
+                      Rol
+                    </label>
+                    <select name="rol_id" id="rol_id" class="form-select" required>
                       {% for rol in roles %}
-                      <option value="{{ rol.rol_id }}">{{ rol.nombre }}</option>
+                        <option value="{{ rol.rol_id }}" {% if rol.rol_id == 3 %}selected{% endif %}>
+                          {{ rol.nombre }}
+                        </option>
                       {% endfor %}
                     </select>
                   </div>
                   <div class="col-md-4 mb-3">
-                    <label for="membresia_id" class="form-label fw-bold"
-                      >Membresía</label
-                    >
-                    <select
-                      name="membresia_id"
-                      id="membresia_id"
-                      class="form-select"
-                      required
-                    >
-                      <option value="" selected disabled>Seleccione...</option>
+                    <label for="membresia_id" class="form-label fw-bold">
+                      Membresía
+                    </label>
+                    <select name="membresia_id" id="membresia_id" class="form-select" required>
                       {% for membresia in membresias %}
-                      <option value="{{ membresia.membresia_id }}">
-                        {{ membresia.nombre }}
-                      </option>
+                        <option value="{{ membresia.membresia_id }}"
+                                {% if membresia.membresia_id == 1 %}selected{% endif %}>
+                          {{ membresia.nombre }}
+                        </option>
                       {% endfor %}
                     </select>
                   </div>
                 </div>
-
                 <div class="d-grid gap-2 mt-4">
                   <button type="submit" class="btn btn-success btn-lg">
                     <i class="bi bi-check-circle-fill me-2"></i>Guardar Usuario
                   </button>
-                  <a href="/users/" class="btn btn-outline-secondary"
-                    >Cancelar</a
-                  >
+                  <a href="/users/" class="btn btn-outline-secondary">Cancelar</a>
                 </div>
               </form>
             </div>
@@ -234,7 +212,6 @@
         </div>
       </div>
     </section>
-
     <script src="{% static 'users/js/jquery-4.0.0.min.js' %}"></script>
     <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
   </body>
