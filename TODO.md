@@ -26,7 +26,15 @@ Este archivo marca el progreso de implementación del sistema.
 
 ---
 
-## 🛠️ Tareas Técnicas Globales
-- [ ] Integrar Bootstrap 5 y jQuery en los templates base.
-- [ ] Configurar variables de entorno (.env) en Django.
-- [ ] Crear Suite de Tests inicial para cada aplicación.
+---
+
+## 🚀 Evolución Profesional & Estándares Senior (Próximos Proyectos)
+- [ ] **Docker-Compose Total:** Implementar Docker para el ciclo de vida completo (DB + App + Cache) en lugar de ejecuciones híbridas.
+- [ ] **direnv & Automatización:** Configurar activación automática de entornos virtuales (`layout python`) y carga de secretos al entrar al directorio.
+- [ ] **Agnosticismo de Shell:** Perfeccionar el uso de `justfile` para ocultar la complejidad del OS.
+
+## ✅ Tareas Técnicas Completadas
+- [x] Implementar DEFAULTS en esquema SQL (`01_schema.sql`).
+- [x] Sincronizar documentación técnica (`entidades_atributos.md`, `diagram.dbml`, `relaciones.md`).
+- [x] Crear `justfile` multiplataforma para automatización de tareas.
+- [x] Definir Estándares de Valores Predeterminados en `defaults.md`.
