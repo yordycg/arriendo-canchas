@@ -1,0 +1,2 @@
+# Ignorar templates de Django porque Prettier rompe la sintaxis {% %}
+**/templates/**/*.html

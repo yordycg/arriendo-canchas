@@ -54,9 +54,16 @@ run:
 shell:
     python manage.py shell
 
-# --- QUALITY & CLEANUP ---
+# --- QUALITY, FORMATTING & CLEANUP ---
 
-# Clean Python cache and temporary files (OS-agnostic via Python)
+# Format all files using the right tool for each type
+format:
+    @echo "Formatting HTML with djlint..."
+    @djlint . --reformat --indent 2
+    @echo "Formatting JS/CSS with prettier..."
+    @npx prettier --write "**/static/**/*.{js,css}" "README.md" "TODO.md"
+
+# Clean Python cache and temporary files
 clean:
     @echo "Cleaning Python cache files..."
     @python -c "import pathlib, shutil; [p.unlink() for p in pathlib.Path('.').rglob('*.py[co]')]; [shutil.rmtree(p) for p in pathlib.Path('.').rglob('__pycache__')]"

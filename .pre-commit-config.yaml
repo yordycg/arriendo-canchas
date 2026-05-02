@@ -1,0 +1,16 @@
+repos:
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        exclude: .*/templates/.*\.html$
+        types_or: [javascript, css, json, markdown]
+
+  - repo: local
+    hooks:
+      - id: djlint
+        name: djlint
+        entry: djlint
+        language: system
+        types: [html]
+        args: ["--reformat", "--indent", "2", "--ignore", "H021,H030,H031,D018"]
