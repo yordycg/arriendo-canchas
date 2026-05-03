@@ -1,2 +1,11 @@
-# Ignorar templates de Django porque Prettier rompe la sintaxis {% %}
-**/templates/**/*.html
+# Ignorar librerías de terceros (Vendor)
+**/static/**/vendor/**
+**/static/**/*.min.js
+**/static/**/*.min.css
+**/static/**/jquery*.js
+**/static/**/bootstrap*.js
+
+# Ignorar archivos de sistema y entorno
+.venv/
+__pycache__/
+node_modules/

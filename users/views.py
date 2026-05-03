@@ -68,7 +68,14 @@ def add_user(request):
         telefono = request.GET.get('telefono')
         estado_usuario_id = int(request.GET.get('estado_usuario_id'))
         rol_id = int(request.GET.get('rol_id'))
-        membresia_id = int(request.GET.get('membresia_id'))
+        membresia_raw = request.GET.get('membresia_id')
+
+        # Validar el rol_id, para evitar asignar una membresia_id al 'admin' e 'invitado'
+        if rol_id in [1, 4]:
+            membresia_id = None
+        else:
+            # Si viene vacio, de forma default asignamos membresia 'Normal'
+            membresia_id = int(membresia_raw) if membresia_raw else 1
 
         db = DatabaseManager()
 
