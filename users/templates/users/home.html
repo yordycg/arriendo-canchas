@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    {% load static %}
+{% load static %}
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="{% static 'users/css/bootstrap.min.css' %}" />
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <script src="{% static 'users/js/jquery-4.0.0.min.js' %}"></script>
-    <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'users/js/main.js' %}"></script>
   </head>
   <body class="bg-light">
     <!-- Ticker de Indicadores Económicos -->
@@ -44,7 +41,9 @@
           <h5 class="mb-0 text-primary fw-bold">
             Gestión de Usuarios
           </h5>
-          <a href="/users/form/" class="btn btn-primary btn-sm">
+          <a href="/users/form/"
+             class="btn btn-primary btn-sm"
+             title="Agregar Usuario">
             <i class="bi bi-person-plus-fill me-1"></i> Nuevo Usuario
           </a>
         </div>
@@ -121,10 +120,16 @@
                     </td>
                     <td class="text-center">
                       <div class="btn-group shadow-sm">
-                        <button class="btn btn-outline-warning btn-sm" title="Editar">
+                        <a href="/users/edit/?rut={{ u.rut }}"
+                           class="btn btn-outline-warning btn-sm"
+                           title="Editar Usuario">
                           <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button class="btn btn-outline-danger btn-sm" title="Eliminar">
+                        </a>
+                        <button type="button"
+                                class="btn btn-outline-danger btn-sm btn-delete"
+                                title="Eliminar Usuario"
+                                data-rut="{{ u.rut }}"
+                                data-nombre="{{ u.nombres }} {{ u.apellido_p }}">
                           <i class="bi bi-trash"></i>
                         </button>
                       </div>
@@ -144,5 +149,9 @@
         </div>
       </div>
     </div>
+    <script src="{% static 'users/js/jquery-4.0.0.min.js' %}"></script>
+    <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'users/js/home.js' %}"></script>
   </body>
 </html>

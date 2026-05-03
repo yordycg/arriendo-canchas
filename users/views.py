@@ -23,7 +23,8 @@ def home(request):
         FROM usuarios u
         JOIN roles r ON u.rol_id = r.rol_id
         JOIN estados_usuarios eu ON u.estado_usuario_id = eu.estado_usuario_id
-        LEFT JOIN membresias m ON u.membresia_id = m.membresia_id;
+        LEFT JOIN membresias m ON u.membresia_id = m.membresia_id
+        WHERE u.is_active = 1; -- Solo usuarios activos
     """
 
     usuarios = db.get_all(query_all_usuarios)
@@ -102,3 +103,15 @@ def add_user(request):
 
         # return render(request, 'users/user_form.html', context)
         return redirect('/users/')
+
+def delete_user(request):
+    rut = request.GET.get('rut')
+
+    db = DatabaseManager()
+
+    # Tecnica SOFT-DELETE: marcar como inactivo
+    query_delete = "UPDATE usuarios SET is_active = 0 WHERE rut = %s;"
+
+    db.execute(query_delete, (rut,))
+
+    return redirect('/users/')

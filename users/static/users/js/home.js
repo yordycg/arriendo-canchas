@@ -47,6 +47,31 @@ $(document).ready(function () {
       },
     });
   }
+
+  $(".btn-delete").on("click", function () {
+    const rut = $(this).data("rut");
+    const name = $(this).data("nombre");
+
+    confirmDelete(rut, name);
+  });
+
+  function confirmDelete(rut, nombre) {
+    Swal.fire({
+      title: "Estas seguro?",
+      text: `Vas a "eliminar" al usuario: ${nombre}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar",
+      cancelButtonColor: "#3085d6",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/users/delete/?rut=${rut}`;
+      }
+    });
+  }
+
   loadEconomicIndicators();
   setInterval(loadEconomicIndicators, 3600000);
 });
