@@ -2,7 +2,7 @@
 # Multi-OS compatible (Windows/Linux/macOS)
 
 set dotenv-load := true
-set shell := ["powershell", "-Command"]
+set shell := ["powershell", "-ExecutionPolicy", "Bypass", "-Command"]
 
 DB_NAME := env_var('DB_NAME')
 DB_USER := env_var('DB_USER')
