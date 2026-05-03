@@ -100,7 +100,7 @@ CREATE TABLE usuarios (
   contador_faltas INT DEFAULT 0,
   estado_usuario_id INT NOT NULL DEFAULT 1, -- FK estados_usuarios.estado_usuario_id
   rol_id INT NOT NULL DEFAULT 3, -- FK roles.rol_id
-  membresia_id INT DEFAULT 1, -- FK membresias.membresia_id
+  membresia_id INT, -- FK membresias.membresia_id
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

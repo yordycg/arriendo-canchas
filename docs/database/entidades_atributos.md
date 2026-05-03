@@ -3,12 +3,15 @@
 Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 
 ## estados_usuarios / estados_reservas / estados_quinchos / roles
-*Tablas Maestras (Lookups)*
+
+_Tablas Maestras (Lookups)_
+
 - **id (PK)** (INT, AutoIncrement)
 - **nombre** (VARCHAR(30), UNIQUE, NOT NULL)
 - **created_at / updated_at** (TIMESTAMP, DEFAULT: CURRENT_TIMESTAMP)
 
 ## membresias
+
 - **membresia_id (PK)** (INT)
 - **nombre** (VARCHAR(30), UNIQUE, NOT NULL) (Normal, VIP, Socio)
 - **porcentaje_descuento** (INT, DEFAULT: 0, CHECK 0-100)
@@ -17,12 +20,14 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **created_at / updated_at** (TIMESTAMP)
 
 ## tipos_canchas
+
 - **tipo_cancha_id (PK)** (INT)
 - **nombre** (VARCHAR(50), UNIQUE, NOT NULL)
 - **is_active** (BOOLEAN, DEFAULT: TRUE)
 - **created_at / updated_at** (TIMESTAMP)
 
 ## canchas
+
 - **cancha_id (PK)** (INT)
 - **nombre** (VARCHAR(100), NOT NULL)
 - **valor_hora** (DECIMAL(12,2), DEFAULT: 0.00, CHECK >= 0)
@@ -33,6 +38,7 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **created_at / updated_at** (TIMESTAMP)
 
 ## usuarios
+
 - **rut (PK)** (VARCHAR(12))
 - **nombres** (VARCHAR(100), NOT NULL)
 - **apellido_p / apellido_m** (VARCHAR(100))
@@ -44,11 +50,12 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **contador_faltas** (INT, DEFAULT 0)
 - **estado_usuario_id (FK)** (INT, DEFAULT: 1 [Activo])
 - **rol_id (FK)** (INT, DEFAULT: 3 [Cliente])
-- **membresia_id (FK)** (INT, DEFAULT: 1 [Normal])
+- **membresia_id (FK)** (INT, NULL) (Solo obligatorio para rol 'Cliente')
 - **is_active** (BOOLEAN, DEFAULT: TRUE)
 - **created_at / updated_at** (TIMESTAMP)
 
 ## quinchos
+
 - **quincho_id (PK)** (INT)
 - **nombre** (VARCHAR(100), NOT NULL)
 - **valor_reserva** (DECIMAL(12,2), DEFAULT: 0.00, CHECK >= 0)
@@ -58,6 +65,7 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **created_at / updated_at** (TIMESTAMP)
 
 ## reservas_canchas / reservas_quinchos
+
 - **id (PK)** (INT)
 - **fecha** (DATE, NOT NULL)
 - **hora** (TIME, NOT NULL)
@@ -66,9 +74,10 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **cancha_id / quincho_id (FK)** (INT)
 - **usuario_rut (FK)** (VARCHAR(12))
 - **created_at / updated_at** (TIMESTAMP)
-- *RESTRICCIÓN:* UNIQUE (id_recurso, fecha, hora)
+- _RESTRICCIÓN:_ UNIQUE (id_recurso, fecha, hora)
 
 ## equipos
+
 - **equipo_id (PK)** (INT)
 - **nombre** (VARCHAR(100), NOT NULL)
 - **capitan_id (FK -> usuarios.rut)** (VARCHAR(12))
@@ -76,11 +85,13 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **created_at / updated_at** (TIMESTAMP)
 
 ## equipos_usuarios
+
 - **equipo_id (PK, FK)** (INT)
 - **usuario_rut (PK, FK)** (VARCHAR(12))
 - **created_at / updated_at** (TIMESTAMP)
 
 ## torneos
+
 - **torneo_id (PK)** (INT)
 - **nombre** (VARCHAR(100), NOT NULL)
 - **fecha_inicio / fecha_fin** (DATE, NOT NULL, CHECK: fin >= inicio)
@@ -89,6 +100,7 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **created_at / updated_at** (TIMESTAMP)
 
 ## partidos
+
 - **partido_id (PK)** (INT)
 - **torneo_id (FK)** (INT)
 - **equipo_1_id / equipo_2_id (FK)** (INT, CHECK: equipo_1 <> equipo_2)
@@ -99,6 +111,7 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **created_at / updated_at** (TIMESTAMP)
 
 ## tipos_penalizaciones
+
 - **tipo_penalizacion_id (PK)** (INT)
 - **nombre** (VARCHAR(50), UNIQUE, NOT NULL)
 - **descripcion** (TEXT)
@@ -108,6 +121,7 @@ Detalle técnico de todas las tablas en `arriendo_canchas_db`.
 - **created_at / updated_at** (TIMESTAMP)
 
 ## usuarios_penalizaciones
+
 - **usuario_penalizado_id (PK)** (INT)
 - **usuario_rut (FK)** (VARCHAR(12))
 - **tipo_penalizacion_id (FK)** (INT)

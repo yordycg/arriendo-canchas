@@ -17,6 +17,7 @@
 2. Cada usuario debe tener un correo electrónico único.
 3. El género de los usuarios se limita a Masculino, Femenino u Otro para fines de categorización.
 4. Los usuarios invitados o externos pueden participar en equipos sin poseer una membresía activa inicialmente.
+5. Los roles administrativos (Admin, Recepcionista) no requieren estar asociados a una membresía de cliente.
 
 ## Torneos y Partidos
 

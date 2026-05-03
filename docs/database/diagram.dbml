@@ -82,7 +82,7 @@ Table usuarios {
   contador_faltas int [default: 0]
   estado_usuario_id int [not null, default: 1]
   rol_id int [not null, default: 3]
-  membresia_id int [default: 1]
+  membresia_id int
   is_active boolean [default: true]
   created_at timestamp [default: `CURRENT_TIMESTAMP`]
   updated_at timestamp [default: `CURRENT_TIMESTAMP`]
