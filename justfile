@@ -1,12 +1,10 @@
 # Justfile - Command Runner for Arriendo Canchas
-# Multi-OS compatible (Windows/Linux/macOS)
-
 set dotenv-load := true
-set shell := ["powershell", "-ExecutionPolicy", "Bypass", "-Command"]
 
-DB_NAME := env_var('DB_NAME')
-DB_USER := env_var('DB_USER')
-DB_PASS := env_var('DB_PASS')
+# Database Variables (overridable via .env)
+DB_NAME := env_var_or_default('DB_NAME', 'arriendo_db')
+DB_USER := env_var_or_default('DB_USER', 'root')
+DB_PASS := env_var_or_default('DB_PASS', 'secret')
 
 # List all available commands
 default:
