@@ -31,11 +31,11 @@ db-reset:
     @echo "Resetting database '{{DB_NAME}}'..."
     @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} -e "DROP DATABASE IF EXISTS {{DB_NAME}}; CREATE DATABASE {{DB_NAME}};"
     @echo "Applying schema (01)..."
-    @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < database/sql/01_schema.sql
+    @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/01_schema.sql
     @echo "Loading master data (02)..."
-    @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < database/sql/02_master_data.sql
+    @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/02_master_data.sql
     @echo "Loading development data (03)..."
-    @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < database/sql/03_dev_data.sql
+    @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/03_dev_data.sql
     @echo "Database successfully reloaded."
 
 # Access the MySQL shell inside the container
