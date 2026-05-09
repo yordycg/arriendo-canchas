@@ -57,3 +57,16 @@ class DatabaseManager:
         connection.close()
 
         return result
+
+    def get_one(self, query, params=None):
+        """Retornar un registro."""
+        connection  = self.get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(query, params)
+        result = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        return result
