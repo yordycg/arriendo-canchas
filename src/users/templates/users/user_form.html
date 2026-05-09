@@ -13,9 +13,21 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
       <div class="container">
         <a class="navbar-brand" href="{% url 'users:user_list' %}">Arriendo Canchas</a>
-        <div class="navbar-nav ms-auto">
+        <div class="navbar-nav ms-auto align-items-center">
           <a class="nav-link" href="{% url 'users:user_list' %}">Inicio</a>
-          <a class="nav-link active" href="{% url 'users:user_form' %}">Agregar Usuario</a>
+          <a class="nav-link active me-3" href="{% url 'users:user_create' %}">Agregar Usuario</a>
+
+          <!-- Información del Usuario y Logout (Directo para evitar líos con JS) -->
+          <div class="d-flex align-items-center bg-secondary bg-opacity-25 rounded-pill px-3 py-1 border border-light border-opacity-25">
+            <div class="me-3">
+              <small class="text-white-50 d-block" style="font-size: 0.7rem; line-height: 1">Logueado como:</small>
+              <span class="text-white fw-bold" style="font-size: 0.9rem">{{ request.session.user_nombres }}</span>
+              <span class="badge bg-info text-dark ms-1" style="font-size: 0.6rem">{{ request.session.user_rol }}</span>
+            </div>
+            <a href="{% url 'authentication:logout' %}" class="btn btn-danger btn-sm rounded-circle shadow-sm" title="Cerrar Sesión">
+              <i class="bi bi-box-arrow-right"></i>
+            </a>
+          </div>
         </div>
       </div>
     </nav>
@@ -32,6 +44,18 @@
               </button>
             </div>
           {% endif %}
+          
+          {% if success %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>¡Éxito!</strong> {{ success }}
+              <button type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                      aria-label="Close">
+              </button>
+            </div>
+          {% endif %}
+
           <div class="card shadow border-0">
             <div class="card-header bg-primary text-white py-3">
               <h4 class="mb-0">

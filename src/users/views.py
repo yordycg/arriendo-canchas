@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from django.contrib.auth.hashers import make_password
 from database.db import DatabaseManager
 from authentication.decorators import login_required_manual, role_required
 
@@ -37,31 +38,13 @@ def user_list(request):
 
     return render(request, 'users/home.html', context)
 
-
 @login_required_manual
-def user_form(request):
-    db = DatabaseManager()
-
-    query_all_roles = 'SELECT rol_id, nombre FROM roles;'
-    query_all_estados_usuarios = 'SELECT estado_usuario_id, nombre FROM estados_usuarios;'
-    query_all_membresias = 'SELECT membresia_id, nombre FROM membresias;'
-
-    roles = db.get_all(query_all_roles)
-    estados_usuarios = db.get_all(query_all_estados_usuarios)
-    membresias = db.get_all(query_all_membresias)
-
-    context = {
-        'roles': roles,
-        'estados': estados_usuarios,
-        'membresias': membresias
-    }
-
-    return render(request, 'users/user_form.html', context)
-
-
-@login_required_manual
-@role_required(['Administrador'])
+@role_required(['Admin'])
 def user_create(request):
+    db = DatabaseManager()
+    error = None
+    success = None
+
     if request.method == 'POST':
         # Obtener los datos del form...
         rut = request.POST.get('rut')
@@ -70,6 +53,7 @@ def user_create(request):
         apellido_m = request.POST.get('apellido_m')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        password_hashed = make_password(password) # generar hash
         sexo = request.POST.get('sexo')
         telefono = request.POST.get('telefono')
         estado_usuario_id = int(request.POST.get('estado_usuario_id'))
@@ -83,31 +67,41 @@ def user_create(request):
             # Si viene vacio, de forma default asignamos membresia 'Normal'
             membresia_id = int(membresia_raw) if membresia_raw else 1
 
-        db = DatabaseManager()
-
         # Validar que no exista el 'rut' a ingresar
         query_validar_rut = 'SELECT * FROM usuarios WHERE rut = %s;'
 
         if db.exists(query_validar_rut, (rut,)):
-            context = {
-                'error': 'Error, ya existe un registro asociado a ese RUT.'
-            }
-            # TODO: OJO, cuando tenemos un rut duplicado igual redireccionamos!!
+            error = 'Ya existe un registro asociado a ese RUT.'
         else:
             query_add_user = """
                 INSERT INTO usuarios
                 (rut, nombres, apellido_p, apellido_m, email, password, sexo, telefono, estado_usuario_id, rol_id, membresia_id)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
             """
-            params = (rut, nombres, apellido_p, apellido_m, email, password,
+            params = (rut, nombres, apellido_p, apellido_m, email, password_hashed,
                       sexo, telefono, estado_usuario_id, rol_id, membresia_id)
 
             db.execute(query_add_user, params)
 
-            context = {'success': 'Registro insertado correctamente'}
+            success = 'Usuario registrado correctamente.'
 
-        # return render(request, 'users/user_form.html', context)
-        return redirect('users:user_list')
+    query_all_roles = 'SELECT rol_id, nombre FROM roles;'
+    query_all_estados_usuarios = 'SELECT estado_usuario_id, nombre FROM estados_usuarios;'
+    query_all_membresias = 'SELECT membresia_id, nombre FROM membresias;'
+
+    roles = db.get_all(query_all_roles)
+    estados_usuarios = db.get_all(query_all_estados_usuarios)
+    membresias = db.get_all(query_all_membresias)
+
+    context = {
+        'roles': roles,
+        'estados': estados_usuarios,
+        'membresias': membresias,
+        'success' : success,
+        'error': error
+    }
+
+    return render(request, 'users/user_form.html', context)
 
 @login_required_manual
 @role_required(['Administrador'])
