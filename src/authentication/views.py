@@ -1,36 +1,17 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from django.contrib.auth.hashers import check_password, make_password
 from database.db import DatabaseManager
 
 # Create your views here.
 def login_view(request):
-    """
-    1.- Obtener los datos de login (correo/rut y password) por medio de POST.get.
-    2.- Conectarme a la DB y por el rut, que is_active esta en 1, buscar el usuario.
-        SI NO existe:
-            retorno alerta(usuario no registrado) | redireccionar al formulario de registrar usuario (?)
-        SI existe:
-            Pero intentos_fallidos = 3 Y/O estado_usuario = bloqueado por seguridad Y/O estado_usuario = inactivo:
-                retorno alerta(usuario bloqueado por seguridad) | redireccionar -> comunicarse con admin (?)
-            Pero estado_usuario = bloqueado por deuda:
-                retorno alerta(usuario tiene una deuda) | redirecciono -> metodos de pagos (?)
-    3.- Comparar los datos de la DB vs obtenidos por el form-login:
-        SI email/rut = db.email/rut Y pass = db.pass Y estado_usuario = activo:
-            intentos_fallidos = 0
-            Crear SESION:
-                - rut
-                - nombre completo
-                - rol_id
-            retorno | redireccionar a donde tu tipo_rol lo permita..
-        SI email/rut = db.email/rut Y pass != db.pass:
-            intentos_fallido ++
-            SI intentos_fallidos = 3:
-                estado_usuario.bloqueo_seguridad = true
-    """
+    if 'user_rut' in request.session:
+        return redirect('users:user_list')
+
     if request.method == 'POST':
         # Obtener los datos del form-login
-        email = request.POST.get('email')
-        password_hashed = request.POST.get('password')
+        email_login = request.POST.get('email')
+        password_login = request.POST.get('password')
 
         # Conectarme a la DB y buscar el usuario...
         db = DatabaseManager()
@@ -55,7 +36,7 @@ def login_view(request):
             WHERE u.email = %s AND u.is_active = 1;
         """
 
-        user_found = db.get_one(query_search_user, (email,))
+        user_found = db.get_one(query_search_user, (email_login,))
 
         # CASO 1: usuario NO registrado en la DB
         if not user_found:
@@ -84,7 +65,10 @@ def login_view(request):
             # CASO 3: comparar los datos de la DB con los del LOGIN
             # CASO 3.1: usuario.pass es diferente al login.pass
             # TODO: hashear (?) la password...
-            if user_found['password'] != password_hashed:
+
+            password_hash_db = user_found['password']
+
+            if not check_password(password_login, password_hash_db):
                 # Calcular valor REAL de itentos_fallidos
                 nuevos_intentos = user_found['intentos_fallidos'] + 1
 
@@ -113,10 +97,8 @@ def login_view(request):
                 return render(request, 'authentication/login.html', context)
 
             # CASO 3.2: usuario.pass_hashed es igual al login.pass_hashed
-            if user_found['password'] == password_hashed:
+            if check_password(password_login, password_hash_db):
                 # Actualizar intentos_fallidos a 0
-                intentos_fallidos = 0
-
                 query_update_intentos_fallidos = """
                     UPDATE usuarios
                     SET intentos_fallidos = 0
@@ -126,7 +108,6 @@ def login_view(request):
                 db.execute(query_update_intentos_fallidos, (user_found['rut'],))
 
                 # Crear SESION
-                # TODO: como gestionar el rol y membresia, deberiamos haber hecho un JOIN antes??
                 request.session['user_rut'] = user_found['rut']
                 request.session['user_nombres'] = user_found['nombres']
                 request.session['user_apellidos'] = user_found['apellidos']
@@ -136,7 +117,6 @@ def login_view(request):
                 # Redireccionar al home del usuario
                 return redirect('users:user_list')
 
-            # TODO: enviar el 'context' para mostrar en las alertas
             return render(request, 'authentication/login.html', context)
 
     return render(request, 'authentication/login.html')
@@ -145,5 +125,52 @@ def logout_view(request):
     request.session.flush() # borrar sesion
     return redirect('authentication:login')
 
+def register_view(request):
+    # Si una sesion esta activa (logueado), redireccionamos al inicio
+    if 'user_rut' in request.session:
+        return redirect('users:user_list')
+
+    error = None
+
+    if request.method == 'POST':
+        rut = request.POST.get('rut')
+        nombres = request.POST.get('nombres')
+        apellido_p = request.POST.get('apellido_p')
+        apellido_m = request.POST.get('apellido_m')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        db = DatabaseManager()
+
+        # Validar RUT y EMAIL
+        valid_rut = db.exists('SELECT rut FROM usuarios WHERE rut = %s;', (rut,))
+        valid_email = db.exists('SELECT email FROM usuarios WHERE email = %s;', (email,))
+
+        if valid_rut:
+            error = 'El RUT ya esta registrado.'
+        elif valid_email:
+            error = 'El CORREO ya esta en uso.'
+        else:
+            try:
+                password_hashed = make_password(password)
+
+                query_add_user = """
+                    INSERT INTO usuarios
+                    (rut, nombres, apellido_p, apellido_m, email, password, estado_usuario_id, rol_id, membresia_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, 1, 3, 1)
+                """
+
+                db.execute(query_add_user, (rut, nombres, apellido_p, apellido_m, email, password_hashed))
+
+                return redirect('authentication:login')
+
+            except Exception as e:
+                error = f'Error al registrar: {str(e)}'
+
+    context = {
+        'error': error
+    }
+
+    return render(request, 'authentication/register.html', context)
 
 

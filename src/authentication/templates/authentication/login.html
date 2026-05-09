@@ -78,13 +78,15 @@ Contraseña
 
                 <div class="d-grid gap-2">
                   <button type="submit" class="btn btn-primary btn-lg fw-bold">
-                                                                                                                                Ingresar <i class="bi bi-arrow-right-short ms-1"></i>
+                                                                                                                                                  Ingresar <i class="bi bi-arrow-right-short ms-1"></i>
                 </button>
               </div>
             </form>
           </div>
-          <div class="card-footer bg-white py-3 text-center text-muted">
-            <small>¿No tienes cuenta? Contacta al administrador</small>
+          <div class="card-footer bg-white py-3 text-center">
+            <small class="text-muted">¿No tienes cuenta?</small>
+            <a href="{% url 'authentication:register' %}"
+               class="text-primary fw-bold text-decoration-none small">Regístrate aquí</a>
           </div>
         </div>
 

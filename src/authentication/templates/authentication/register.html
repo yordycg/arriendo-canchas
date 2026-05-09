@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cliente - Arriendo Canchas</title>
+    <link rel="stylesheet" href="{% static 'users/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .register-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="text-center mb-4">
+                    <h2 class="text-white fw-bold"><i class="bi bi-trophy-fill me-2"></i>Arriendo Canchas</h2>
+                    <p class="text-white-50">Crea tu cuenta para empezar a jugar</p>
+                </div>
+
+                {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endif %}
+
+                <div class="card register-card p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="rut" class="form-label fw-bold">RUT</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-card-text"></i></span>
+                                <input type="text" name="rut" id="rut" class="form-control border-start-0" placeholder="12.345.678-9" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombres" class="form-label fw-bold">Nombres</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+                                <input type="text" name="nombres" id="nombres" class="form-control border-start-0" placeholder="Juan Pedro" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="apellido_p" class="form-label fw-bold">Ape. Paterno</label>
+                                <input type="text" name="apellido_p" id="apellido_p" class="form-control" placeholder="Perez" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellido_m" class="form-label fw-bold">Ape. Materno</label>
+                                <input type="text" name="apellido_m" id="apellido_m" class="form-control" placeholder="Soto">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope"></i></span>
+                                <input type="email" name="email" id="email" class="form-control border-start-0" placeholder="juan@correo.com" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-bold">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock"></i></span>
+                                <input type="password" name="password" id="password" class="form-control border-start-0" placeholder="********" required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                                Registrarme <i class="bi bi-arrow-right-circle ms-2"></i>
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <span class="text-muted">¿Ya tienes cuenta?</span>
+                            <a href="{% url 'authentication:login' %}" class="text-primary fw-bold text-decoration-none">Inicia Sesión</a>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="/" class="text-white-50 text-decoration-none small"><i class="bi bi-house-door me-1"></i> Volver al inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
