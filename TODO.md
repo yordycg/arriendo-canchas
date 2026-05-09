@@ -6,6 +6,8 @@ Este archivo marca el progreso de implementación del sistema.
 
 - [ ] Configurar Proyecto Django Base (Settings, Base de Datos PyMySQL).
 - [ ] Implementar App `users`: Modelo de usuario personalizado (RUT), Login y Roles.
+  - [x] **Login/Logout Base:** Autenticación manual con SQL y manejo de sesiones.
+  - [ ] **Control de Acceso (Decoradores):** Implementar `@login_required_manual` y `@role_required` para proteger rutas.
   - [ ] **Buscador Dinámico:** Filtro de usuarios por RUT, Nombre o Email en el listado.
   - [ ] **Paginación Senior:** Mostrar solo 10 registros por página con controles de navegación (Next/Prev).
   - [ ] **Panel de Recuperación:** Interfaz para administrar usuarios inactivos y permitir su reactivación.
