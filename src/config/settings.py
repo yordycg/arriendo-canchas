@@ -80,10 +80,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# Config for connection to MySQL
+DB_CONFIG = {
+    # Si tenemos un problema al obtener la info de .env
+    # le pasamos un segundo parametro para que use ese dato.
+    "HOST": os.getenv('DB_HOST', '127.0.0.1'),
+    "USER": os.getenv('DB_USER'),
+    "PASSWORD": os.getenv('DB_PASS'),
+    "NAME": os.getenv('DB_NAME'),
+    # Nos aseguramos que reciba un tipo de dato INT.
+    "PORT": int(os.getenv('DB_PORT', 3306)),
+}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': DB_CONFIG['NAME'],
+        'USER': DB_CONFIG['USER'],
+        'PASSWORD': DB_CONFIG['PASSWORD'],
+        'HOST': DB_CONFIG['HOST'],
+        'PORT': DB_CONFIG['PORT'],
     }
 }
 
@@ -124,14 +140,3 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Config for connection to MySQL
-DB_CONFIG = {
-    # Si tenemos un problema al obtener la info de .env
-    # le pasamos un segundo parametro para que use ese dato.
-    "HOST": os.getenv('DB_HOST', '127.0.0.1'),
-    "USER": os.getenv('DB_USER'),
-    "PASSWORD": os.getenv('DB_PASS'),
-    "NAME": os.getenv('DB_NAME'),
-    # Nos aseguramos que reciba un tipo de dato INT.
-    "PORT": int(os.getenv('DB_PORT', 3306)),
-}
