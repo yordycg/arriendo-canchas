@@ -41,7 +41,24 @@ El sistema se divide en 7 aplicaciones modulares para garantizar escalabilidad y
 
 ---
 
-## 🛠️ Estándares de Comunicación
-- **Vistas:** Se utilizarán *Class-Based Views (CBV)* para consistencia.
-- **Validaciones:** Las reglas de negocio se validarán en el método `clean()` de los modelos o en los *Forms*.
-- **Seguridad:** Uso de Mixins para control de acceso basado en el rol del usuario.
+## 🚀 Visión del Producto (Estructura de Acceso)
+
+Para cumplir con los objetivos comerciales y de usuario, el sistema se divide en dos grandes áreas:
+
+### 1. Portal Público (Landing Page)
+- **Audiencia:** Usuarios no registrados, visitantes y clientes potenciales.
+- **Contenido:** Catálogo de canchas, servicios (quinchos), precios y testimonios.
+- **Acciones:** Registro de nuevos socios (Auto-registro) e Inicio de Sesión.
+
+### 2. Panel Administrativo (SaaS Web App)
+- **Audiencia:** Staff del recinto (Admin, Vendedores, Recepcionistas).
+- **Contenido:** Gestión de usuarios, configuración de canchas, reportes y penalizaciones.
+- **Acciones:** CRUD total del sistema y gestión de membresías especiales.
+
+---
+
+## 🛠️ Estándares Técnicos (Actualizados)
+- **Capa de Datos:** Uso estricto de **SQL Manual** vía `DatabaseManager`. Se omite el ORM de Django para lógica de negocio.
+- **Vistas:** Se utilizarán *Function-Based Views (FBV)* para mayor control del flujo manual.
+- **Seguridad:** Control de acceso mediante **Decoradores Manuales** (`@login_required_manual`, `@role_required`) que validan la sesión en la base de datos.
+- **Sesiones:** Manejo persistente en el servidor para rastrear RUT, Rol y Membresía del usuario.
