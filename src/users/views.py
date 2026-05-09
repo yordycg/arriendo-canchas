@@ -1,11 +1,11 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from .db import DatabaseManager
+from database.db import DatabaseManager
 
 # Create your views here.
 
 
-def home(request):
+def user_list(request):
     db = DatabaseManager()
 
     query_all_usuarios = """
@@ -56,20 +56,20 @@ def user_form(request):
     return render(request, 'users/user_form.html', context)
 
 
-def add_user(request):
-    if request.method == 'GET':
+def user_create(request):
+    if request.method == 'POST':
         # Obtener los datos del form...
-        rut = request.GET.get('rut')
-        nombres = request.GET.get('nombres')
-        apellido_p = request.GET.get('apellido_p')
-        apellido_m = request.GET.get('apellido_m')
-        email = request.GET.get('email')
-        password = request.GET.get('password')
-        sexo = request.GET.get('sexo')
-        telefono = request.GET.get('telefono')
-        estado_usuario_id = int(request.GET.get('estado_usuario_id'))
-        rol_id = int(request.GET.get('rol_id'))
-        membresia_raw = request.GET.get('membresia_id')
+        rut = request.POST.get('rut')
+        nombres = request.POST.get('nombres')
+        apellido_p = request.POST.get('apellido_p')
+        apellido_m = request.POST.get('apellido_m')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        sexo = request.POST.get('sexo')
+        telefono = request.POST.get('telefono')
+        estado_usuario_id = int(request.POST.get('estado_usuario_id'))
+        rol_id = int(request.POST.get('rol_id'))
+        membresia_raw = request.POST.get('membresia_id')
 
         # Validar el rol_id, para evitar asignar una membresia_id al 'admin' e 'invitado'
         if rol_id in [1, 4]:
@@ -102,9 +102,9 @@ def add_user(request):
             context = {'success': 'Registro insertado correctamente'}
 
         # return render(request, 'users/user_form.html', context)
-        return redirect('/users/')
+        return redirect('users:user_list')
 
-def delete_user(request):
+def user_delete(request):
     rut = request.GET.get('rut')
 
     db = DatabaseManager()
@@ -114,4 +114,4 @@ def delete_user(request):
 
     db.execute(query_delete, (rut,))
 
-    return redirect('/users/')
+    return redirect('users:user_list')

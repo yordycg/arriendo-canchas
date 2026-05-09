@@ -26,12 +26,12 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
       <div class="container">
-        <a class="navbar-brand" href="/users/">
+        <a class="navbar-brand" href="{% url 'users:user_list' %}">
           <i class="bi bi-trophy-fill me-2"></i>Arriendo Canchas
         </a>
         <div class="navbar-nav ms-auto">
-          <a class="nav-link active" href="/users/">Inicio</a>
-          <a class="nav-link" href="/users/form/">Agregar Usuario</a>
+          <a class="nav-link active" href="{% url 'users:user_list' %}">Inicio</a>
+          <a class="nav-link" href="{% url 'users:user_form' %}">Agregar Usuario</a>
         </div>
       </div>
     </nav>
@@ -41,7 +41,7 @@
           <h5 class="mb-0 text-primary fw-bold">
             Gestión de Usuarios
           </h5>
-          <a href="/users/form/"
+          <a href="{% url 'users:user_form' %}"
              class="btn btn-primary btn-sm"
              title="Agregar Usuario">
             <i class="bi bi-person-plus-fill me-1"></i> Nuevo Usuario
@@ -120,7 +120,7 @@
                     </td>
                     <td class="text-center">
                       <div class="btn-group shadow-sm">
-                        <a href="/users/edit/?rut={{ u.rut }}"
+                        <a href="#"
                            class="btn btn-outline-warning btn-sm"
                            title="Editar Usuario">
                           <i class="bi bi-pencil-square"></i>

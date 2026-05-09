@@ -1,9 +1,11 @@
 from django.urls import path
 from . import views
 
+app_name = 'users'
+
 urlpatterns = [
-    path('', views.home),
-    path('form/', views.user_form),
-    path('add/', views.add_user),
-    path('delete/', views.delete_user)
+    path('', views.user_list, name='user_list'),
+    path('form/', views.user_form, name='user_form'),
+    path('create/', views.user_create, name='user_create'),
+    path('delete/', views.user_delete, name='user_delete')
 ]
