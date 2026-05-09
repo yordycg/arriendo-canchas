@@ -57,7 +57,7 @@ shell:
 # Format all files using the right tool for each type
 format:
     @echo "Formatting HTML with djlint..."
-    @djlint . --reformat --indent 2 --ignore "H021,H030,H031,D018"
+    -@djlint . --reformat --indent 2 --ignore "H021,H030,H031,D018"
     @echo "Formatting JS/CSS with prettier..."
     @npx prettier --write "**/static/**/*.{js,css}" "README.md" "TODO.md"
 
