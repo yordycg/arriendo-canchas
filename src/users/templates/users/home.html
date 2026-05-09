@@ -32,15 +32,19 @@
         <div class="navbar-nav ms-auto align-items-center">
           <a class="nav-link active" href="{% url 'users:user_list' %}">Inicio</a>
           <a class="nav-link me-3" href="{% url 'users:user_create' %}">Agregar Usuario</a>
-          
+
           <!-- Información del Usuario y Logout (Directo para evitar líos con JS) -->
           <div class="d-flex align-items-center bg-secondary bg-opacity-25 rounded-pill px-3 py-1 border border-light border-opacity-25">
             <div class="me-3">
-              <small class="text-white-50 d-block" style="font-size: 0.7rem; line-height: 1">Logueado como:</small>
+              <small class="text-white-50 d-block"
+                     style="font-size: 0.7rem;
+                            line-height: 1">Logueado como:</small>
               <span class="text-white fw-bold" style="font-size: 0.9rem">{{ request.session.user_nombres }}</span>
               <span class="badge bg-info text-dark ms-1" style="font-size: 0.6rem">{{ request.session.user_rol }}</span>
             </div>
-            <a href="{% url 'authentication:logout' %}" class="btn btn-danger btn-sm rounded-circle shadow-sm" title="Cerrar Sesión">
+            <a href="{% url 'authentication:logout' %}"
+               class="btn btn-danger btn-sm rounded-circle shadow-sm"
+               title="Cerrar Sesión">
               <i class="bi bi-box-arrow-right"></i>
             </a>
           </div>
@@ -51,12 +55,23 @@
       <!-- Punto 2: Mostrar mensajes del sistema (mensajes de decoradores, etc.) -->
       {% if messages %}
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
-            {% if message.tags == 'error' %}<i class="bi bi-exclamation-octagon-fill me-2"></i>{% endif %}
-            {% if message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
-            {% if message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>{% endif %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm"
+               role="alert">
+            {% if message.tags == 'error' %}
+              <i class="bi bi-exclamation-octagon-fill me-2"></i>
+            {% endif %}
+            {% if message.tags == 'warning' %}
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {% endif %}
+            {% if message.tags == 'success' %}
+              <i class="bi bi-check-circle-fill me-2"></i>
+            {% endif %}
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
           </div>
         {% endfor %}
       {% endif %}
