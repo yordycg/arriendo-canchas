@@ -28,15 +28,17 @@ db-logs:
 
 # Full DB reset: drops, recreates and seeds the database
 db-reset:
-    @echo "Resetting database '{{DB_NAME}}'..."
+    @echo "🚀 Iniciando reseteo completo de la base de datos '{{DB_NAME}}'..."
     @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} -e "DROP DATABASE IF EXISTS {{DB_NAME}}; CREATE DATABASE {{DB_NAME}};"
-    @echo "Applying schema (01)..."
+    @echo "📜 Aplicando esquema manual (01_schema.sql)..."
     @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/01_schema.sql
-    @echo "Loading master data (02)..."
+    @echo "⚙️ Cargando datos maestros (02_master_data.sql)..."
     @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/02_master_data.sql
-    @echo "Loading development data (03)..."
+    @echo "🧪 Cargando datos de prueba (03_dev_data.sql)..."
     @docker-compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/03_dev_data.sql
-    @echo "Database successfully reloaded."
+    @echo "📦 Django: Creando tablas de sistema (sessions, admin, etc.)..."
+    @python manage.py migrate --noinput
+    @echo "✅ Base de datos reseteada y configurada exitosamente."
 
 # Access the MySQL shell inside the container
 db-shell:
