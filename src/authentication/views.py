@@ -70,7 +70,7 @@ def login_view(request):
             # O estado = bloqueado_seguridad O estado = inactivo
             if user_found['intentos_fallidos'] == 3 or user_found['estado_usuario_id'] == 4 or user_found['estado_usuario_id'] == 2:
                 context = {
-                    'error': 'Usuario bloqueado por seguridad o inactividad, comunicarse con un ADMIN.'
+                    'error': 'Usuario Bloqueado Por Seguridad o Inactivo, comunicarse con un ADMIN.'
                 }
                 return render(request, 'authentication/login.html', context)
 
