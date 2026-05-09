@@ -1,10 +1,12 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from database.db import DatabaseManager
+from authentication.decorators import login_required_manual, role_required
 
 # Create your views here.
 
 
+@login_required_manual
 def user_list(request):
     db = DatabaseManager()
 
@@ -36,6 +38,7 @@ def user_list(request):
     return render(request, 'users/home.html', context)
 
 
+@login_required_manual
 def user_form(request):
     db = DatabaseManager()
 
@@ -56,6 +59,8 @@ def user_form(request):
     return render(request, 'users/user_form.html', context)
 
 
+@login_required_manual
+@role_required(['Administrador'])
 def user_create(request):
     if request.method == 'POST':
         # Obtener los datos del form...
@@ -104,6 +109,8 @@ def user_create(request):
         # return render(request, 'users/user_form.html', context)
         return redirect('users:user_list')
 
+@login_required_manual
+@role_required(['Administrador'])
 def user_delete(request):
     rut = request.GET.get('rut')
 
