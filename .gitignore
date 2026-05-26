@@ -18,7 +18,7 @@ pip-delete-this-directory.txt
 
 # Security (CRITICAL)
 .env
-.envrc
+.direnv/
 
 # IDEs
 .vscode/*
