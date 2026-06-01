@@ -40,7 +40,15 @@ _Ocurre cuando muchos registros de una tabla se relacionan con muchos de otra. R
 
 _En este diseño actual, no se han definido relaciones 1:1 obligatorias, ya que se prefiere la flexibilidad de 1:N._
 
-## 4. Resumen de Integridad Referencial (FKs)
+## 4. Entidades Independientes (Sin Relaciones)
+
+_Tablas que no poseen llaves foráneas para mantener desacoplamiento o por requerimientos de auditoría._
+
+| Tabla               | Descripción                                                                                               |
+| :------------------ | :-------------------------------------------------------------------------------------------------------- |
+| **auditoria_login** | Registra intentos de acceso. No usa FK para permitir el registro de usuarios inexistentes o eliminados. |
+
+## 5. Resumen de Integridad Referencial (FKs)
 
 - **Restricción por Defecto:** Se utiliza `ON DELETE RESTRICT` en todas las llaves foráneas para prevenir la eliminación accidental de datos maestros (como roles o tipos de cancha) que tengan registros vinculados.
 - **Auditoría:** Todas las tablas, incluidas las de relación, cuentan con `created_at` y `updated_at` (TIMESTAMP) para una trazabilidad completa de los cambios.

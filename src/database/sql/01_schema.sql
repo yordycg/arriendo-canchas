@@ -210,3 +210,12 @@ CREATE TABLE usuarios_penalizaciones (
   CONSTRAINT fk_usuario_penalizacion_usuario FOREIGN KEY (usuario_rut) REFERENCES usuarios (rut) ON DELETE RESTRICT,
   CONSTRAINT fk_usuario_penalizacion_tipo FOREIGN KEY (tipo_penalizacion_id) REFERENCES tipos_penalizaciones (tipo_penalizacion_id) ON DELETE RESTRICT
 );
+
+CREATE TABLE auditoria_login (
+  auditoria_id INT PRIMARY KEY AUTO_INCREMENT,
+  usuario VARCHAR(150) NOT NULL, -- RUT o Email
+  fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  estado_login VARCHAR(20) NOT NULL CHECK(estado_login IN ('Correcto', 'Incorrecto')),
+  password_ingresada VARCHAR(255), -- Solo registrar si el 'estado_login' = 'Incorrecto'
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

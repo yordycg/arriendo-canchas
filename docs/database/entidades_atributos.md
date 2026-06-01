@@ -128,3 +128,12 @@ _Tablas Maestras (Lookups)_
 - **fecha** (DATE, DEFAULT: CURRENT_DATE)
 - **pagada** (BOOLEAN, DEFAULT: FALSE)
 - **created_at / updated_at** (TIMESTAMP)
+
+## auditoria_login
+
+- **auditoria_id (PK)** (INT, AutoIncrement)
+- **usuario** (VARCHAR(150), NOT NULL) (RUT o Email ingresado)
+- **fecha_hora** (TIMESTAMP, DEFAULT: CURRENT_TIMESTAMP)
+- **estado_login** (VARCHAR(20), NOT NULL, CHECK: Correcto, Incorrecto)
+- **password_ingresada** (VARCHAR(255), NULL) (Solo se registra si el estado es 'Incorrecto')
+- **created_at** (TIMESTAMP, DEFAULT: CURRENT_TIMESTAMP)

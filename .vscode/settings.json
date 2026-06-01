@@ -18,5 +18,22 @@
   "[django-html]": {
     "editor.defaultFormatter": "monosans.djlint",
     "editor.tabSize": 2
-  }
+  },
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "Proyecto arriendo canchas",
+      "database": "arriendo_canchas_db",
+      "username": "admin",
+      "password": "db_ac.2026%%"
+    }
+  ]
 }

@@ -40,3 +40,11 @@ Valores de configuración y registro transaccional.
 | `membresias` | `costo_mensual` | `0.00` | Sin costo recurrente inicial. |
 | `tipos_penalizaciones` | `valor_multa` | `0.00` | Monto base para multas. |
 | `tipos_penalizaciones` | `dias_bloqueo` | `0` | Sin suspensión temporal inicial. |
+
+## 5. Auditoría de Login
+Valores automáticos para el registro de seguridad.
+
+| Tabla | Columna | Valor Default | Descripción |
+| :--- | :--- | :--- | :--- |
+| `auditoria_login` | `fecha_hora` | `CURRENT_TIMESTAMP` | Registro exacto del momento del intento. |
+| `auditoria_login` | `created_at` | `CURRENT_TIMESTAMP` | Marca de tiempo de creación del registro. |
