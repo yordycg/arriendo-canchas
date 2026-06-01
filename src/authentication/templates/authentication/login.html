@@ -6,7 +6,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Iniciar Sesión - Arriendo Canchas</title>
-    <link rel="stylesheet" href="{% static 'users/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet"
+          href="{% static 'authentication/css/bootstrap.min.css' %}" />
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   </head>
@@ -23,20 +24,6 @@
     <section class="container">
       <div class="row justify-content-center">
         <div class="col-md-5">
-          <!-- Mensajes de Error -->
-          {% if error %}
-            <div class="alert alert-danger alert-dismissible fade show shadow-sm"
-                 role="alert">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
-              {{ error }}
-              <button type="button"
-                      class="btn-close"
-                      data-bs-dismiss="alert"
-                      aria-label="Close">
-              </button>
-            </div>
-          {% endif %}
-
           <div class="card shadow border-0">
             <div class="card-header bg-primary text-white py-3 text-center">
               <h4 class="mb-0 fw-bold">
@@ -52,11 +39,11 @@ Correo Electrónico
                   </label>
                   <div class="input-group">
                     <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
-                    <input type="email"
-                           name="email"
-                           id="email"
+                    <input type="text"
+                           name="username"
+                           id="username"
                            class="form-control"
-                           placeholder="ejemplo@correo.cl"
+                           placeholder="Emailejemplo@correo.cl / Rut: 188550851"
                            required />
                   </div>
                 </div>
@@ -78,28 +65,40 @@ Contraseña
 
                 <div class="d-grid gap-2">
                   <button type="submit" class="btn btn-primary btn-lg fw-bold">
-                                                                                                                                                                    Ingresar <i class="bi bi-arrow-right-short ms-1"></i>
-                </button>
-              </div>
-            </form>
+                    Ingresar
+                    <i class="bi bi-arrow-right-short ms-1"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="card-footer bg-white py-3 text-center">
+              <small class="text-muted">¿No tienes cuenta?</small>
+              <a href="{% url 'authentication:register' %}"
+                 class="text-primary fw-bold text-decoration-none small">Regístrate aquí</a>
+            </div>
           </div>
-          <div class="card-footer bg-white py-3 text-center">
-            <small class="text-muted">¿No tienes cuenta?</small>
-            <a href="{% url 'authentication:register' %}"
-               class="text-primary fw-bold text-decoration-none small">Regístrate aquí</a>
-          </div>
-        </div>
 
-        <div class="text-center mt-4 text-muted">
-          <p>
-            <small>&copy; 2026 Arriendo Canchas - IPVG</small>
-          </p>
+          <div class="text-center mt-4 text-muted">
+            <p>
+              <small>&copy; 2026 Arriendo Canchas - IPVG</small>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <script src="{% static 'users/js/jquery-4.0.0.min.js' %}"></script>
-  <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
-</body>
+    <script src="{% static 'authentication/js/jquery-4.0.0.min.js' %}"></script>
+    <script src="{% static 'authentication/js/bootstrap.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% if sw_alert %}
+      <script id="sw-data" type="application/json">
+          {
+              "type": "{{ sw_alert.type }}",
+              "title": "{{ sw_alert.title }}",
+              "message": "{{ sw_alert.message }}"
+          }
+      </script>
+    {% endif %}
+    <script src="{% static 'authentication/js/alert.js' %}"></script>
+  </body>
 </html>
