@@ -63,7 +63,7 @@ def court_create(request):
 
     tipos_canchas = db.get_all(
         "SELECT tipo_cancha_id, nombre FROM tipos_canchas WHERE is_active = 1")
-    superficies = ['Pasto Sintético', 'Pasto Natural',
+    superficies = ['Pasto Sintetico', 'Pasto Natural',
                    'Arcilla', 'Cemento', 'Parquet', 'Baldosa']
     recintos = ['Abierto', 'Semi-techado', 'Cerrado']
 
@@ -146,7 +146,7 @@ def pavilion_create(request):
                     'type': 'success',
                     'title': '¡Quincho Creado!',
                     'message': f'El quincho "{nombre}" ha sido registrado exitosamente.',
-                    'redirect': reverse('courts:court_list')
+                    'redirect': reverse('courts:court_list') + '?tab=pavilions'
                 }
             }
             return render(request, 'courts/pavilion_form.html', context)
@@ -274,7 +274,7 @@ def pavilion_update(request, quincho_id):
                     'type': 'success',
                     'title': '¡Quincho Actualizado!',
                     'message': f'Los datos del quincho "{nombre}" han sido guardados.',
-                    'redirect': reverse('courts:court_list')
+                    'redirect': reverse('courts:court_list') + '?tab=pavilions'
                 }
             }
             return render(request, 'courts/pavilion_form.html', context)
@@ -335,4 +335,4 @@ def pavilion_delete(request, quincho_id):
     except Exception as e:
         print(f"ERROR DB [Eliminar Quincho]: {str(e)}")
         
-    return redirect('courts:court_list')
+    return redirect(reverse('courts:court_list') + '?tab=pavilions')

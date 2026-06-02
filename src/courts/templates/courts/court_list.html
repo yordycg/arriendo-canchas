@@ -210,19 +210,24 @@ Acciones
                       <td class="fw-bold text-success">
 ${{ quincho.valor_reserva }}
                       </td>
-                      <td>
-                        {% if quincho.estado == 'Disponible' %}
-                          <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill"
-                                style="font-size: 0.7rem">
-                            <i class="bi bi-check-circle-fill me-1"></i> {{ quincho.estado }}
-                          </span>
-                        {% else %}
-                          <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill"
-                                style="font-size: 0.7rem">
-                            <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ quincho.estado }}
-                          </span>
-                        {% endif %}
-                      </td>
+                                    <td>
+                                        {% if quincho.estado == 'Disponible' %}
+                                          <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill"
+                                                style="font-size: 0.7rem">
+                                            <i class="bi bi-check-circle-fill me-1"></i> {{ quincho.estado }}
+                                          </span>
+                                        {% elif quincho.estado == 'Mantenimiento' %}
+                                          <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 rounded-pill"
+                                                style="font-size: 0.7rem">
+                                            <i class="bi bi-tools me-1"></i> {{ quincho.estado }}
+                                          </span>
+                                        {% else %}
+                                          <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill"
+                                                style="font-size: 0.7rem">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ quincho.estado }}
+                                          </span>
+                                        {% endif %}
+                                    </td>
                       <td class="text-center pe-3">
                         <div class="btn-group shadow-sm rounded-3">
                           <a href="{% url 'courts:pavilion_update' quincho.quincho_id %}"

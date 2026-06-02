@@ -194,16 +194,30 @@ Sistema de Gestión
     {% if sw_alert %}
       <script id="sw-data" type="application/json">
           {
-              "type": "{{ sw_alert.type }}",
-              "title": "{{ sw_alert.title }}",
-              "message": "{{ sw_alert.message }}",
-              "redirect": "{{ sw_alert.redirect|default:'' }}"
+              "type": "{{ sw_alert.type|escapejs }}",
+              "title": "{{ sw_alert.title|escapejs }}",
+              "message": "{{ sw_alert.message|escapejs }}",
+              "redirect": "{{ sw_alert.redirect|escapejs }}"
           }
       </script>
     {% endif %}
 
     <script>
         $(document).ready(function() {
+            // Activar pestaña basada en parámetro URL ?tab=pavilions
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            
+            if (tabParam === 'pavilions') {
+                setTimeout(function() {
+                    const pavilionsBtn = document.getElementById('pavilions-tab');
+                    if (pavilionsBtn) {
+                        // En Bootstrap 5, simplemente disparamos el evento click o usamos el constructor
+                        pavilionsBtn.click();
+                    }
+                }, 150);
+            }
+
             // Toggle Sidebar Móvil
             $('#sidebarCollapse').on('click', function() {
                 $('#sidebar').toggleClass('active');
