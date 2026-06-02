@@ -10,9 +10,9 @@ INSERT INTO usuarios (rut, nombres, apellido_p, sexo, email, password, estado_us
 
 -- Canchas
 INSERT INTO canchas (nombre, valor_hora, tipo_superficie, tipo_recinto, tipo_cancha_id) VALUES
-('Maracaná 5', 25000.00, 'Pasto Sintético', 'Abierto', 1),
+('Maracaná 5', 25000.00, 'Pasto Sintetico', 'Abierto', 1),
 ('Wimbledon Central', 15000.00, 'Pasto Natural', 'Abierto', 4),
-('Estadio 7', 35000.00, 'Pasto Sintético', 'Cerrado', 2),
+('Estadio 7', 35000.00, 'Pasto Sintetico', 'Cerrado', 2),
 ('Gimnasio Techado', 20000.00, 'Parquet', 'Cerrado', 6);
 
 -- Quinchos

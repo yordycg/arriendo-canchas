@@ -1,3 +1,4 @@
+SET NAMES 'utf8mb4';
 CREATE DATABASE IF NOT EXISTS arriendo_canchas_db;
 
 USE arriendo_canchas_db;
@@ -65,7 +66,7 @@ CREATE TABLE canchas (
   cancha_id INT PRIMARY KEY AUTO_INCREMENT,
   nombre VARCHAR(100) NOT NULL,
   valor_hora DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_hora >= 0),
-  tipo_superficie VARCHAR(50) NOT NULL CHECK (tipo_superficie IN ('Pasto Sintético', 'Pasto Natural', 'Arcilla', 'Cemento', 'Parquet', 'Baldosa')),
+  tipo_superficie VARCHAR(50) NOT NULL CHECK (tipo_superficie IN ('Pasto Sintetico', 'Pasto Natural', 'Arcilla', 'Cemento', 'Parquet', 'Baldosa')),
   tipo_recinto VARCHAR(50) NOT NULL CHECK (tipo_recinto IN ('Abierto', 'Semi-techado', 'Cerrado')),
   tipo_cancha_id INT NOT NULL, -- FK tipos_canchas.tipo_cancha_id
   is_active BOOLEAN DEFAULT TRUE,

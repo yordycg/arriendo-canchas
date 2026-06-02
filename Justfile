@@ -40,13 +40,16 @@ logs:
 # Reseteo total: Borra, recrea y carga todos los datos (Dentro del contenedor)
 db-reset:
     @echo "🚀 Iniciando reseteo completo de la base de datos..."
-    @docker compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} -e "DROP DATABASE IF EXISTS {{DB_NAME}}; CREATE DATABASE {{DB_NAME}};"
+    @docker compose exec -T db mysql --default-character-set=utf8mb4 -u{{DB_USER}} -p{{DB_PASS}} -e "DROP DATABASE IF EXISTS {{DB_NAME}}; CREATE DATABASE {{DB_NAME}} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
     @echo "📜 Aplicando esquema manual (01_schema.sql)..."
-    @docker compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/01_schema.sql
+    @docker cp src/database/sql/01_schema.sql arriendo-canchas-db:/tmp/01_schema.sql
+    @docker compose exec -T db mysql --default-character-set=utf8mb4 -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} -e "source /tmp/01_schema.sql"
     @echo "⚙️ Cargando datos maestros (02_master_data.sql)..."
-    @docker compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/02_master_data.sql
+    @docker cp src/database/sql/02_master_data.sql arriendo-canchas-db:/tmp/02_master_data.sql
+    @docker compose exec -T db mysql --default-character-set=utf8mb4 -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} -e "source /tmp/02_master_data.sql"
     @echo "🧪 Cargando datos de prueba (03_dev_data.sql)..."
-    @docker compose exec -T db mysql -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} < src/database/sql/03_dev_data.sql
+    @docker cp src/database/sql/03_dev_data.sql arriendo-canchas-db:/tmp/03_dev_data.sql
+    @docker compose exec -T db mysql --default-character-set=utf8mb4 -u{{DB_USER}} -p{{DB_PASS}} {{DB_NAME}} -e "source /tmp/03_dev_data.sql"
     @echo "📦 Django: Ejecutando migraciones pendientes..."
     @docker compose exec app python manage.py migrate --noinput
     @echo "✅ Base de datos lista."

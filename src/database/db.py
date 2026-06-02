@@ -10,6 +10,7 @@ class DatabaseManager:
             password=settings.DB_CONFIG["PASSWORD"],
             database=settings.DB_CONFIG["NAME"],
             port=settings.DB_CONFIG["PORT"],
+            charset='utf8mb4',
             # Mecanismo que permite ir fila x fila...
             # DictCursor: retorna los datos como diccionarios de python.
             cursorclass=pymysql.cursors.DictCursor,
