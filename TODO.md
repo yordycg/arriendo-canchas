@@ -20,11 +20,11 @@ Este archivo marca el progreso de implementación del sistema siguiendo la **Rut
 
 Sigue este orden para garantizar que cada módulo tenga sus dependencias listas para probar:
 
-### 1. 🟢 App `courts`: Infraestructura Base
-- [ ] CRUD de Canchas (Listado, Creación, Edición, Eliminación).
-- [ ] CRUD de Quinchos (con flag de `solo_vip`).
-- [ ] Gestión de tipos de canchas y superficies.
-- [ ] **Consumo de API (Clima):** Mostrar temperatura/pronóstico para ayudar en la elección de canchas.
+### 1. 🟢 App `courts`: Infraestructura Base (COMPLETADO)
+- [x] CRUD de Canchas (Listado, Creación, Edición, Eliminación).
+- [x] CRUD de Quinchos (con flag de `solo_vip`).
+- [x] Gestión de tipos de canchas y superficies.
+- [ ] **Consumo de API (Clima):** Pendiente para la fase final.
 
 ### 2. 🟡 App `memberships`: Reglas de Negocio y Precios
 - [ ] CRUD de Planes (Normal, VIP, Socio) con sus porcentajes de descuento.
