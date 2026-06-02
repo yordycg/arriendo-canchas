@@ -1,0 +1,197 @@
+{% extends 'courts/base.html' %}
+
+{% load static %}
+
+{% block title %}
+  {% if cancha %}
+Editar Cancha
+  {% else %}
+Registrar Cancha
+  {% endif %}
+{% endblock title %}
+
+{% block section_title %}
+  {% if cancha %}
+Edición de Cancha
+  {% else %}
+Registro de Cancha
+  {% endif %}
+{% endblock section_title %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-10">
+      <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <!-- Header con estilo similar a Usuarios pero en Azul para Canchas -->
+        <div class="card-header bg-primary text-white p-3 px-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center me-3"
+                   style="width: 50px;
+                          height: 50px">
+                <i class="bi bi-grid-3x3-gap fs-4 text-white"></i>
+              </div>
+              <div>
+                <h5 class="mb-0 fw-bold">
+                  {% if cancha %}
+Actualizar Cancha
+                  {% else %}
+Nueva Cancha
+                  {% endif %}
+                </h5>
+                <p class="mb-0 text-white-50 small">
+Configure las especificaciones técnicas y valor de la infraestructura.
+                </p>
+              </div>
+            </div>
+            {% if not cancha %}
+              <a href="{% url 'courts:pavilion_create' %}"
+                 class="btn btn-light btn-sm fw-bold shadow-sm rounded-pill px-3">
+                <i class="bi bi-house-add me-1"></i>Nuevo Quincho
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5 bg-white">
+          <form method="POST">
+{% csrf_token %}
+
+            <!-- Sección: Especificaciones -->
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                   style="width: 35px;
+                          height: 35px">
+                <i class="bi bi-gear-fill"></i>
+              </div>
+              <h5 class="mb-0 fw-bold text-dark text-uppercase"
+                  style="font-size: 0.85rem;
+                         letter-spacing: 1px">
+Especificaciones Técnicas
+              </h5>
+            </div>
+
+            <div class="row g-4 mb-4">
+              <div class="col-md-8">
+                <label for="nombre"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Nombre de la Cancha
+                </label>
+                <input type="text"
+                       name="nombre"
+                       id="nombre"
+                       class="form-control"
+                       placeholder="Ej: Cancha Central - Pasto Natural"
+                       value="{{ cancha.nombre|default:'' }}"
+                       required>
+              </div>
+              <div class="col-md-4">
+                <label for="tipo_cancha_id"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Tipo de Deporte
+                </label>
+                <select name="tipo_cancha_id"
+                        id="tipo_cancha_id"
+                        class="form-select"
+                        required>
+                  <option value="" disabled selected>
+Seleccione...
+                  </option>
+                  {% for tipo in tipos_canchas %}
+                    <option value="{{ tipo.tipo_cancha_id }}"
+                            {% if cancha.tipo_cancha_id == tipo.tipo_cancha_id %}selected{% endif %}>
+{{ tipo.nombre }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="tipo_superficie"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Superficie
+                </label>
+                <select name="tipo_superficie"
+                        id="tipo_superficie"
+                        class="form-select"
+                        required>
+                  <option value="" disabled selected>
+Seleccione...
+                  </option>
+                  {% for s in superficies %}
+                    <option value="{{ s }}"
+                            {% if cancha.tipo_superficie == s %}selected{% endif %}>
+{{ s }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="tipo_recinto"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Tipo de Recinto
+                </label>
+                <select name="tipo_recinto" id="tipo_recinto" class="form-select" required>
+                  <option value="" disabled selected>
+Seleccione...
+                  </option>
+                  {% for r in recintos %}
+                    <option value="{{ r }}" {% if cancha.tipo_recinto == r %}selected{% endif %}>
+{{ r }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Sección: Precios -->
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                   style="width: 35px;
+                          height: 35px">
+                <i class="bi bi-currency-dollar"></i>
+              </div>
+              <h5 class="mb-0 fw-bold text-dark text-uppercase"
+                  style="font-size: 0.85rem;
+                         letter-spacing: 1px">
+Costos de Arriendo
+              </h5>
+            </div>
+
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <label for="valor_hora"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Valor por Hora (CLP)
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light">$</span>
+                  <input type="number"
+                         name="valor_hora"
+                         id="valor_hora"
+                         class="form-control"
+                         placeholder="0.00"
+                         value="{{ cancha.valor_hora|default:'' }}"
+                         min="0"
+                         required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="d-flex justify-content-center gap-3 mt-5">
+              <a href="{% url 'courts:court_list' %}"
+                 class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+              <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                {% if cancha %}
+Guardar Cambios
+                {% else %}
+Registrar Cancha
+                {% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

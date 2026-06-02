@@ -5,5 +5,6 @@ app_name = 'courts'
 
 urlpatterns = [
     path('', views.court_list, name='court_list'),
-    # Próximamente: create, update, delete
+    path('create/', views.court_create, name='court_create'),
+    path('pavilions/create/', views.pavilion_create, name='pavilion_create'),
 ]

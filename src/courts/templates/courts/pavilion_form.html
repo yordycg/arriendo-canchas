@@ -1,0 +1,171 @@
+{% extends 'courts/base.html' %}
+
+{% load static %}
+
+{% block title %}
+  {% if quincho %}
+Editar Quincho
+  {% else %}
+Registrar Quincho
+  {% endif %}
+{% endblock title %}
+
+{% block section_title %}
+  {% if quincho %}
+Edición de Quincho
+  {% else %}
+Registro de Quincho
+  {% endif %}
+{% endblock section_title %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-10">
+      <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <!-- Header con estilo similar a Usuarios pero en Verde para Quinchos -->
+        <div class="card-header bg-success text-white p-3 px-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center me-3"
+                   style="width: 50px;
+                          height: 50px">
+                <i class="bi bi-house-add fs-4 text-white"></i>
+              </div>
+              <div>
+                <h5 class="mb-0 fw-bold">
+                  {% if quincho %}
+Actualizar Quincho
+                  {% else %}
+Nuevo Quincho
+                  {% endif %}
+                </h5>
+                <p class="mb-0 text-white-50 small">
+Gestione los espacios de recreación y políticas de acceso VIP.
+                </p>
+              </div>
+            </div>
+            {% if not quincho %}
+              <a href="{% url 'courts:court_create' %}"
+                 class="btn btn-light btn-sm fw-bold shadow-sm rounded-pill px-3">
+                <i class="bi bi-plus-lg me-1"></i>Nueva Cancha
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5 bg-white">
+          <form method="POST">
+{% csrf_token %}
+
+            <!-- Sección: Datos del Espacio -->
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                   style="width: 35px;
+                          height: 35px">
+                <i class="bi bi-info-circle-fill"></i>
+              </div>
+              <h5 class="mb-0 fw-bold text-dark text-uppercase"
+                  style="font-size: 0.85rem;
+                         letter-spacing: 1px">
+Información del Espacio
+              </h5>
+            </div>
+
+            <div class="row g-4 mb-4">
+              <div class="col-md-8">
+                <label for="nombre"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Nombre del Quincho
+                </label>
+                <input type="text"
+                       name="nombre"
+                       id="nombre"
+                       class="form-control"
+                       placeholder="Ej: Quincho Las Camelias"
+                       value="{{ quincho.nombre|default:'' }}"
+                       required>
+              </div>
+              <div class="col-md-4">
+                <label for="estado_quincho_id"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Estado Inicial
+                </label>
+                <select name="estado_quincho_id"
+                        id="estado_quincho_id"
+                        class="form-select"
+                        required>
+                  {% for estado in estados %}
+                    <option value="{{ estado.estado_quincho_id }}"
+                            {% if quincho.estado_quincho_id == estado.estado_quincho_id %}selected{% endif %}>
+{{ estado.nombre }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Sección: Políticas y Costos -->
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                   style="width: 35px;
+                          height: 35px">
+                <i class="bi bi-shield-check"></i>
+              </div>
+              <h5 class="mb-0 fw-bold text-dark text-uppercase"
+                  style="font-size: 0.85rem;
+                         letter-spacing: 1px">
+Políticas y Costos
+              </h5>
+            </div>
+
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <label for="valor_reserva"
+                       class="form-label fw-bold small text-muted text-uppercase">
+Valor de Reserva (CLP)
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light">$</span>
+                  <input type="number"
+                         name="valor_reserva"
+                         id="valor_reserva"
+                         class="form-control"
+                         placeholder="0.00"
+                         value="{{ quincho.valor_reserva|default:'' }}"
+                         min="0"
+                         required>
+                </div>
+              </div>
+              <div class="col-md-6 d-flex align-items-center">
+                <div class="form-check form-switch mt-4">
+                  <input class="form-check-input"
+                         type="checkbox"
+                         name="solo_vip"
+                         id="solo_vip"
+                         {% if quincho.solo_vip %}checked{% endif %}>
+                  <label class="form-check-label fw-bold text-dark ms-2" for="solo_vip">
+Restricción Solo para VIP/Socios
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="d-flex justify-content-center gap-3 mt-5">
+              <a href="{% url 'courts:court_list' %}"
+                 class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+              <button type="submit"
+                      class="btn btn-success rounded-pill px-4 shadow-sm text-white">
+                {% if quincho %}
+Guardar Cambios
+                {% else %}
+Registrar Quincho
+                {% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
