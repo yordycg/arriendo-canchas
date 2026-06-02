@@ -123,9 +123,11 @@ ${{ cancha.valor_hora }}
                       </td>
                       <td class="text-center pe-3">
                         <div class="btn-group shadow-sm rounded-3">
-                          <button class="btn btn-white btn-sm border-end px-3" title="Editar">
+                          <a href="{% url 'courts:court_update' cancha.cancha_id %}"
+                             class="btn btn-white btn-sm border-end px-3"
+                             title="Editar">
                             <i class="bi bi-pencil-square text-primary"></i>
-                          </button>
+                          </a>
                           <button class="btn btn-white btn-sm px-3" title="Eliminar">
                             <i class="bi bi-trash3 text-danger"></i>
                           </button>
@@ -220,9 +222,11 @@ ${{ quincho.valor_reserva }}
                       </td>
                       <td class="text-center pe-3">
                         <div class="btn-group shadow-sm rounded-3">
-                          <button class="btn btn-white btn-sm border-end px-3" title="Editar">
+                          <a href="{% url 'courts:pavilion_update' quincho.quincho_id %}"
+                             class="btn btn-white btn-sm border-end px-3"
+                             title="Editar">
                             <i class="bi bi-pencil-square text-primary"></i>
-                          </button>
+                          </a>
                           <button class="btn btn-white btn-sm px-3" title="Eliminar">
                             <i class="bi bi-trash3 text-danger"></i>
                           </button>

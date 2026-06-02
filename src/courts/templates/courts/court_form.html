@@ -54,7 +54,8 @@ Configure las especificaciones técnicas y valor de la infraestructura.
         </div>
 
         <div class="card-body p-4 p-md-5 bg-white">
-          <form method="POST">
+          <form method="POST"
+                action="{% if cancha %}{% url 'courts:court_update' cancha.cancha_id %}{% else %}{% url 'courts:court_create' %}{% endif %}">
 {% csrf_token %}
 
             <!-- Sección: Especificaciones -->

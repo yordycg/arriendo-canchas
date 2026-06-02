@@ -54,7 +54,8 @@ Gestione los espacios de recreación y políticas de acceso VIP.
         </div>
 
         <div class="card-body p-4 p-md-5 bg-white">
-          <form method="POST">
+          <form method="POST"
+                action="{% if quincho %}{% url 'courts:pavilion_update' quincho.quincho_id %}{% else %}{% url 'courts:pavilion_create' %}{% endif %}">
 {% csrf_token %}
 
             <!-- Sección: Datos del Espacio -->
