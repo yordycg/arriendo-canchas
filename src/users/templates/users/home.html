@@ -1,197 +1,177 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
+{% extends "users/base.html" %}
+
 {% load static %}
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista de Usuarios - Arriendo Canchas</title>
-    <link rel="stylesheet" href="{% static 'users/css/bootstrap.min.css' %}" />
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  </head>
-  <body class="bg-light">
-    <!-- Ticker de Indicadores Económicos -->
-    <div class="bg-primary text-white py-1 shadow-sm overflow-hidden"
-         style="font-size: 0.85rem">
-      <div id="ticker-container" class="d-flex align-items-center">
-        <div class="px-3 border-end border-white border-opacity-25 fw-bold text-nowrap">
-          <i class="bi bi-graph-up-arrow me-1"></i> Indicadores Hoy:
-        </div>
-        <div id="indicators-list" class="d-flex align-items-center flex-grow-1">
-          <span class="px-3 text-nowrap">Cargando indicadores...</span>
-        </div>
-      </div>
+{% block title %}
+Lista de Usuarios
+{% endblock title %}
+
+{% block section_title %}
+Gestión de Usuarios
+{% endblock section_title %}
+
+{% block content %}
+  <div class="card shadow-sm border-0 rounded-3">
+    <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom">
+      <h5 class="mb-0 fw-bold text-dark">
+        <i class="bi bi-person-lines-fill me-2 text-primary"></i>Usuarios Registrados
+      </h5>
+      <a href="{% url 'users:user_create' %}"
+         class="btn btn-primary shadow-sm rounded-pill px-4">
+        <i class="bi bi-person-plus-fill me-2"></i>Nuevo Usuario
+      </a>
     </div>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
-      <div class="container">
-        <a class="navbar-brand" href="{% url 'users:user_list' %}">
-          <i class="bi bi-trophy-fill me-2"></i>Arriendo Canchas
-        </a>
-        <div class="navbar-nav ms-auto align-items-center">
-          <a class="nav-link active" href="{% url 'users:user_list' %}">Inicio</a>
-          <a class="nav-link me-3" href="{% url 'users:user_create' %}">Agregar Usuario</a>
-
-          <!-- Información del Usuario y Logout (Directo para evitar líos con JS) -->
-          <div class="d-flex align-items-center bg-secondary bg-opacity-25 rounded-pill px-3 py-1 border border-light border-opacity-25">
-            <div class="me-3">
-              <small class="text-white-50 d-block"
-                     style="font-size: 0.7rem;
-                            line-height: 1">Logueado como:</small>
-              <span class="text-white fw-bold" style="font-size: 0.9rem">{{ request.session.user_nombres }}</span>
-              <span class="badge bg-info text-dark ms-1" style="font-size: 0.6rem">{{ request.session.user_rol }}</span>
-            </div>
-            <a href="{% url 'authentication:logout' %}"
-               class="btn btn-danger btn-sm rounded-circle shadow-sm"
-               title="Cerrar Sesión">
-              <i class="bi bi-box-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <div class="container-fluid px-4">
-      <!-- Punto 2: Mostrar mensajes del sistema (mensajes de decoradores, etc.) -->
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm"
-               role="alert">
-            {% if message.tags == 'error' %}
-              <i class="bi bi-exclamation-octagon-fill me-2"></i>
-            {% endif %}
-            {% if message.tags == 'warning' %}
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            {% endif %}
-            {% if message.tags == 'success' %}
-              <i class="bi bi-check-circle-fill me-2"></i>
-            {% endif %}
-            {{ message }}
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                    aria-label="Close">
-            </button>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      <div class="card shadow border-0">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-          <h5 class="mb-0 text-primary fw-bold">
-            Gestión de Usuarios
-          </h5>
-          <a href="{% url 'users:user_create' %}"
-             class="btn btn-primary btn-sm"
-             title="Agregar Usuario">
-            <i class="bi bi-person-plus-fill me-1"></i> Nuevo Usuario
-          </a>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th>
-                    RUT
-                  </th>
-                  <th>
-                    Nombre Completo
-                  </th>
-                  <th>
-                    Email
-                  </th>
-                  <th>
-                    Sexo
-                  </th>
-                  <th>
-                    Teléfono
-                  </th>
-                  <th>
-                    Estado
-                  </th>
-                  <th>
-                    Rol
-                  </th>
-                  <th>
-                    Membresía
-                  </th>
-                  <th class="text-center">
-                    Acciones
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for u in usuarios %}
-                  <tr>
-                    <td class="fw-bold">
-                      {{ u.rut }}
-                    </td>
-                    <td>
-                      {{ u.nombres }} {{ u.apellido_p }} {{ u.apellido_m|default:"" }}
-                    </td>
-                    <td>
-                      {{ u.email|default:"---" }}
-                    </td>
-                    <td>
-                      {% if u.sexo == 'M' %}
-                        <span class="badge bg-primary">Masculino</span>
-                      {% elif u.sexo == 'F' %}
-                        <span class="badge bg-danger" style="background-color: #e83e8c !important">
-                          Femenino
-                        </span>
-                      {% else %}
-                        <span class="badge bg-secondary">Otro</span>
-                      {% endif %}
-                    </td>
-                    <td>
-                      {{ u.telefono|default:"---" }}
-                    </td>
-                    <td>
-                      <span class="badge rounded-pill {% if u.estado_usuario == 'Activo' %}bg-success{% else %}bg-warning text-dark{% endif %}">
-                        {{ u.estado_usuario }}
-                      </span>
-                    </td>
-                    <td>
-                      {{ u.rol }}
-                    </td>
-                    <td>
-                      <small class="text-muted fw-bold">{{ u.membresia }}</small>
-                    </td>
-                    <td class="text-center">
-                      <div class="btn-group shadow-sm">
-                        <a href="#"
-                           class="btn btn-outline-warning btn-sm"
-                           title="Editar Usuario">
-                          <i class="bi bi-pencil-square"></i>
-                        </a>
-                        <button type="button"
-                                class="btn btn-outline-danger btn-sm btn-delete"
-                                title="Eliminar Usuario"
-                                data-rut="{{ u.rut }}"
-                                data-nombre="{{ u.nombres }} {{ u.apellido_p }}">
-                          <i class="bi bi-trash"></i>
-                        </button>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4 py-3 text-uppercase text-muted fw-bold"
+                  style="font-size: 0.75rem">
+RUT
+              </th>
+              <th class="py-3 text-uppercase text-muted fw-bold"
+                  style="font-size: 0.75rem">
+Nombre Completo
+              </th>
+              <th class="py-3 text-uppercase text-muted fw-bold"
+                  style="font-size: 0.75rem">
+Email
+              </th>
+              <th class="py-3 text-uppercase text-muted fw-bold"
+                  style="font-size: 0.75rem">
+Rol
+              </th>
+              <th class="py-3 text-uppercase text-muted fw-bold"
+                  style="font-size: 0.75rem">
+Membresía
+              </th>
+              <th class="py-3 text-uppercase text-muted fw-bold"
+                  style="font-size: 0.75rem">
+Estado
+              </th>
+              <th class="py-3 text-uppercase text-muted fw-bold text-center"
+                  style="font-size: 0.75rem">
+Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in usuarios %}
+              <tr>
+                <td class="ps-4 fw-semibold text-dark">
+{{ u.rut }}
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3"
+                         style="width: 35px;
+                                height: 35px">
+                      <i class="bi bi-person text-secondary"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold text-dark">
+{{ u.nombres }}
                       </div>
-                    </td>
-                  </tr>
-                {% empty %}
-                  <tr>
-                    <td colspan="9" class="text-center py-5 text-muted">
-                      <i class="bi bi-people mb-2 d-block fs-1"></i>
-                      No se encontraron usuarios registrados.
-                    </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                      <small class="text-muted">{{ u.apellido_p }} {{ u.apellido_m }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+{{ u.email }}
+                </td>
+                <td>
+                  {% if u.rol == 'Admin' %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill"
+                          style="font-size: 0.7rem">
+                      <i class="bi bi-shield-lock-fill me-1"></i>{{ u.rol }}
+                    </span>
+                  {% elif u.rol == 'Recepcionista' %}
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill"
+                          style="font-size: 0.7rem">
+                      <i class="bi bi-person-badge-fill me-1"></i>{{ u.rol }}
+                    </span>
+                  {% elif u.rol == 'Cliente' %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill"
+                          style="font-size: 0.7rem">
+                      <i class="bi bi-person-check-fill me-1"></i>{{ u.rol }}
+                    </span>
+                  {% else %}
+                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill"
+                          style="font-size: 0.7rem">
+                      <i class="bi bi-person-fill me-1"></i>{{ u.rol }}
+                    </span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-star-fill text-warning me-2" style="font-size: 0.8rem"></i>
+                    <span class="text-muted fw-semibold" style="font-size: 0.9rem">{{ u.membresia }}</span>
+                  </div>
+                </td>
+                <td>
+                  {% if u.estado_usuario == 'Activo' %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">
+                      <i class="bi bi-check-circle-fill me-1"></i>{{ u.estado_usuario }}
+                    </span>
+                  {% elif u.estado_usuario == 'Inactivo' %}
+                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill">
+                      <i class="bi bi-dash-circle-fill me-1"></i>{{ u.estado_usuario }}
+                    </span>
+                  {% else %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">
+                      <i class="bi bi-exclamation-triangle-fill me-1"></i>{{ u.estado_usuario }}
+                    </span>
+                  {% endif %}
+                </td>
+                <td class="text-center pe-3">
+                  <div class="btn-group shadow-sm rounded-3">
+                    <a href="{% url 'users:user_update' u.rut %}"
+                       class="btn btn-white btn-sm border-end px-3"
+                       title="Editar">
+                      <i class="bi bi-pencil-square text-primary"></i>
+                    </a>
+                    <a href="#"
+                       class="btn btn-white btn-sm border-end px-3 btn-more"
+                       data-rut="{{ u.rut }}"
+                       data-nombres="{{ u.nombres }}"
+                       data-apellidos="{{ u.apellido_p }} {{ u.apellido_m }}"
+                       data-sexo="{% if u.sexo == 'M' %}Masculino{% elif u.sexo == 'F' %}Femenino{% else %}Otro{% endif %}"
+                       data-telefono="{{ u.telefono|default:'No registrado' }}"
+                       data-email="{{ u.email }}"
+                       data-estado="{{ u.estado_usuario }}"
+                       data-rol="{{ u.rol }}"
+                       data-membresia="{{ u.membresia|default:'Sin Membresía' }}"
+                       title="Ver Detalles">
+                      <i class="bi bi-eye text-info"></i>
+                    </a>
+                    <button type="button"
+                            class="btn btn-white btn-sm px-3 btn-delete"
+                            data-rut="{{ u.rut }}"
+                            data-nombre="{{ u.nombres }} {{ u.apellido_p }}"
+                            title="Eliminar">
+                      <i class="bi bi-trash3 text-danger"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  <i class="bi bi-people text-muted display-4 d-block mb-3"></i>
+                  <p class="text-muted">
+No hay usuarios registrados en el sistema.
+                  </p>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-    <script src="{% static 'users/js/jquery-4.0.0.min.js' %}"></script>
-    <script src="{% static 'users/js/bootstrap.min.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'users/js/home.js' %}"></script>
-  </body>
-</html>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+  <script src="{% static 'users/js/home.js' %}"></script>
+{% endblock extra_js %}
