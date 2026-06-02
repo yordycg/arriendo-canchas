@@ -23,7 +23,7 @@ def login_view(request):
 
     if request.method == 'POST':
         # Paso 2: capturar datos del formulario login, y definir variables
-        usuario_login = request.POST.get('username')  # Email o RUT
+        usuario_login = request.POST.get('usuario')  # Email o RUT
         password_login = request.POST.get('password')
         user_found = None
         context = {}
