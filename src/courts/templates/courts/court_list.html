@@ -128,7 +128,10 @@ ${{ cancha.valor_hora }}
                              title="Editar">
                             <i class="bi bi-pencil-square text-primary"></i>
                           </a>
-                          <button class="btn btn-white btn-sm px-3" title="Eliminar">
+                          <button class="btn btn-white btn-sm px-3 btn-delete-court" 
+                                  data-id="{{ cancha.cancha_id }}" 
+                                  data-nombre="{{ cancha.nombre }}"
+                                  title="Eliminar">
                             <i class="bi bi-trash3 text-danger"></i>
                           </button>
                         </div>
@@ -227,7 +230,10 @@ ${{ quincho.valor_reserva }}
                              title="Editar">
                             <i class="bi bi-pencil-square text-primary"></i>
                           </a>
-                          <button class="btn btn-white btn-sm px-3" title="Eliminar">
+                          <button class="btn btn-white btn-sm px-3 btn-delete-pavilion"
+                                  data-id="{{ quincho.quincho_id }}"
+                                  data-nombre="{{ quincho.nombre }}"
+                                  title="Eliminar">
                             <i class="bi bi-trash3 text-danger"></i>
                           </button>
                         </div>
@@ -249,3 +255,7 @@ No hay quinchos registrados.
     </div>
   </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'courts/js/courts.js' %}"></script>
+{% endblock extra_js %}

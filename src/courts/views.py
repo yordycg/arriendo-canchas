@@ -310,3 +310,29 @@ def pavilion_update(request, quincho_id):
         **get_dropdown_data()
     }
     return render(request, 'courts/pavilion_form.html', context)
+
+
+@login_required_manual
+@role_required(['Admin'])
+def court_delete(request, cancha_id):
+    try:
+        db = DatabaseManager()
+        # Soft-delete: marcar como inactivo
+        db.execute("UPDATE canchas SET is_active = 0 WHERE cancha_id = %s", (cancha_id,))
+    except Exception as e:
+        print(f"ERROR DB [Eliminar Cancha]: {str(e)}")
+        
+    return redirect('courts:court_list')
+
+
+@login_required_manual
+@role_required(['Admin'])
+def pavilion_delete(request, quincho_id):
+    try:
+        db = DatabaseManager()
+        # Soft-delete: marcar como inactivo
+        db.execute("UPDATE quinchos SET is_active = 0 WHERE quincho_id = %s", (quincho_id,))
+    except Exception as e:
+        print(f"ERROR DB [Eliminar Quincho]: {str(e)}")
+        
+    return redirect('courts:court_list')
