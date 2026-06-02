@@ -1,0 +1,29 @@
+{% extends 'users/dashboards/base_dashboard.html' %}
+
+{% block title %}Panel de Cliente{% endblock %}
+{% block page_title %}Mi Panel{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-calendar-plus me-2"></i>Agendar Nueva Reserva</h5>
+            </div>
+            <div class="card-body">
+                <p>Selecciona una cancha o quincho disponible para agendar tu próxima visita.</p>
+                <button class="btn btn-success"><i class="bi bi-plus-circle me-2"></i>Crear Reserva</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-star-fill fs-1 mb-2"></i>
+                <h5>Mi Membresía</h5>
+                <h3 class="fw-bold">{{ request.session.user_membresia }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

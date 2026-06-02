@@ -5,27 +5,25 @@ from django.urls import reverse
 from database.db import DatabaseManager
 
 # Create your views here.
+
+
 def login_view(request):
     # Paso 1: verificar existencia de una session activa
     if 'user_rut' in request.session:
         # Redireccionar segun ROL:
         rol_actual = request.session.get('user_rol')
         if rol_actual == 'Admin':
-            # return redirect(dashboard-admin)
-            pass
+            return redirect('users:admin_dash')
         if rol_actual == 'Recepcionista':
-            # return redirect(dashboard-recepcionista)
-            pass
+            return redirect('users:recepcionista_dash')
         if rol_actual == 'Cliente':
-            # return redirect(dashboard-cliente)
-            pass
+            return redirect('users:cliente_dash')
         if rol_actual == 'Invitado':
-            # return redirect(dashboard-cliente)
-            pass
+            return redirect('users:invitado_dash')
 
     if request.method == 'POST':
         # Paso 2: capturar datos del formulario login, y definir variables
-        usuario_login = request.POST.get('username') # Email o RUT
+        usuario_login = request.POST.get('username')  # Email o RUT
         password_login = request.POST.get('password')
         user_found = None
         context = {}
@@ -52,7 +50,8 @@ def login_view(request):
                 WHERE (u.email = %s OR u.rut = %s) AND u.is_active = 1;
             """
 
-            user_found = db.get_one(query_search_user, (usuario_login, usuario_login))
+            user_found = db.get_one(
+                query_search_user, (usuario_login, usuario_login))
         except Exception as e:
             print(f"ERROR CRITICO DB [Buscar Usuario]: {str(e)}")
             context = {
@@ -73,20 +72,22 @@ def login_view(request):
                     VALUES (%s, %s, %s);
                 """
 
-                db.execute(query_auditoria, (usuario_ingresado, estado_login, password_ingresada))
+                db.execute(query_auditoria, (usuario_ingresado,
+                           estado_login, password_ingresada))
             except Exception as e:
-                print(f"ADVERTENCIA DB [Auditoria]: No se pudo guardar el registro: {str(e)}")
+                print(
+                    f"ADVERTENCIA DB [Auditoria]: No se pudo guardar el registro: {str(e)}")
                 pass
 
         # Paso 4: manejar los diferentes casos respecto al resultado de la busqueda del usuario en DB
         # CASO 1: usuario NO registrado en la DB
         if not user_found:
             context = {
-              'sw_alert': {
-                'type': 'error',
-                'title': 'Error',
-                'message': 'No existe un registro asociado a ese rut/email/contrasena.'
-              }
+                'sw_alert': {
+                    'type': 'error',
+                    'title': 'Error',
+                    'message': 'No existe un registro asociado a ese rut/email/contrasena.'
+                }
             }
             return render(request, 'authentication/login.html', context)
 
@@ -94,33 +95,33 @@ def login_view(request):
         # CASO 2.1: usuario registrado pero bloqueado por seguridad
         if user_found['intentos_fallidos'] == 3 or user_found['estado_usuario_id'] == 4:
             context = {
-              'sw_alert': {
-                'type': 'error',
-                'title': 'Error',
-                'message': 'Usuario Bloqueado por Seguridad, comunicarse con un Administrador.'
-              }
+                'sw_alert': {
+                    'type': 'error',
+                    'title': 'Error',
+                    'message': 'Usuario Bloqueado por Seguridad, comunicarse con un Administrador.'
+                }
             }
             return render(request, 'authentication/login.html', context)
 
         # CASO 2.2: usuario registrado pero bloqueado por deuda
         if user_found['estado_usuario_id'] == 3:
             context = {
-              'sw_alert': {
-                'type': 'error',
-                'title': 'Error',
-                'message': 'Usuario Bloqueado por Deuda, por favor pague su deuda.'
-              }
+                'sw_alert': {
+                    'type': 'error',
+                    'title': 'Error',
+                    'message': 'Usuario Bloqueado por Deuda, por favor pague su deuda.'
+                }
             }
             return render(request, 'authentication/login.html', context)
 
         # CASO 2.3: usuario registrado pero inactivo
         if user_found['estado_usuario_id'] == 2:
             context = {
-              'sw_alert': {
-                'type': 'error',
-                'title': 'Error',
-                'message': 'Usuario Inactivo, comunicarse con un Administrador.'
-              }
+                'sw_alert': {
+                    'type': 'error',
+                    'title': 'Error',
+                    'message': 'Usuario Inactivo, comunicarse con un Administrador.'
+                }
             }
             return render(request, 'authentication/login.html', context)
 
@@ -132,7 +133,8 @@ def login_view(request):
             # Auditoria
             insert_auditoria(usuario_login, 'Incorrecto', password_login)
 
-            nuevos_intentos = user_found['intentos_fallidos'] + 1 # calcular valor real de intentos
+            # calcular valor real de intentos
+            nuevos_intentos = user_found['intentos_fallidos'] + 1
 
             try:
                 # Actualizar contador de intentos fallidos en la DB
@@ -141,7 +143,8 @@ def login_view(request):
                     SET intentos_fallidos = %s
                     WHERE rut = %s;
                 """
-                db.execute(query_update_intentos_fallidos, (nuevos_intentos, user_found['rut']))
+                db.execute(query_update_intentos_fallidos,
+                           (nuevos_intentos, user_found['rut']))
 
                 # Bloqueo por seguridad al tener mas de 3 intentos fallidos
                 if nuevos_intentos >= 3:
@@ -151,17 +154,19 @@ def login_view(request):
                         WHERE rut = %s;
                     """
 
-                    db.execute(query_update_estado_usuario, (user_found['rut'],))
+                    db.execute(query_update_estado_usuario,
+                               (user_found['rut'],))
             except Exception as e:
-                print(f"ADVERTENCIA DB [Actualizar Intentos]: No se pueden actualizar los intentos: {str(e)}")
+                print(
+                    f"ADVERTENCIA DB [Actualizar Intentos]: No se pueden actualizar los intentos: {str(e)}")
                 pass
 
             context = {
-              'sw_alert': {
-                'type': 'error',
-                'title': 'Error',
-                'message': 'Usuario y/o contrasena invalidos.'
-              }
+                'sw_alert': {
+                    'type': 'error',
+                    'title': 'Error',
+                    'message': 'Usuario y/o contrasena invalidos.'
+                }
             }
             return render(request, 'authentication/login.html', context)
 
@@ -178,9 +183,11 @@ def login_view(request):
                     WHERE rut = %s;
                 """
 
-                db.execute(query_update_intentos_fallidos, (user_found['rut'],))
+                db.execute(query_update_intentos_fallidos,
+                           (user_found['rut'],))
             except Exception as e:
-                print(f"ADVERTENCIA DB [Actualizar Intentos]: No se pueden actualizar los intentos: {str(e)}")
+                print(
+                    f"ADVERTENCIA DB [Actualizar Intentos]: No se pueden actualizar los intentos: {str(e)}")
                 pass
 
             # Crear SESION
@@ -194,23 +201,21 @@ def login_view(request):
             # Dependiendo del ROL redireccionar al dashboard/vista respectiva
             rol_asignado = user_found['rol_nombre']
             if rol_asignado == 'Admin':
-                # return redirect(dashboard-admin)
-                pass
+                return redirect('users:admin_dash')
             if rol_asignado == 'Recepcionista':
-                # return redirect(dashboard-recepcionista)
-                pass
+                return redirect('users:recepcionista_dash')
             if rol_asignado == 'Cliente':
-                # return redirect(dashboard-cliente)
-                pass
+                return redirect('users:cliente_dash')
             if rol_asignado == 'Invitado':
-                # return redirect(dashboard-cliente)
-                pass
+                return redirect('users:invitado_dash')
 
     return render(request, 'authentication/login.html')
 
+
 def logout_view(request):
-    request.session.flush() # borrar sesion
+    request.session.flush()  # borrar sesion
     return redirect('authentication:login')
+
 
 def register_view(request):
     # Paso 1: verificar existencia de una session activa
@@ -218,17 +223,13 @@ def register_view(request):
         # Redireccionar segun ROL:
         rol_actual = request.session.get('user_rol')
         if rol_actual == 'Admin':
-            # return redirect(dashboard-admin)
-            pass
+            return redirect('users:admin_dash')
         if rol_actual == 'Recepcionista':
-            # return redirect(dashboard-recepcionista)
-            pass
+            return redirect('users:recepcionista_dash')
         if rol_actual == 'Cliente':
-            # return redirect(dashboard-cliente)
-            pass
+            return redirect('users:cliente_dash')
         if rol_actual == 'Invitado':
-            # return redirect(dashboard-cliente)
-            pass
+            return redirect('users:invitado_dash')
 
     message = None
     context = {}
@@ -246,23 +247,25 @@ def register_view(request):
 
         try:
             # Validar duplicados
-            valid_rut = db.exists('SELECT rut FROM usuarios WHERE rut = %s;', (rut,))
-            valid_email = db.exists('SELECT email FROM usuarios WHERE email = %s;', (email,))
+            valid_rut = db.exists(
+                'SELECT rut FROM usuarios WHERE rut = %s;', (rut,))
+            valid_email = db.exists(
+                'SELECT email FROM usuarios WHERE email = %s;', (email,))
 
             if valid_rut:
                 context = {
                     'sw_alert': {
-                    'type': 'error',
-                    'title': 'RUT Duplicado',
-                    'message': 'El RUT ya se encuentra registrado.'
+                        'type': 'error',
+                        'title': 'RUT Duplicado',
+                        'message': 'El RUT ya se encuentra registrado.'
                     }
                 }
             elif valid_email:
                 context = {
                     'sw_alert': {
-                    'type': 'error',
-                    'title': 'Email en uso',
-                    'message': 'El Email ya esta registrado.'
+                        'type': 'error',
+                        'title': 'Email en uso',
+                        'message': 'El Email ya esta registrado.'
                     }
                 }
             else:
@@ -275,7 +278,8 @@ def register_view(request):
                     VALUES (%s, %s, %s, %s, %s, %s, 1, 3, 1)
                 """
 
-                db.execute(query_add_user, (rut, nombres, apellido_p, apellido_m, email, password_hashed))
+                db.execute(query_add_user, (rut, nombres, apellido_p,
+                           apellido_m, email, password_hashed))
 
                 context = {
                     'sw_alert': {

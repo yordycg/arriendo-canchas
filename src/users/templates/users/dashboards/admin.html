@@ -1,0 +1,43 @@
+{% extends 'users/dashboards/base_dashboard.html' %}
+
+{% block title %}Panel de Administración{% endblock %}
+{% block page_title %}Panel de Administración{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 border-start border-primary border-4">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase mb-2">Ingresos Mensuales</h6>
+                <h3 class="mb-0 fw-bold">$2,450,000</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 border-start border-success border-4">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase mb-2">Reservas Activas</h6>
+                <h3 class="mb-0 fw-bold">124</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 border-start border-warning border-4">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase mb-2">Usuarios Registrados</h6>
+                <h3 class="mb-0 fw-bold">350</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0 fw-bold"><i class="bi bi-shield-lock me-2"></i>Accesos Directos Admin</h5>
+    </div>
+    <div class="card-body">
+        <p>Bienvenido al sistema de administración. Desde aquí podrás gestionar usuarios, configurar membresías y revisar la auditoría del sistema.</p>
+        <a href="{% url 'users:user_list' %}" class="btn btn-primary">Ir a Gestión de Usuarios</a>
+    </div>
+</div>
+{% endblock %}
