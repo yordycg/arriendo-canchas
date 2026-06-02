@@ -10,7 +10,7 @@ from database.db import DatabaseManager
 def login_view(request):
     # Paso 1: verificar existencia de una session activa
     if 'user_rut' in request.session:
-        # Redireccionar segun ROL:
+        # Redireccionar según ROL:
         rol_actual = request.session.get('user_rol')
         if rol_actual == 'Admin':
             return redirect('users:admin_dash')
@@ -31,7 +31,7 @@ def login_view(request):
 
         # Buscar el usuario en la DB
         try:
-            # Necesitamos un LEFT JOIN para 'membresias' porque tenemos algunos
+            # Necesitamos un LEFT JOIN para 'membresías' porque tenemos algunos
             # roles que permiten valores NULL, pero de igual forma debemos obtenerlos
             query_search_user = """
                 SELECT
@@ -86,7 +86,7 @@ def login_view(request):
                 'sw_alert': {
                     'type': 'error',
                     'title': 'Error',
-                    'message': 'No existe un registro asociado a ese rut/email/contrasena.'
+                    'message': 'No existe un registro asociado a ese rut/email/contraseña.'
                 }
             }
             return render(request, 'authentication/login.html', context)
@@ -165,7 +165,7 @@ def login_view(request):
                 'sw_alert': {
                     'type': 'error',
                     'title': 'Error',
-                    'message': 'Usuario y/o contrasena invalidos.'
+                    'message': 'Usuario y/o contraseña inválidos.'
                 }
             }
             return render(request, 'authentication/login.html', context)
@@ -285,7 +285,7 @@ def register_view(request):
                     'sw_alert': {
                         'type': 'success',
                         'title': 'Registro Exitoso!',
-                        'message': 'Ya puedes iniciar sesion con tus credenciales.',
+                        'message': 'Ya puedes iniciar sesión con tus credenciales.',
                         'redirect': reverse('authentication:login')
                     }
                 }
