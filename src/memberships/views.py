@@ -137,3 +137,16 @@ def membership_update(request, membresia_id):
         'membresia': membresia
     }
     return render(request, 'memberships/membership_form.html', context)
+
+
+@login_required_manual
+@role_required(['Admin'])
+def membership_delete(request, membresia_id):
+    try:
+        db = DatabaseManager()
+        # Soft-delete: marcar como inactivo
+        db.execute("UPDATE membresias SET is_active = 0 WHERE membresia_id = %s", (membresia_id,))
+    except Exception as e:
+        print(f"ERROR DB [Eliminar Membresía]: {str(e)}")
+
+    return redirect('memberships:membership_list')
