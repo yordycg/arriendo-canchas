@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "users",
     "authentication",
     "courts",
+    "memberships",
 ]
 
 MIDDLEWARE = [

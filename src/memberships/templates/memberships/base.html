@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
       {% block title %}
-      Canchas / Quinchos
+      Membresías
       {% endblock title %}
-                                                 - Arriendo Canchas</title>
+                                                         - Arriendo Canchas</title>
 
-    <link rel="stylesheet" href="{% static 'courts/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet"
+          href="{% static 'memberships/css/bootstrap.min.css' %}" />
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
@@ -161,7 +162,7 @@
 
           <h5 class="mb-0 fw-bold text-dark d-none d-md-block">
             {% block section_title %}
-Sistema de Gestión
+            Sistema de Gestión
             {% endblock section_title %}
           </h5>
 
@@ -193,37 +194,23 @@ Sistema de Gestión
     </div>
 
     <!-- Scripts -->
-    <script src="{% static 'courts/js/jquery-4.0.0.min.js' %}"></script>
-    <script src="{% static 'courts/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'memberships/js/jquery-4.0.0.min.js' %}"></script>
+    <script src="{% static 'memberships/js/bootstrap.min.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {% if sw_alert %}
       <script id="sw-data" type="application/json">
           {
-              "type": "{{ sw_alert.type|escapejs }}",
-              "title": "{{ sw_alert.title|escapejs }}",
-              "message": "{{ sw_alert.message|escapejs }}",
-              "redirect": "{{ sw_alert.redirect|escapejs }}"
+              "type": "{{ sw_alert.type }}",
+              "title": "{{ sw_alert.title }}",
+              "message": "{{ sw_alert.message }}",
+              "redirect": "{{ sw_alert.redirect|default:'' }}"
           }
       </script>
     {% endif %}
 
     <script>
         $(document).ready(function() {
-            // Activar pestaña basada en parámetro URL ?tab=pavilions
-            const urlParams = new URLSearchParams(window.location.search);
-            const tabParam = urlParams.get('tab');
-            
-            if (tabParam === 'pavilions') {
-                setTimeout(function() {
-                    const pavilionsBtn = document.getElementById('pavilions-tab');
-                    if (pavilionsBtn) {
-                        // En Bootstrap 5, simplemente disparamos el evento click o usamos el constructor
-                        pavilionsBtn.click();
-                    }
-                }, 150);
-            }
-
             // Toggle Sidebar Móvil
             $('#sidebarCollapse').on('click', function() {
                 $('#sidebar').toggleClass('active');
@@ -239,7 +226,7 @@ Sistema de Gestión
         });
     </script>
 
-    <script src="{% static 'courts/js/alert.js' %}"></script>
+    <script src="{% static 'memberships/js/alert.js' %}"></script>
     {% block extra_js %}
     {% endblock extra_js %}
   </body>

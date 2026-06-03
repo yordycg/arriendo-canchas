@@ -1,0 +1,119 @@
+{% extends "memberships/base.html" %}
+
+{% load static %}
+
+{% block title %}
+Planes de Membresía
+{% endblock title %}
+
+{% block section_title %}
+Gestión de Membresías
+{% endblock section_title %}
+
+{% block content %}
+  <div class="container-fluid p-0">
+    <!-- Header de la sección -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h3 class="fw-bold text-dark mb-1">
+Listado de Planes
+        </h3>
+        <p class="text-muted small mb-0">
+Administra los niveles de socio y beneficios de descuento del sistema.
+        </p>
+      </div>
+      <div>
+        <button class="btn btn-warning fw-bold d-flex align-items-center shadow-sm rounded-pill px-4 text-dark">
+          <i class="bi bi-patch-check-fill me-2"></i> Nuevo Plan
+        </button>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4 py-3 text-uppercase text-muted fw-bold"
+                    style="font-size: 0.75rem">
+Nombre del Plan
+                </th>
+                <th class="py-3 text-uppercase text-muted fw-bold"
+                    style="font-size: 0.75rem">
+Descuento Aplicado
+                </th>
+                <th class="py-3 text-uppercase text-muted fw-bold"
+                    style="font-size: 0.75rem">
+Costo Mensual
+                </th>
+                <th class="py-3 text-uppercase text-muted fw-bold"
+                    style="font-size: 0.75rem">
+Estado
+                </th>
+                <th class="pe-4 py-3 text-center text-uppercase text-muted fw-bold"
+                    style="font-size: 0.75rem">
+Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in membresias %}
+                <tr>
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center">
+                      <div class="bg-warning-subtle rounded-circle d-flex align-items-center justify-content-center me-3"
+                           style="width: 35px;
+                                  height: 35px">
+                        <i class="bi bi-star-fill text-warning"></i>
+                      </div>
+                      <span class="fw-bold text-dark">{{ m.nombre }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill"
+                          style="font-size: 0.8rem">
+                      {{ m.porcentaje_descuento }} % de descuento
+                    </span>
+                  </td>
+                  <td>
+                    <span class="fw-bold text-success">${{ m.costo_mensual }}</span>
+                  </td>
+                  <td>
+                    {% if m.is_active %}
+                      <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill"
+                            style="font-size: 0.7rem">
+                        <i class="bi bi-check-circle-fill me-1"></i> Activo
+                      </span>
+                    {% else %}
+                      <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill"
+                            style="font-size: 0.7rem">
+                        <i class="bi bi-dash-circle-fill me-1"></i> Inactivo
+                      </span>
+                    {% endif %}
+                  </td>
+                  <td class="text-center pe-3">
+                    <div class="btn-group shadow-sm rounded-3">
+                      <button class="btn btn-white btn-sm border-end px-3" title="Editar">
+                        <i class="bi bi-pencil-square text-primary"></i>
+                      </button>
+                      <button class="btn btn-white btn-sm px-3" title="Eliminar">
+                        <i class="bi bi-trash3 text-danger"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-muted">
+No hay planes registrados.
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

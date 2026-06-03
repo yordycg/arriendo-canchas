@@ -38,7 +38,6 @@ def user_list(request):
         context = {
             'usuarios': users
         }
-
         return render(request, 'users/home.html', context)
     except Exception as e:
         print(f"ERROR CRITICO DB [Usuarios]: {str(e)}")
@@ -185,7 +184,8 @@ def user_update(request, rut):
         apellido_p = request.POST.get('apellido_p')
         apellido_m = request.POST.get('apellido_m')
         email = request.POST.get('email')
-        password = request.POST.get('password') # Capturamos la posible nueva password
+        # Capturamos la posible nueva password
+        password = request.POST.get('password')
         sexo = request.POST.get('sexo')
         telefono = request.POST.get('telefono')
         estado_usuario_id = int(request.POST.get('estado_usuario_id'))
