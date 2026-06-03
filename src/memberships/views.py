@@ -74,6 +74,66 @@ def membership_create(request):
                     'message': 'No se pudo crear el plan. Verifique que el nombre sea único.'
                 }
             }
+    return render(request, 'memberships/membership_form.html', context)
+
+
+@login_required_manual
+@role_required(['Admin'])
+def membership_update(request, membresia_id):
+    db = DatabaseManager()
+    context = {}
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        porcentaje_descuento = int(request.POST.get('porcentaje_descuento', 0))
+        costo_mensual = float(request.POST.get('costo_mensual', 0.0))
+
+        try:
+            query_update_membership = """
+                UPDATE membresias
+                SET nombre=%s, porcentaje_descuento=%s, costo_mensual=%s
+                WHERE membresia_id=%s
+            """
+            params = (nombre, porcentaje_descuento,
+                      costo_mensual, membresia_id)
+            db.execute(query_update_membership, params)
+
+            context = {
+                'sw_alert': {
+                    'type': 'success',
+                    'title': '¡Plan Actualizado!',
+                    'message': f'Los beneficios de "{nombre}" han sido guardados.',
+                    'redirect': reverse('memberships:membership_list')
+                }
+            }
+            return render(request, 'memberships/membership_form.html', context)
+        except Exception as e:
+            print(f"ERROR DB [Actualizar Membresía]: {str(e)}")
+            context = {
+                'sw_alert': {
+                    'type': 'error',
+                    'title': 'Error de Actualización',
+                    'message': 'No se pudieron guardar los cambios.'
+                },
+                'membresia': {
+                    'membresia_id': membresia_id, 'nombre': nombre,
+                    'porcentaje_descuento': porcentaje_descuento,
+                    'costo_mensual': costo_mensual
+                }
+            }
             return render(request, 'memberships/membership_form.html', context)
 
+    # Metodo GET: Buscar datos actuales
+    try:
+        query_search_membership = "SELECT * FROM membresias WHERE membresia_id = %s"
+        membresia = db.get_one(query_search_membership, (membresia_id,))
+        if not membresia:
+            return redirect('memberships:membership_list')
+    except Exception as e:
+        print(f"Error al buscar membresía: {e}")
+        return redirect('memberships:membership_list')
+
+    context = {
+        'membresia': membresia
+    }
     return render(request, 'memberships/membership_form.html', context)
