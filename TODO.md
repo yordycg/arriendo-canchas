@@ -26,10 +26,10 @@ Sigue este orden para garantizar que cada módulo tenga sus dependencias listas 
 - [x] Gestión de tipos de canchas y superficies.
 - [ ] **Consumo de API (Clima):** Pendiente para la fase final.
 
-### 2. 🟡 App `memberships`: Reglas de Negocio y Precios
-- [ ] CRUD de Planes (Normal, VIP, Socio) con sus porcentajes de descuento.
-- [ ] Lógica de asociación de membresía al perfil de usuario.
-- [ ] Vista de beneficios según nivel de socio.
+### 2. 🟡 App `memberships`: Reglas de Negocio y Precios (COMPLETADO)
+- [x] CRUD de Planes (Normal, VIP, Socio) con sus porcentajes de descuento.
+- [x] Lógica de asociación de membresía al perfil de usuario.
+- [x] Vista de beneficios según nivel de socio.
 
 ### 3. 🔴 App `bookings`: Motor Transaccional (EL CORAZÓN)
 - [ ] Motor de reservas de canchas y quinchos (SQL Manual).

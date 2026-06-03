@@ -145,8 +145,53 @@ def membership_delete(request, membresia_id):
     try:
         db = DatabaseManager()
         # Soft-delete: marcar como inactivo
-        db.execute("UPDATE membresias SET is_active = 0 WHERE membresia_id = %s", (membresia_id,))
+        db.execute(
+            "UPDATE membresias SET is_active = 0 WHERE membresia_id = %s", (membresia_id,))
     except Exception as e:
         print(f"ERROR DB [Eliminar Membresía]: {str(e)}")
 
     return redirect('memberships:membership_list')
+
+
+@login_required_manual
+def my_benefits(request):
+    db = DatabaseManager()
+    rut = request.session.get('user_rut')
+    context = {}
+
+    try:
+        # Buscamos al usuario y su membresía
+        query_user_plan = """
+            SELECT 
+                CONCAT(u.nombres, ' ', u.apellido_p, ' ', u.apellido_m) as nombre_completo,
+                m.nombre as plan_nombre,
+                m.porcentaje_descuento,
+                m.costo_mensual
+            FROM usuarios u
+            LEFT JOIN membresias m ON u.membresia_id = m.membresia_id
+            WHERE u.rut = %s
+        """
+        user_data = db.get_one(query_user_plan, (rut,))
+
+        # Si por alguna razón no tiene membresía (ej. Admin), asignamos valores por defecto
+        if not user_data or not user_data.get('plan_nombre'):
+            user_data = {
+                'nombre_completo': request.session.get('user_nombres', 'Usuario'),
+                'plan_nombre': 'Usuario Regular',
+                'porcentaje_descuento': 0,
+                'costo_mensual': 0
+            }
+
+        # Obtenemos todos los planes activos para mostrar la comparativa
+        all_plans = db.get_all(
+            "SELECT * FROM membresias WHERE is_active = 1 ORDER BY porcentaje_descuento ASC")
+
+        context = {
+            'user_data': user_data,
+            'all_plans': all_plans
+        }
+    except Exception as e:
+        print(f"ERROR DB [Mis Beneficios]: {str(e)}")
+        context['error'] = "No pudimos cargar tus beneficios en este momento."
+
+    return render(request, 'memberships/my_benefits.html', context)
