@@ -1,5 +1,6 @@
 import pymysql
 from django.conf import settings
+from contextlib import contextmanager
 
 
 class DatabaseManager:
@@ -15,6 +16,33 @@ class DatabaseManager:
             # DictCursor: retorna los datos como diccionarios de python.
             cursorclass=pymysql.cursors.DictCursor,
         )
+
+    """
+    contextmanager: decorador que nos permite transformar una función en un administrador de
+    recurso, se divide en 3 fase:
+    - Antes del 'yield': ejecutamos nuestro setup, configurar lo necesario para funcionar.
+    - En el 'yield': en este caso le prestamos el 'cursor' a la vista, para que ejecute
+    el código necesario.
+    - Después del 'yield': ejecutamos el cleanup, en este caso COMMIT/ROLLBACK/CLOSE.
+    """
+    @contextmanager
+    def transaction(self):
+        """
+        Administrador de contexto para transacciones manuales.
+        Permite ejecutar múltiples consultas dentro de una sola transacción
+        garantizando el commit o rollback automático.
+        """
+        connection = self.get_connection()
+        cursor = connection.cursor()
+        try:
+            yield cursor
+            connection.commit()
+        except Exception as e:
+            connection.rollback()
+            raise e
+        finally:
+            cursor.close()
+            connection.close()
 
     def execute(self, query, params=None):
         """Ejecutar una sola query."""
@@ -61,7 +89,7 @@ class DatabaseManager:
 
     def get_one(self, query, params=None):
         """Retornar un registro."""
-        connection  = self.get_connection()
+        connection = self.get_connection()
         cursor = connection.cursor()
 
         cursor.execute(query, params)

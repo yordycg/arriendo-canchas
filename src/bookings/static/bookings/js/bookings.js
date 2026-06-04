@@ -103,4 +103,25 @@ $(document).ready(function () {
     );
     $summarySection.removeClass("d-none");
   });
+
+  // Lógica para cancelar reserva
+  $(document).on("click", ".btn-cancel-booking", function () {
+    const url = $(this).data("url");
+    const recurso = $(this).data("recurso");
+
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: `Vas a cancelar la reserva de: ${recurso}. Si lo haces con menos de 30 minutos de anticipación, se aplicará una penalización.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, cancelar",
+      cancelButtonText: "Volver",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  });
 });
