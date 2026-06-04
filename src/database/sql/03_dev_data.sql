@@ -30,9 +30,9 @@ INSERT INTO torneos (nombre, fecha_inicio, fecha_fin, tipo_cancha_id) VALUES
 ('Liga Relámpago Verano', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY), 1);
 
 -- Reservas de Canchas
-INSERT INTO reservas_canchas (fecha, hora, valor_pagado, estado_id, cancha_id, usuario_rut) VALUES
-(CURDATE(), '18:00:00', 25000.00, 2, 1, '22.222.222-2'),
-(CURDATE(), '19:00:00', 25000.00, 1, 1, '33.333.333-3');
+INSERT INTO reservas_canchas (fecha, hora, hora_fin, valor_pagado, estado_id, cancha_id, usuario_rut) VALUES
+(CURDATE(), '18:00:00', '19:00:00', 25000.00, 2, 1, '22.222.222-2'),
+(CURDATE(), '19:00:00', '20:00:00', 25000.00, 1, 1, '33.333.333-3');
 
 -- Partidos y Walkover
 -- Escenario normal

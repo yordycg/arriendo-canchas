@@ -126,7 +126,7 @@
               </a>
             {% endif %}
 
-            <a href="{% url 'bookings:list' %}"
+            <a href="{% url 'bookings:booking_list' %}"
                class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'bookings' %}active{% endif %}">
               <i class="bi bi-calendar3 me-3 fs-5"></i>
               <span>Reservas</span>
