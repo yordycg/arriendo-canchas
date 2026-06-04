@@ -1,0 +1,109 @@
+{% extends "bookings/base.html" %}
+{% load static %}
+
+{% block title %}Nueva Reserva{% endblock %}
+
+{% block section_title %}Reserva de Espacios{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white p-3 px-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                        <i class="bi bi-calendar-plus fs-4 text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Nueva Reserva</h5>
+                        <p class="mb-0 text-white-50 small">Seleccione un recurso, una fecha y el bloque de su preferencia.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4 p-md-5 bg-white">
+                <form id="booking-form" method="POST" action="{% url 'bookings:booking_create' %}">
+                    {% csrf_token %}
+                    
+                    <div class="row g-4 mb-4">
+                        <!-- Paso 1: Selección de Recurso -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Recurso (Cancha o Quincho)</label>
+                            <select name="recurso_selector" id="recurso_selector" class="form-select form-select-lg" required>
+                                <option value="" selected disabled>Seleccione un espacio...</option>
+                                <optgroup label="Canchas">
+                                    {% for c in canchas %}
+                                        <option value="{{ c.id }}" data-tipo="Cancha" data-precio="{{ c.precio }}">{{ c.nombre }} (${{ c.precio }}/hr)</option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup label="Quinchos">
+                                    {% for q in quinchos %}
+                                        <option value="{{ q.id }}" data-tipo="Quincho" data-precio="{{ q.precio }}" {% if q.solo_vip %}data-vip="true"{% endif %}>
+                                            {{ q.nombre }} (${{ q.precio }}/reserva) {% if q.solo_vip %}[SOLO VIP]{% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                            <input type="hidden" name="recurso_id" id="recurso_id">
+                            <input type="hidden" name="tipo" id="tipo">
+                        </div>
+
+                        <!-- Paso 2: Selección de Fecha -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Fecha de Reserva</label>
+                            <input type="date" name="fecha" id="fecha" class="form-control form-control-lg" min="{{ today|date:'Y-m-d' }}" required>
+                        </div>
+                    </div>
+
+                    <hr class="my-5 border-light">
+
+                    <!-- Paso 3: Selección de Bloques -->
+                    <div id="availability-section" class="d-none">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                            <h5 class="mb-0 fw-bold text-dark text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px">Bloques Disponibles</h5>
+                        </div>
+
+                        <div id="blocks-container" class="row g-3">
+                            <!-- Los bloques se cargarán aquí vía JS -->
+                        </div>
+                        <input type="hidden" name="hora" id="hora_inicio">
+                        <input type="hidden" name="hora_fin" id="hora_fin">
+                    </div>
+
+                    <div id="no-availability" class="text-center py-5 d-none">
+                        <i class="bi bi-calendar-x text-muted display-4 d-block mb-3"></i>
+                        <p class="text-muted">No hay bloques disponibles para esta fecha y recurso. Intente con otro.</p>
+                    </div>
+
+                    <!-- Resumen y Botón -->
+                    <div id="summary-section" class="mt-5 p-4 rounded-4 bg-light d-none">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h6 class="fw-bold text-dark mb-1">Resumen de Reserva</h6>
+                                <p id="summary-text" class="text-muted mb-0 small">Seleccione un horario para ver el resumen.</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                                    <i class="bi bi-check2-circle me-2"></i>Confirmar Reserva
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Variables de contexto para JS
+    const AJAX_URL = "{% url 'bookings:get_available_blocks' %}";
+    const USER_ROL = "{{ request.session.user_rol }}";
+</script>
+<script src="{% static 'bookings/js/bookings.js' %}"></script>
+{% endblock %}
