@@ -1,7 +1,7 @@
 /* Estilos específicos para Reservas */
 .booking-item {
-    transition: all 0.2s;
+  transition: all 0.2s;
 }
 .booking-item:hover {
-    background-color: #f1f3f5;
+  background-color: #f1f3f5;
 }

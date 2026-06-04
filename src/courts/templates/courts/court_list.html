@@ -23,12 +23,14 @@ Administra las canchas y quinchos del recinto deportivo.
         </p>
       </div>
       <div class="d-flex gap-2">
-          <a href="{% url 'courts:court_create' %}" class="btn btn-primary d-flex align-items-center shadow-sm">
-              <i class="bi bi-plus-lg me-2"></i> Nueva Cancha
-          </a>
-          <a href="{% url 'courts:pavilion_create' %}" class="btn btn-success d-flex align-items-center shadow-sm">
-              <i class="bi bi-house-add me-2"></i> Nuevo Quincho
-          </a>
+        <a href="{% url 'courts:court_create' %}"
+           class="btn btn-primary d-flex align-items-center shadow-sm">
+          <i class="bi bi-plus-lg me-2"></i> Nueva Cancha
+        </a>
+        <a href="{% url 'courts:pavilion_create' %}"
+           class="btn btn-success d-flex align-items-center shadow-sm">
+          <i class="bi bi-house-add me-2"></i> Nuevo Quincho
+        </a>
       </div>
     </div>
 
@@ -128,8 +130,8 @@ ${{ cancha.valor_hora }}
                              title="Editar">
                             <i class="bi bi-pencil-square text-primary"></i>
                           </a>
-                          <button class="btn btn-white btn-sm px-3 btn-delete-court" 
-                                  data-id="{{ cancha.cancha_id }}" 
+                          <button class="btn btn-white btn-sm px-3 btn-delete-court"
+                                  data-id="{{ cancha.cancha_id }}"
                                   data-nombre="{{ cancha.nombre }}"
                                   title="Eliminar">
                             <i class="bi bi-trash3 text-danger"></i>
@@ -210,24 +212,24 @@ Acciones
                       <td class="fw-bold text-success">
 ${{ quincho.valor_reserva }}
                       </td>
-                                    <td>
-                                        {% if quincho.estado == 'Disponible' %}
-                                          <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill"
-                                                style="font-size: 0.7rem">
-                                            <i class="bi bi-check-circle-fill me-1"></i> {{ quincho.estado }}
-                                          </span>
-                                        {% elif quincho.estado == 'Mantenimiento' %}
-                                          <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 rounded-pill"
-                                                style="font-size: 0.7rem">
-                                            <i class="bi bi-tools me-1"></i> {{ quincho.estado }}
-                                          </span>
-                                        {% else %}
-                                          <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill"
-                                                style="font-size: 0.7rem">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ quincho.estado }}
-                                          </span>
-                                        {% endif %}
-                                    </td>
+                      <td>
+                        {% if quincho.estado == 'Disponible' %}
+                          <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill"
+                                style="font-size: 0.7rem">
+                            <i class="bi bi-check-circle-fill me-1"></i> {{ quincho.estado }}
+                          </span>
+                        {% elif quincho.estado == 'Mantenimiento' %}
+                          <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 rounded-pill"
+                                style="font-size: 0.7rem">
+                            <i class="bi bi-tools me-1"></i> {{ quincho.estado }}
+                          </span>
+                        {% else %}
+                          <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill"
+                                style="font-size: 0.7rem">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ quincho.estado }}
+                          </span>
+                        {% endif %}
+                      </td>
                       <td class="text-center pe-3">
                         <div class="btn-group shadow-sm rounded-3">
                           <a href="{% url 'courts:pavilion_update' quincho.quincho_id %}"
@@ -262,5 +264,5 @@ No hay quinchos registrados.
 {% endblock content %}
 
 {% block extra_js %}
-<script src="{% static 'courts/js/courts.js' %}"></script>
+  <script src="{% static 'courts/js/courts.js' %}"></script>
 {% endblock extra_js %}

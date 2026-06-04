@@ -21,28 +21,33 @@ Este archivo marca el progreso de implementación del sistema siguiendo la **Rut
 Sigue este orden para garantizar que cada módulo tenga sus dependencias listas para probar:
 
 ### 1. 🟢 App `courts`: Infraestructura Base (COMPLETADO)
+
 - [x] CRUD de Canchas (Listado, Creación, Edición, Eliminación).
 - [x] CRUD de Quinchos (con flag de `solo_vip`).
 - [x] Gestión de tipos de canchas y superficies.
 - [ ] **Consumo de API (Clima):** Pendiente para la fase final.
 
 ### 2. 🟡 App `memberships`: Reglas de Negocio y Precios (COMPLETADO)
+
 - [x] CRUD de Planes (Normal, VIP, Socio) con sus porcentajes de descuento.
 - [x] Lógica de asociación de membresía al perfil de usuario.
 - [x] Vista de beneficios según nivel de socio.
 
 ### 3. 🔴 App `bookings`: Motor Transaccional (EL CORAZÓN)
+
 - [ ] Motor de reservas de canchas y quinchos (SQL Manual).
 - [ ] **Prevención de Sobrecupo:** Validación de disponibilidad única por recurso/fecha/hora.
 - [ ] **Cálculo Dinámico:** Aplicar descuentos según membresía del usuario en tiempo real.
 - [ ] Lógica de cancelación (Regla 30 min / 15 min según nivel).
 
 ### 4. 🟠 App `penalties`: Disciplina y Control
+
 - [ ] Registro automático de inasistencias (No-shows).
 - [ ] Cálculo de multas progresivas (Escala 50% - 100%).
 - [ ] **Bloqueo de Cuenta:** Impedir nuevas reservas si el usuario tiene >= 5 faltas.
 
 ## 🏆 Fase Final: Competición y Cierre
+
 - [ ] Implementar App `tournaments`: Gestión de torneos y equipos.
 - [ ] Implementar registro de partidos y Regla de Walkover (3-0).
 - [ ] Generación de Manual de Desarrollo (Documentación Final).

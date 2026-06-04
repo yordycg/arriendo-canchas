@@ -146,8 +146,8 @@ $(document).ready(function () {
       confirmButtonColor: "#0d6efd",
       confirmButtonText: "Cerrar Vista Previa",
       customClass: {
-        popup: 'rounded-4 shadow-lg'
-      }
+        popup: "rounded-4 shadow-lg",
+      },
     });
   });
 

@@ -9,7 +9,8 @@
       {% block title %}
       Canchas / Quinchos
       {% endblock title %}
-                                                 - Arriendo Canchas</title>
+      - Arriendo Canchas
+    </title>
 
     <link rel="stylesheet" href="{% static 'courts/css/bootstrap.min.css' %}" />
     <link rel="stylesheet"
@@ -99,31 +100,31 @@
 
           <div class="nav nav-pills flex-column">
             {% if request.session.user_rol == 'Admin' or request.session.user_rol == 'Recepcionista' %}
-            <a href="{% url 'users:user_list' %}"
-               class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'users' %}active{% endif %}">
-              <i class="bi bi-people-fill me-3 fs-5"></i>
-              <span>Gestión Usuarios</span>
-            </a>
+              <a href="{% url 'users:user_list' %}"
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'users' %}active{% endif %}">
+                <i class="bi bi-people-fill me-3 fs-5"></i>
+                <span>Gestión Usuarios</span>
+              </a>
 
-            <a href="{% url 'memberships:membership_list' %}"
-               class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'memberships' %}active{% endif %}">
-              <i class="bi bi-star-fill me-3 fs-5"></i>
-              <span>Planes Membresía</span>
-            </a>
+              <a href="{% url 'memberships:membership_list' %}"
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'memberships' %}active{% endif %}">
+                <i class="bi bi-star-fill me-3 fs-5"></i>
+                <span>Planes Membresía</span>
+              </a>
 
-            <a href="{% url 'courts:court_list' %}"
-               class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'courts' %}active{% endif %}">
-              <i class="bi bi-pin-map-fill me-3 fs-5"></i>
-              <span>Canchas / Quinchos</span>
-            </a>
+              <a href="{% url 'courts:court_list' %}"
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'courts' %}active{% endif %}">
+                <i class="bi bi-pin-map-fill me-3 fs-5"></i>
+                <span>Canchas / Quinchos</span>
+              </a>
             {% endif %}
 
             {% if request.session.user_rol == 'Cliente' %}
-            <a href="{% url 'memberships:my_benefits' %}"
-               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'my_benefits' %}active{% endif %}">
-              <i class="bi bi-patch-check-fill me-3 fs-5"></i>
-              <span>Mis Beneficios</span>
-            </a>
+              <a href="{% url 'memberships:my_benefits' %}"
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'my_benefits' %}active{% endif %}">
+                <i class="bi bi-patch-check-fill me-3 fs-5"></i>
+                <span>Mis Beneficios</span>
+              </a>
             {% endif %}
 
             <a href="#" class="nav-link d-flex align-items-center text-white-50">
@@ -223,7 +224,7 @@ Sistema de Gestión
             // Activar pestaña basada en parámetro URL ?tab=pavilions
             const urlParams = new URLSearchParams(window.location.search);
             const tabParam = urlParams.get('tab');
-            
+
             if (tabParam === 'pavilions') {
                 setTimeout(function() {
                     const pavilionsBtn = document.getElementById('pavilions-tab');
