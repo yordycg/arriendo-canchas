@@ -69,12 +69,14 @@ _Tablas Maestras (Lookups)_
 - **id (PK)** (INT)
 - **fecha** (DATE, NOT NULL)
 - **hora** (TIME, NOT NULL)
+- **hora_fin** (TIME, NOT NULL)
 - **valor_pagado** (DECIMAL(12,2), DEFAULT: 0.00, CHECK >= 0)
 - **estado_id (FK)** (INT, DEFAULT: 1 [Pendiente])
 - **cancha_id / quincho_id (FK)** (INT)
 - **usuario_rut (FK)** (VARCHAR(12))
 - **created_at / updated_at** (TIMESTAMP)
 - _RESTRICCIÓN:_ UNIQUE (id_recurso, fecha, hora)
+- _RESTRICCIÓN:_ CHECK (hora_fin > hora)
 
 ## equipos
 

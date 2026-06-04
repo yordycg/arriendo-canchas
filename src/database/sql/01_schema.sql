@@ -126,6 +126,7 @@ CREATE TABLE reservas_canchas (
   reserva_cancha_id INT PRIMARY KEY AUTO_INCREMENT,
   fecha DATE NOT NULL,
   hora TIME NOT NULL,
+  hora_fin TIME NOT NULL,
   valor_pagado DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_pagado >= 0),
   estado_id INT NOT NULL DEFAULT 1, -- FK estados_reservas.estado_reserva_id
   cancha_id INT NOT NULL, -- FK canchas.cancha_id
@@ -135,13 +136,15 @@ CREATE TABLE reservas_canchas (
   CONSTRAINT uq_reserva_cancha UNIQUE (cancha_id, fecha, hora),
   CONSTRAINT fk_reserva_cancha_estado FOREIGN KEY (estado_id) REFERENCES estados_reservas (estado_reserva_id) ON DELETE RESTRICT,
   CONSTRAINT fk_reserva_cancha_cancha FOREIGN KEY (cancha_id) REFERENCES canchas (cancha_id) ON DELETE RESTRICT,
-  CONSTRAINT fk_reserva_cancha_usuario FOREIGN KEY (usuario_rut) REFERENCES usuarios (rut) ON DELETE RESTRICT
+  CONSTRAINT fk_reserva_cancha_usuario FOREIGN KEY (usuario_rut) REFERENCES usuarios (rut) ON DELETE RESTRICT,
+  CONSTRAINT ck_reserva_cancha_horas CHECK (hora_fin > hora)
 );
 
 CREATE TABLE reservas_quinchos (
   reserva_quincho_id INT PRIMARY KEY AUTO_INCREMENT,
   fecha DATE NOT NULL,
   hora TIME NOT NULL,
+  hora_fin TIME NOT NULL,
   valor_pagado DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (valor_pagado >= 0),
   estado_id INT NOT NULL DEFAULT 1, -- FK estados_reservas.estado_reserva_id
   quincho_id INT NOT NULL, -- FK quinchos.quincho_id
@@ -151,7 +154,8 @@ CREATE TABLE reservas_quinchos (
   CONSTRAINT uq_reserva_quincho UNIQUE (quincho_id, fecha, hora),
   CONSTRAINT fk_reserva_quincho_estado FOREIGN KEY (estado_id) REFERENCES estados_reservas (estado_reserva_id) ON DELETE RESTRICT,
   CONSTRAINT fk_reserva_quincho_quincho FOREIGN KEY (quincho_id) REFERENCES quinchos (quincho_id) ON DELETE RESTRICT,
-  CONSTRAINT fk_reserva_quincho_usuario FOREIGN KEY (usuario_rut) REFERENCES usuarios (rut) ON DELETE RESTRICT
+  CONSTRAINT fk_reserva_quincho_usuario FOREIGN KEY (usuario_rut) REFERENCES usuarios (rut) ON DELETE RESTRICT,
+  CONSTRAINT ck_reserva_quincho_horas CHECK (hora_fin > hora)
 );
 
 CREATE TABLE equipos (
