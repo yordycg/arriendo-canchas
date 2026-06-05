@@ -138,6 +138,21 @@ $(document).ready(function () {
   // Lógica para ver detalles
   $(document).on("click", ".btn-view-booking", function () {
     const d = $(this).data();
+    let footerHtml = "";
+
+    // Si la reserva está pendiente, mostrar botón de pago en el modal
+    if (d.estado === "Pendiente") {
+      footerHtml = `
+                <hr>
+                <div class="d-grid">
+                    <button type="button" class="btn btn-success btn-pay-booking" 
+                            data-url="${d.payUrl}" data-recurso="${d.recurso}" data-monto="${d.pago}">
+                        <i class="bi bi-credit-card me-2"></i>Pagar Ahora
+                    </button>
+                </div>
+            `;
+    }
+
     const html = `
             <div class="text-start">
                 <p><strong>Recurso:</strong> ${d.recurso} (${d.tipo})</p>
@@ -156,6 +171,7 @@ $(document).ready(function () {
                     <span class="fw-bold text-success fs-5">$${d.pago}</span>
                 </div>
                 <p class="small text-muted mt-2 text-center">* Descuento aplicado según membresía.</p>
+                ${footerHtml}
             </div>
         `;
 
@@ -163,7 +179,30 @@ $(document).ready(function () {
       title: "Detalles de la Reserva",
       html: html,
       icon: "info",
-      confirmButtonText: "Cerrar",
+      showConfirmButton: false,
+      showCloseButton: true,
+    });
+  });
+
+  // Lógica para pagar reserva
+  $(document).on("click", ".btn-pay-booking", function () {
+    const url = $(this).data("url");
+    const recurso = $(this).data("recurso");
+    const monto = $(this).data("monto");
+
+    Swal.fire({
+      title: "¿Confirmar Pago?",
+      text: `¿Desea registrar el pago por $${monto} para la reserva de: ${recurso}?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#198754",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, Pagar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
     });
   });
 

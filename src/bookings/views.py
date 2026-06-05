@@ -84,6 +84,14 @@ def booking_list(request):
     context = {}
     try:
         bookings = get_bookings_data(request)
+
+        # Convertir timedeltas (de MySQL TIME) a objetos time para el template
+        for b in bookings:
+            if isinstance(b["hora"], timedelta):
+                b["hora"] = (datetime.min + b["hora"]).time()
+            if isinstance(b["hora_fin"], timedelta):
+                b["hora_fin"] = (datetime.min + b["hora_fin"]).time()
+
         context = {"reservas": bookings}
         return render(request, "bookings/booking_list.html", context)
     except Exception as e:
@@ -321,6 +329,48 @@ def booking_cancel(request, tipo, id):
 
 
 @login_required_manual
+def booking_pay(request, tipo, id):
+    """
+    Cambia el estado de una reserva a 'Pagada' (2).
+    """
+    db = DatabaseManager()
+    user_rut = request.session.get("user_rut")
+    user_rol = request.session.get("user_rol")
+
+    table = "reservas_canchas" if tipo == "Cancha" else "reservas_quinchos"
+    pk_col = "reserva_cancha_id" if tipo == "Cancha" else "reserva_quincho_id"
+
+    try:
+        res = db.get_one(f"SELECT * FROM {table} WHERE {pk_col} = %s", [id])
+        if not res or (
+            res["usuario_rut"] != user_rut
+            and user_rol not in ["Admin", "Recepcionista"]
+        ):
+            return redirect("bookings:booking_list")
+
+        # Solo se pueden pagar reservas pendientes (estado_id = 1)
+        if res["estado_id"] != 1:
+            return redirect("bookings:booking_list")
+
+        db.execute(f"UPDATE {table} SET estado_id = 2 WHERE {pk_col} = %s", [id])
+
+        context = {
+            "reservas": get_bookings_data(request),
+            "sw_alert": {
+                "type": "success",
+                "title": "Pago Exitoso",
+                "message": f"Se ha registrado el pago de la reserva por ${res['valor_pagado']:,.0f}.",
+                "redirect": reverse("bookings:booking_list"),
+            },
+        }
+        return render(request, "bookings/booking_list.html", context)
+
+    except Exception as e:
+        print(f"ERROR DB [Pagar Reserva]: {str(e)}")
+        return redirect("bookings:booking_list")
+
+
+@login_required_manual
 def get_available_blocks(request):
     recurso_id = request.GET.get("recurso_id")
     tipo = request.GET.get("tipo")
@@ -340,11 +390,15 @@ def get_available_blocks(request):
     )
 
     try:
+        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+        now = datetime.now()
+        is_today = fecha_obj == now.date()
+        current_hour = now.hour
+
         reservas = db.get_all(query, [recurso_id, fecha])
 
         def is_occupied(inicio_s, fin_s):
             for res in reservas:
-
                 def to_sec(t):
                     return (
                         t.total_seconds()
@@ -361,6 +415,10 @@ def get_available_blocks(request):
         bloques = []
         # Rango de 8:00 a 23:00
         for h in range(8, 23):
+            # Filtro: Si es hoy, no mostrar horas pasadas
+            if is_today and h <= current_hour:
+                continue
+
             # Si es 2 horas, el último bloque posible empieza a las 21:00 (para terminar 23:00)
             if duracion == 2 and h > 21:
                 break
