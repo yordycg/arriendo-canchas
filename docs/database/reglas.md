@@ -7,8 +7,10 @@
 
 ## Reservas
 
-1. Se puede "cancelar" una "reserva" con minimo 30 minutos de anticipacion.
-   1.1 Por ejemplo: hacerlo con a los 20 minutos de la reserva, se le asigna una penalizacion al usuario.
+1. Se puede "cancelar" una "reserva" sin penalización según el nivel de membresía:
+   - **Cliente Normal:** Mínimo 60 minutos de anticipación.
+   - **VIP / Socio:** Mínimo 30 minutos de anticipación.
+   1.1 Si se cancela fuera de estos plazos, se asigna automáticamente una penalización al usuario.
 2. El valor pagado registrado en la reserva debe ser mayor o igual a cero.
 
 ## Usuarios

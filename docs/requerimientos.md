@@ -30,7 +30,7 @@ Este documento detalla las capacidades que debe poseer el sistema de Arriendo de
 | ID | Requerimiento | Descripción | Acceso |
 | :--- | :--- | :--- | :--- |
 | **RF-09** | Prevención de Sobrecupo | Impedir más de una reserva para el mismo recurso, fecha y hora. | Cliente |
-| **RF-10** | Cancelación Flexible | Permitir cancelar sin multa hasta 30 min antes (15 min para nivel Socio). | Cliente |
+| **RF-10** | Cancelación Flexible | Permitir cancelar sin multa hasta 60 min antes (30 min para nivel VIP/Socio). | Cliente |
 
 ## 5. Penalizaciones (App: `penalties`)
 

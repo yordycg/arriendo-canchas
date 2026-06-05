@@ -33,14 +33,14 @@ Sigue este orden para garantizar que cada módulo tenga sus dependencias listas 
 - [x] Lógica de asociación de membresía al perfil de usuario.
 - [x] Vista de beneficios según nivel de socio.
 
-### 3. 🔴 App `bookings`: Motor Transaccional (EL CORAZÓN) (EN PROGRESO)
+### 3. 🔴 App `bookings`: Motor Transaccional (EL CORAZÓN) (COMPLETADO)
 - [x] Motor de reservas de canchas y quinchos (SQL Manual).
 - [x] **Prevención de Sobrecupo:** Validación de disponibilidad única por recurso/fecha/hora.
 - [x] **Cálculo Dinámico:** Aplicar descuentos según membresía del usuario en tiempo real.
-- [ ] **Refinamiento de Reglas:** Diferenciar cancelación (Normal 30 min / VIP-Socio 15 min).
-- [ ] **UX: Detalle en SweetAlert:** Implementar vista de detalles tipo modal (estilo `users/`).
-- [ ] **Lógica de Duración:** Implementar soporte para reservas de 2 horas.
-- [ ] **Integración:** Botón "Reservar" directo desde el listado de canchas.
+- [x] **Refinamiento de Reglas:** Diferenciar cancelación (Normal 60 min / VIP-Socio 30 min.
+- [x] **UX: Detalle en SweetAlert:** Implementar vista de detalles tipo modal (estilo `users/`).
+- [x] **Lógica de Duración:** Implementar soporte para reservas de 2 horas.
+- [x] **Integración:** Botón "Reservar" directo desde el listado de canchas.
 
 ### 4. 🟠 App `penalties`: Disciplina y Control
 
