@@ -115,11 +115,20 @@ Acciones
                 </td>
                 <td class="text-center pe-3">
                   <div class="btn-group shadow-sm rounded-3">
-                    <a href="#"
-                       class="btn btn-white btn-sm border-end px-3"
+                    <button type="button"
+                       class="btn btn-white btn-sm border-end px-3 btn-view-booking"
+                       data-recurso="{{ r.recurso }}"
+                       data-tipo="{{ r.tipo }}"
+                       data-fecha="{{ r.fecha|date:'d/m/Y' }}"
+                       data-horario="{{ r.hora|time:'H:i' }} - {{ r.hora_fin|time:'H:i' }}"
+                       data-pago="{{ r.valor_pagado }}"
+                       data-base="{{ r.precio_base }}"
+                       data-estado="{{ r.estado }}"
+                       data-usuario="{{ r.nombres }} {{ r.apellido_p }}"
+                       data-membresia="{{ r.membresia|default:'Sin Membresía' }}"
                        title="Ver Detalles">
                       <i class="bi bi-eye text-info"></i>
-                    </a>
+                    </button>
                     {% if r.estado != 'Cancelada' %}
                       <button type="button"
                               class="btn btn-white btn-sm px-3 btn-cancel-booking"

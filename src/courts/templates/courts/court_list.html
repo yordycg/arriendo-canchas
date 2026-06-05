@@ -232,6 +232,11 @@ ${{ quincho.valor_reserva }}
                       </td>
                       <td class="text-center pe-3">
                         <div class="btn-group shadow-sm rounded-3">
+                          <a href="{% url 'bookings:booking_create' %}?recurso_id={{ quincho.quincho_id }}&tipo=Quincho"
+                             class="btn btn-white btn-sm border-end px-3"
+                             title="Reservar">
+                            <i class="bi bi-calendar-plus text-success"></i>
+                          </a>
                           <a href="{% url 'courts:pavilion_update' quincho.quincho_id %}"
                              class="btn btn-white btn-sm border-end px-3"
                              title="Editar">
