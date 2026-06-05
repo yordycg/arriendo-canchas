@@ -79,44 +79,48 @@ Sin reservas
                 <small class="text-white-50">¡Anímate a jugar!</small>
               </div>
             </div>
-            <button class="btn btn-white btn-sm rounded-pill px-4 mt-2 fw-bold text-primary">
-Reservar Ahora
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            <a href="{% url 'bookings:booking_create' %}" class="btn btn-white btn-sm rounded-pill px-4 mt-2 fw-bold text-primary">
+              Reservar Ahora
+            </a>
+            </div>
+            </div>
+            </div>
+            </div>
 
-    <!-- Accesos Rápidos -->
-    <div class="mt-5">
-      <h5 class="fw-bold text-dark mb-4">
-¿Qué quieres hacer?
-      </h5>
-      <div class="row g-3">
-        <div class="col-md-3">
-          <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
-            <i class="bi bi-calendar-plus fs-3 text-success mb-2 d-block"></i>
-            <h6 class="fw-bold mb-0 small">
-Nueva Reserva
-            </h6>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
+            <!-- Accesos Rápidos -->
+            <div class="mt-5">
+            <h5 class="fw-bold text-dark mb-4">
+            ¿Qué quieres hacer?
+            </h5>
+            <div class="row g-3">
+            <div class="col-md-3">
+            <a href="{% url 'bookings:booking_create' %}" class="text-decoration-none">
+            <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
+              <i class="bi bi-calendar-plus fs-3 text-success mb-2 d-block"></i>
+              <h6 class="fw-bold mb-0 small">
+            Nueva Reserva
+              </h6>
+            </div>
+            </a>
+            </div>
+            <div class="col-md-3">
+            <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
             <i class="bi bi-trophy fs-3 text-primary mb-2 d-block"></i>
             <h6 class="fw-bold mb-0 small">
-Mis Equipos
+            Mis Equipos
             </h6>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
-            <i class="bi bi-clock-history fs-3 text-secondary mb-2 d-block"></i>
-            <h6 class="fw-bold mb-0 small">
-Historial
-            </h6>
-          </div>
-        </div>
+            </div>
+            </div>
+            <div class="col-md-3">
+            <a href="{% url 'bookings:booking_list' %}" class="text-decoration-none">
+            <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
+              <i class="bi bi-clock-history fs-3 text-secondary mb-2 d-block"></i>
+              <h6 class="fw-bold mb-0 small">
+            Historial
+              </h6>
+            </div>
+            </a>
+            </div>
         <div class="col-md-3">
           <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
             <i class="bi bi-person-lines-fill fs-3 text-danger mb-2 d-block"></i>
