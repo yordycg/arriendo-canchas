@@ -1,6 +1,8 @@
 $(document).ready(function () {
   const $recursoSelector = $("#recurso_selector");
   const $fechaInput = $("#fecha");
+  const $duracionSelect = $("#duracion");
+  const $durationContainer = $("#duration-container");
   const $blocksContainer = $("#blocks-container");
   const $availabilitySection = $("#availability-section");
   const $noAvailability = $("#no-availability");
@@ -11,15 +13,43 @@ $(document).ready(function () {
   const $recursoIdInput = $("#recurso_id");
   const $tipoInput = $("#tipo");
 
-  // Al cambiar recurso o fecha
+  // Al cambiar recurso, fecha o duración
   $recursoSelector.on("change", loadAvailability);
   $fechaInput.on("change", loadAvailability);
+  $duracionSelect.on("change", loadAvailability);
+
+  // Pre-selección desde URL (GET params)
+  const urlParams = new URLSearchParams(window.location.search);
+  const recursoIdParam = urlParams.get("recurso_id");
+  const tipoParam = urlParams.get("tipo");
+
+  if (recursoIdParam && tipoParam) {
+    // Buscar la opción que coincida con tipo e ID
+    $recursoSelector.find("option").each(function () {
+      if ($(this).val() == recursoIdParam && $(this).data("tipo") == tipoParam) {
+        $recursoSelector.val($(this).val());
+        return false;
+      }
+    });
+    // Disparar cambio manual
+    loadAvailability();
+  }
 
   function loadAvailability() {
     const recursoId = $recursoSelector.val();
-    const tipo = $recursoSelector.find(":selected").data("tipo");
+    const $selected = $recursoSelector.find(":selected");
+    const tipo = $selected.data("tipo");
     const fecha = $fechaInput.val();
-    const isVip = $recursoSelector.find(":selected").data("vip");
+    const isVip = $selected.data("vip");
+    const duracion = $duracionSelect.val();
+
+    // Mostrar/ocultar selector de duración solo para canchas
+    if (tipo === "Cancha") {
+      $durationContainer.removeClass("d-none");
+    } else {
+      $durationContainer.addClass("d-none");
+      $duracionSelect.val("1"); // Reset a 1h para Quinchos
+    }
 
     // Actualizar inputs ocultos
     $recursoIdInput.val(recursoId);
@@ -54,6 +84,7 @@ $(document).ready(function () {
         recurso_id: recursoId,
         tipo: tipo,
         fecha: fecha,
+        duracion: duracion,
       },
       success: function (data) {
         $blocksContainer.empty();
@@ -69,7 +100,7 @@ $(document).ready(function () {
                         <div class="col-6 col-md-3">
                             <button type="button" class="btn btn-outline-primary w-100 py-3 block-btn"
                                     data-inicio="${bloque.inicio}" data-fin="${bloque.fin}">
-                                <i class="bi bi-clock me-2"></i>${bloque.inicio}
+                                <i class="bi bi-clock me-2"></i>${bloque.inicio} - ${bloque.fin}
                             </button>
                         </div>
                     `;
@@ -104,6 +135,38 @@ $(document).ready(function () {
     $summarySection.removeClass("d-none");
   });
 
+  // Lógica para ver detalles
+  $(document).on("click", ".btn-view-booking", function () {
+    const d = $(this).data();
+    const html = `
+            <div class="text-start">
+                <p><strong>Recurso:</strong> ${d.recurso} (${d.tipo})</p>
+                <p><strong>Usuario:</strong> ${d.usuario} <span class="badge bg-info text-dark">${d.membresia}</span></p>
+                <hr>
+                <p><strong>Fecha:</strong> ${d.fecha}</p>
+                <p><strong>Horario:</strong> ${d.horario}</p>
+                <p><strong>Estado:</strong> <span class="badge bg-secondary">${d.estado}</span></p>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                    <span>Precio Base:</span>
+                    <span class="text-muted">$${d.base}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center p-2 mt-1">
+                    <span class="fw-bold text-dark">Total Pagado:</span>
+                    <span class="fw-bold text-success fs-5">$${d.pago}</span>
+                </div>
+                <p class="small text-muted mt-2 text-center">* Descuento aplicado según membresía.</p>
+            </div>
+        `;
+
+    Swal.fire({
+      title: "Detalles de la Reserva",
+      html: html,
+      icon: "info",
+      confirmButtonText: "Cerrar",
+    });
+  });
+
   // Lógica para cancelar reserva
   $(document).on("click", ".btn-cancel-booking", function () {
     const url = $(this).data("url");
@@ -111,7 +174,7 @@ $(document).ready(function () {
 
     Swal.fire({
       title: "¿Estás seguro?",
-      text: `Vas a cancelar la reserva de: ${recurso}. Si lo haces con menos de 30 minutos de anticipación, se aplicará una penalización.`,
+      text: `Vas a cancelar la reserva de: ${recurso}. Si lo haces fuera del plazo permitido (60 min normal / 30 min VIP), se aplicará una penalización.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",

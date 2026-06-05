@@ -76,7 +76,7 @@ Seleccione un espacio...
               </div>
 
               <!-- Paso 2: Selección de Fecha -->
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label class="form-label fw-bold small text-muted text-uppercase">
 Fecha de Reserva
                 </label>
@@ -86,6 +86,17 @@ Fecha de Reserva
                        class="form-control form-control-lg"
                        min="{{ today|date:'Y-m-d' }}"
                        required>
+              </div>
+
+              <!-- Paso 3: Selección de Duración (Solo para Canchas) -->
+              <div class="col-md-2 d-none" id="duration-container">
+                <label class="form-label fw-bold small text-muted text-uppercase">
+Duración
+                </label>
+                <select name="duracion" id="duracion" class="form-select form-select-lg">
+                  <option value="1" selected>1 Hora</option>
+                  <option value="2">2 Horas</option>
+                </select>
               </div>
             </div>
 
