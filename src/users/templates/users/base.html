@@ -92,6 +92,14 @@
 
         <!-- Sidebar Navigation -->
         <nav class="sidebar-nav flex-grow-1 overflow-auto py-3">
+          <div class="nav nav-pills flex-column mb-3">
+            <a href="{% if request.session.user_rol == 'Admin' %}{% url 'users:admin_dash' %}{% elif request.session.user_rol == 'Recepcionista' %}{% url 'users:recepcionista_dash' %}{% elif request.session.user_rol == 'Cliente' %}{% url 'users:cliente_dash' %}{% else %}{% url 'users:invitado_dash' %}{% endif %}"
+               class="nav-link d-flex align-items-center {% if 'dash' in request.resolver_match.url_name %}active{% else %}text-white-50{% endif %}">
+              <i class="bi bi-speedometer2 me-3 fs-5"></i>
+              <span>Panel de Inicio</span>
+            </a>
+          </div>
+
           <div class="text-uppercase text-white-50 px-4 mb-3 small fw-bold"
                style="letter-spacing: 1px;
                       font-size: 0.65rem">
@@ -101,19 +109,19 @@
           <div class="nav nav-pills flex-column">
             {% if request.session.user_rol == 'Admin' or request.session.user_rol == 'Recepcionista' %}
               <a href="{% url 'users:user_list' %}"
-                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'users' %}active{% endif %}">
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'users' %}active{% else %}text-white-50{% endif %}">
                 <i class="bi bi-people-fill me-3 fs-5"></i>
                 <span>Gestión Usuarios</span>
               </a>
 
               <a href="{% url 'memberships:membership_list' %}"
-                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'memberships' %}active{% endif %}">
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'memberships' %}active{% else %}text-white-50{% endif %}">
                 <i class="bi bi-star-fill me-3 fs-5"></i>
                 <span>Planes Membresía</span>
               </a>
 
               <a href="{% url 'courts:court_list' %}"
-                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'courts' %}active{% endif %}">
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'courts' %}active{% else %}text-white-50{% endif %}">
                 <i class="bi bi-pin-map-fill me-3 fs-5"></i>
                 <span>Canchas / Quinchos</span>
               </a>
@@ -121,13 +129,14 @@
 
             {% if request.session.user_rol == 'Cliente' %}
               <a href="{% url 'memberships:my_benefits' %}"
-                 class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'my_benefits' %}active{% endif %}">
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'my_benefits' %}active{% else %}text-white-50{% endif %}">
                 <i class="bi bi-patch-check-fill me-3 fs-5"></i>
                 <span>Mis Beneficios</span>
               </a>
             {% endif %}
 
-            <a href="#" class="nav-link d-flex align-items-center text-white-50">
+            <a href="{% url 'bookings:booking_list' %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'bookings' %}active{% else %}text-white-50{% endif %}">
               <i class="bi bi-calendar3 me-3 fs-5"></i>
               <span>Reservas</span>
             </a>
