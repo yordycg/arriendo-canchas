@@ -125,6 +125,12 @@
                 <i class="bi bi-pin-map-fill me-3 fs-5"></i>
                 <span>Canchas / Quinchos</span>
               </a>
+
+              <a href="{% url 'penalties:penalty_list' %}"
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'penalties' and request.resolver_match.url_name == 'penalty_list' %}active{% else %}text-white-50{% endif %}">
+                <i class="bi bi-exclamation-octagon-fill me-3 fs-5"></i>
+                <span>Penalizaciones</span>
+              </a>
             {% endif %}
 
             {% if request.session.user_rol == 'Cliente' %}
@@ -132,6 +138,12 @@
                  class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'my_benefits' %}active{% else %}text-white-50{% endif %}">
                 <i class="bi bi-patch-check-fill me-3 fs-5"></i>
                 <span>Mis Beneficios</span>
+              </a>
+
+              <a href="{% url 'penalties:my_penalties' %}"
+                 class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'my_penalties' %}active{% else %}text-white-50{% endif %}">
+                <i class="bi bi-exclamation-triangle-fill me-3 fs-5"></i>
+                <span>Mis Penalizaciones</span>
               </a>
             {% endif %}
 
