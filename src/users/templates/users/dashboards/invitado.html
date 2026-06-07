@@ -11,8 +11,13 @@ Zona de Invitados
 
 {% block content %}
   <div class="container-fluid p-0">
+    <div class="row mb-4">
+      <div class="col-lg-4 offset-lg-8">
+         {% include 'users/dashboards/weather_widget.html' %}
+      </div>
+    </div>
     <div class="row justify-content-center">
-      <div class="col-lg-10">
+      <div class="col-lg-12">
         <div class="card border-0 shadow-lg rounded-5 overflow-hidden">
           <div class="row g-0">
             <div class="col-md-6 bg-primary p-5 d-flex flex-column justify-content-center text-white">
@@ -53,3 +58,7 @@ Beneficios de ser Socio
     </div>
   </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'users/js/weather.js' %}"></script>
+{% endblock extra_js %}

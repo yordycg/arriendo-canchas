@@ -129,24 +129,9 @@ Gestiona canchas y quinchos.
         </div>
       </div>
 
-      <!-- Card: API Placeholder (Indicadores) -->
+      <!-- Card: API Clima -->
       <div class="col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-          <div class="card-header bg-primary text-white py-3 px-4 border-0">
-            <h6 class="fw-bold mb-0">
-              <i class="bi bi-graph-up-arrow me-2"></i>Indicadores Económicos
-            </h6>
-          </div>
-          <div class="card-body p-4">
-            <div id="admin-indicators" class="text-center py-4">
-              <div class="spinner-border text-primary opacity-50 mb-3" role="status">
-              </div>
-              <p class="text-muted small">
-Cargando datos financieros...
-              </p>
-            </div>
-          </div>
-        </div>
+        {% include 'users/dashboards/weather_widget.html' %}
       </div>
     </div>
   </div>
@@ -167,3 +152,7 @@ Cargando datos financieros...
       }
   </style>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'users/js/weather.js' %}"></script>
+{% endblock extra_js %}
