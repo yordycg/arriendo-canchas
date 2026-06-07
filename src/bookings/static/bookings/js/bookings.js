@@ -26,7 +26,10 @@ $(document).ready(function () {
   if (recursoIdParam && tipoParam) {
     // Buscar la opción que coincida con tipo e ID
     $recursoSelector.find("option").each(function () {
-      if ($(this).val() == recursoIdParam && $(this).data("tipo") == tipoParam) {
+      if (
+        $(this).val() == recursoIdParam &&
+        $(this).data("tipo") == tipoParam
+      ) {
         $recursoSelector.val($(this).val());
         return false;
       }
@@ -56,18 +59,6 @@ $(document).ready(function () {
     $tipoInput.val(tipo);
 
     if (!recursoId || !fecha) return;
-
-    // Validación básica de VIP en Frontend
-    if (
-      isVip &&
-      USER_ROL === "Cliente" &&
-      !confirm(
-        "Este recurso es SOLO VIP. ¿Desea continuar? (El sistema validará su membresía)",
-      )
-    ) {
-      $recursoSelector.val("");
-      return;
-    }
 
     // Mostrar loading o limpiar
     $blocksContainer.html(

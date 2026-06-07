@@ -3,6 +3,7 @@ from datetime import datetime, time, timedelta
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 
 from authentication.decorators import login_required_manual
 from database.db import DatabaseManager
@@ -12,7 +13,7 @@ from database.db import DatabaseManager
 
 def get_bookings_data(request):
     """
-    Función auxiliar para obtener las reservas según el rol.
+    Obtener las reservas según el rol.
     Evita duplicar la query en el listado y en la cancelación.
     """
     db = DatabaseManager()
@@ -85,7 +86,7 @@ def booking_list(request):
     try:
         bookings = get_bookings_data(request)
 
-        # Convertir timedeltas (de MySQL TIME) a objetos time para el template
+        # Convertir timedeltas (mysql) a objetos time
         for b in bookings:
             if isinstance(b["hora"], timedelta):
                 b["hora"] = (datetime.min + b["hora"]).time()
@@ -110,7 +111,10 @@ def booking_list(request):
 def booking_create(request):
     db = DatabaseManager()
     user_rut = request.session.get("user_rut")
-    context = {"today": datetime.now().date()}
+    user_rol = request.session.get("user_rol")
+    is_staff = user_rol in ["Admin", "Recepcionista"]
+
+    context = {"today": datetime.now().date(), "is_staff": is_staff}
 
     def load_resources():
         canchas = db.get_all(
@@ -128,11 +132,16 @@ def booking_create(request):
         hora = request.POST.get("hora")
         hora_fin = request.POST.get("hora_fin")
 
+        # Si es staff, puede haber elegido a otro usuario
+        target_rut = request.POST.get("usuario_rut") if is_staff else user_rut
+        if not target_rut:
+            target_rut = user_rut
+
         try:
             # 1. Validación de faltas
             user_data = db.get_one(
                 "SELECT contador_faltas, membresia_id FROM usuarios WHERE rut = %s",
-                [user_rut],
+                [target_rut],
             )
 
             if user_data["contador_faltas"] >= 5:
@@ -144,13 +153,15 @@ def booking_create(request):
                     },
                     **load_resources(),
                     "today": datetime.now().date(),
+                    "is_staff": is_staff,
                 }
                 return render(request, "bookings/booking_form.html", context)
 
             # 2. Validar VIP para Quinchos
             if tipo == "Quincho":
                 quincho = db.get_one(
-                    "SELECT solo_vip FROM quinchos WHERE quincho_id = %s", [recurso_id]
+                    "SELECT solo_vip FROM quinchos WHERE quincho_id = %s", [
+                        recurso_id]
                 )
                 if quincho["solo_vip"] and (
                     not user_data["membresia_id"] or user_data["membresia_id"] == 1
@@ -163,6 +174,7 @@ def booking_create(request):
                         },
                         **load_resources(),
                         "today": datetime.now().date(),
+                        "is_staff": is_staff,
                     }
                     return render(request, "bookings/booking_form.html", context)
 
@@ -183,6 +195,7 @@ def booking_create(request):
                     },
                     **load_resources(),
                     "today": datetime.now().date(),
+                    "is_staff": is_staff,
                 }
                 return render(request, "bookings/booking_form.html", context)
 
@@ -194,7 +207,7 @@ def booking_create(request):
             )
             res_info = db.get_one(res_query, [recurso_id])
 
-            # Calcular duración
+            # 5. Calcular duración
             h_ini = datetime.strptime(hora, "%H:%M")
             h_fin = datetime.strptime(hora_fin, "%H:%M")
             horas_total = (h_fin - h_ini).total_seconds() / 3600
@@ -207,15 +220,15 @@ def booking_create(request):
 
             memb_info = db.get_one(
                 "SELECT COALESCE(m.porcentaje_descuento, 0) as descuento FROM usuarios u LEFT JOIN membresias m ON u.membresia_id = m.membresia_id WHERE u.rut = %s",
-                [user_rut],
+                [target_rut],
             )
             precio_final = precio_base * (1 - (memb_info["descuento"] / 100))
 
-            # 5. Insertar
+            # 6. Insertar
             query_insert = f"INSERT INTO {check_table} (fecha, hora, hora_fin, valor_pagado, estado_id, {check_col}, usuario_rut) VALUES (%s, %s, %s, %s, 1, %s, %s)"
             db.execute(
                 query_insert,
-                [fecha, hora, hora_fin, precio_final, recurso_id, user_rut],
+                [fecha, hora, hora_fin, precio_final, recurso_id, target_rut],
             )
 
             context = {
@@ -227,7 +240,6 @@ def booking_create(request):
                 }
             }
             return render(request, "bookings/booking_form.html", context)
-
         except Exception as e:
             print(f"ERROR DB [Crear Reserva]: {str(e)}")
             context = {
@@ -238,6 +250,7 @@ def booking_create(request):
                 },
                 **load_resources(),
                 "today": datetime.now().date(),
+                "is_staff": is_staff,
             }
             return render(request, "bookings/booking_form.html", context)
 
@@ -277,11 +290,15 @@ def booking_cancel(request, tipo, id):
         if isinstance(res_hora, timedelta):
             res_hora = (datetime.min + res_hora).time()
         res_datetime = datetime.combine(res["fecha"], res_hora)
-        minutos_faltantes = (res_datetime - datetime.now()).total_seconds() / 60
+        minutos_faltantes = (res_datetime - datetime.now()
+                             ).total_seconds() / 60
 
         # Umbral: VIP (2) y Socio (3) tienen 30 min. Normal (1 o NULL) tiene 60 min.
         es_premium = res["membresia_id"] in [2, 3]
         umbral = 30 if es_premium else 60
+
+        user_rol = request.session.get("user_rol")
+        is_staff = user_rol in ["Admin", "Recepcionista"]
 
         # 3. Transacción atómica
         with db.transaction() as cursor:
@@ -290,8 +307,8 @@ def booking_cancel(request, tipo, id):
                 f"UPDATE {table} SET estado_id = 3 WHERE {pk_col} = %s", [id]
             )
 
-            if minutos_faltantes < umbral:
-                # Aplicar penalización
+            if minutos_faltantes < umbral and not is_staff:
+                # Aplicar penalización solo si no es staff
                 cursor.execute(
                     "UPDATE usuarios SET contador_faltas = contador_faltas + 1 WHERE rut = %s",
                     [res["usuario_rut"]],
@@ -301,6 +318,8 @@ def booking_cancel(request, tipo, id):
                     [res["usuario_rut"], datetime.now().date()],
                 )
                 msg = f"Cancelación fuera de plazo ({umbral} min). Se ha aplicado una penalización."
+            elif is_staff and minutos_faltantes < umbral:
+                msg = "Reserva cancelada por personal administrativo (sin penalización)."
             else:
                 msg = "Reserva cancelada exitosamente sin penalización."
 
@@ -314,7 +333,6 @@ def booking_cancel(request, tipo, id):
             },
         }
         return render(request, "bookings/booking_list.html", context)
-
     except Exception as e:
         print(f"ERROR DB [Cancelar Reserva]: {str(e)}")
         context = {
@@ -341,7 +359,15 @@ def booking_pay(request, tipo, id):
     pk_col = "reserva_cancha_id" if tipo == "Cancha" else "reserva_quincho_id"
 
     try:
-        res = db.get_one(f"SELECT * FROM {table} WHERE {pk_col} = %s", [id])
+        # Debemos unir con usuarios para obtener su membresía actual y aplicar el umbral correcto
+        query_res = f"""
+            SELECT t.*, u.membresia_id
+            FROM {table} t
+            JOIN usuarios u ON t.usuario_rut = u.rut
+            WHERE t.{pk_col} = %s
+        """
+        res = db.get_one(query_res, [id])
+
         if not res or (
             res["usuario_rut"] != user_rut
             and user_rol not in ["Admin", "Recepcionista"]
@@ -352,7 +378,8 @@ def booking_pay(request, tipo, id):
         if res["estado_id"] != 1:
             return redirect("bookings:booking_list")
 
-        db.execute(f"UPDATE {table} SET estado_id = 2 WHERE {pk_col} = %s", [id])
+        db.execute(
+            f"UPDATE {table} SET estado_id = 2 WHERE {pk_col} = %s", [id])
 
         context = {
             "reservas": get_bookings_data(request),
@@ -391,9 +418,11 @@ def get_available_blocks(request):
 
     try:
         fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
-        now = datetime.now()
+        # Usamos timezone.localtime para obtener la hora real de Chile según settings.py
+        now = timezone.localtime(timezone.now())
         is_today = fecha_obj == now.date()
         current_hour = now.hour
+        weekday = fecha_obj.weekday()  # 0=Lunes, 4=Viernes, 5=Sábado, 6=Domingo
 
         reservas = db.get_all(query, [recurso_id, fecha])
 
@@ -404,7 +433,8 @@ def get_available_blocks(request):
                         t.total_seconds()
                         if isinstance(t, timedelta)
                         else (
-                            t.hour * 3600 + t.minute * 60 if isinstance(t, time) else 0
+                            t.hour * 3600 + t.minute *
+                            60 if isinstance(t, time) else 0
                         )
                     )
 
@@ -415,9 +445,18 @@ def get_available_blocks(request):
         bloques = []
         # Rango de 8:00 a 23:00
         for h in range(8, 23):
-            # Filtro: Si es hoy, no mostrar horas pasadas
+            # Filtros:
+            # 1. Si es hoy, no mostrar horas pasadas
             if is_today and h <= current_hour:
                 continue
+
+            # 2. Hora de Colación (13:00 - 14:00) de Lunes a Viernes
+            # Si la duración es 2 horas, el bloque 12:00 - 14:00 también choca con colación
+            if weekday < 5:
+                if h == 13:
+                    continue
+                if duracion == 2 and h == 12:
+                    continue
 
             # Si es 2 horas, el último bloque posible empieza a las 21:00 (para terminar 23:00)
             if duracion == 2 and h > 21:
@@ -433,7 +472,6 @@ def get_available_blocks(request):
                         "fin": f"{(h + duracion):02d}:00",
                     }
                 )
-
         return JsonResponse({"bloques": bloques})
     except Exception as e:
         print(f"ERROR AJAX [Bloques]: {str(e)}")

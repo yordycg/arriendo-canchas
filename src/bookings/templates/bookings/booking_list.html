@@ -16,7 +16,8 @@ Gestión de Reservas
       <h5 class="mb-0 fw-bold text-dark">
         <i class="bi bi-calendar-check me-2 text-primary"></i>Historial de Reservas
       </h5>
-      <a href="{% url 'bookings:booking_create' %}" class="btn btn-primary shadow-sm rounded-pill px-4">
+      <a href="{% url 'bookings:booking_create' %}"
+         class="btn btn-primary shadow-sm rounded-pill px-4">
         <i class="bi bi-plus-circle-fill me-2"></i>Nueva Reserva
       </a>
     </div>
@@ -116,26 +117,51 @@ Acciones
                 <td class="text-center pe-3">
                   <div class="btn-group shadow-sm rounded-3">
                     <button type="button"
-                       class="btn btn-white btn-sm border-end px-3 btn-view-booking"
-                       data-recurso="{{ r.recurso }}"
-                       data-tipo="{{ r.tipo }}"
-                       data-fecha="{{ r.fecha|date:'d/m/Y' }}"
-                       data-horario="{{ r.hora|time:'H:i' }} - {{ r.hora_fin|time:'H:i' }}"
-                       data-pago="{{ r.valor_pagado }}"
-                       data-base="{{ r.precio_base }}"
-                       data-estado="{{ r.estado }}"
-                       data-usuario="{{ r.nombres }} {{ r.apellido_p }}"
-                       data-membresia="{{ r.membresia|default:'Sin Membresía' }}"
-                       title="Ver Detalles">
+                            class="btn btn-white btn-sm border-end px-3 btn-view-booking"
+                            data-recurso="{{ r.recurso }}"
+                            data-tipo="{{ r.tipo }}"
+                            data-fecha="{{ r.fecha|date:'d/m/Y' }}"
+                            data-horario="{{ r.hora|time:'H:i' }} - {{ r.hora_fin|time:'H:i' }}"
+                            data-pago="{{ r.valor_pagado }}"
+                            data-base="{{ r.precio_base }}"
+                            data-estado="{{ r.estado }}"
+                            data-usuario="{{ r.nombres }} {{ r.apellido_p }}"
+                            data-membresia="{{ r.membresia|default:'Sin Membresía' }}"
+                            data-pay-url="{% url 'bookings:booking_pay' r.tipo r.id %}"
+                            title="Ver Detalles">
                       <i class="bi bi-eye text-info"></i>
                     </button>
-                    {% if r.estado != 'Cancelada' %}
+                    {% if r.estado == 'Pendiente' %}
+                      <button type="button"
+                              class="btn btn-white btn-sm border-end px-3 btn-pay-booking"
+                              data-url="{% url 'bookings:booking_pay' r.tipo r.id %}"
+                              data-recurso="{{ r.recurso }}"
+                              data-monto="{{ r.valor_pagado }}"
+                              title="Pagar Reserva">
+                        <i class="bi bi-credit-card text-success"></i>
+                      </button>
+                    {% else %}
+                      <button type="button"
+                              class="btn btn-white btn-sm border-end px-3 disabled text-muted"
+                              title="No se puede pagar"
+                              disabled>
+                        <i class="bi bi-credit-card"></i>
+                      </button>
+                    {% endif %}
+                    {% if r.estado == 'Confirmada' or r.estado == 'Pendiente' %}
                       <button type="button"
                               class="btn btn-white btn-sm px-3 btn-cancel-booking"
                               data-url="{% url 'bookings:booking_cancel' r.tipo r.id %}"
                               data-recurso="{{ r.recurso }}"
                               title="Cancelar Reserva">
                         <i class="bi bi-trash3 text-danger"></i>
+                      </button>
+                    {% else %}
+                      <button type="button"
+                              class="btn btn-white btn-sm px-3 disabled text-muted"
+                              title="No se puede cancelar"
+                              disabled>
+                        <i class="bi bi-trash3"></i>
                       </button>
                     {% endif %}
                   </div>

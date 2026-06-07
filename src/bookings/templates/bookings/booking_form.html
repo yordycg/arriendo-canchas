@@ -62,10 +62,14 @@ Seleccione un espacio...
                       <option value="{{ q.id }}"
                               data-tipo="Quincho"
                               data-precio="{{ q.precio }}"
-                              {% if q.solo_vip %}data-vip="true"{% endif %}>
-                                            {{ q.nombre }} (${{ q.precio }}/reserva)
+                              {% if q.solo_vip %}data-vip="true"{% endif %}
+                              {% if q.solo_vip and request.session.user_membresia == 'Normal' %}disabled{% endif %}>
                         {% if q.solo_vip %}
-[SOLO VIP]
+🔒
+                        {% endif %}
+                        {{ q.nombre }} (${{ q.precio }}/reserva)
+                        {% if q.solo_vip %}
+                          [SOLO VIP]
                         {% endif %}
                       </option>
                     {% endfor %}
@@ -94,8 +98,12 @@ Fecha de Reserva
 Duración
                 </label>
                 <select name="duracion" id="duracion" class="form-select form-select-lg">
-                  <option value="1" selected>1 Hora</option>
-                  <option value="2">2 Horas</option>
+                  <option value="1" selected>
+1 Hora
+                  </option>
+                  <option value="2">
+2 Horas
+                  </option>
                 </select>
               </div>
             </div>

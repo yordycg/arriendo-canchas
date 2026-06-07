@@ -34,6 +34,7 @@ Sigue este orden para garantizar que cada módulo tenga sus dependencias listas 
 - [x] Vista de beneficios según nivel de socio.
 
 ### 3. 🔴 App `bookings`: Motor Transaccional (EL CORAZÓN) (COMPLETADO)
+
 - [x] Motor de reservas de canchas y quinchos (SQL Manual).
 - [x] **Prevención de Sobrecupo:** Validación de disponibilidad única por recurso/fecha/hora.
 - [x] **Cálculo Dinámico:** Aplicar descuentos según membresía del usuario en tiempo real.

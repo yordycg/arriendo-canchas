@@ -10,4 +10,6 @@ urlpatterns = [
          name="get_available_blocks"),
     path("cancelar/<str:tipo>/<int:id>/",
          views.booking_cancel, name="booking_cancel"),
+    path("pagar/<str:tipo>/<int:id>/",
+         views.booking_pay, name="booking_pay"),
 ]
