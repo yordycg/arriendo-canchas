@@ -16,6 +16,10 @@ Control de Penalizaciones
       <h5 class="mb-0 fw-bold text-dark">
         <i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i>Historial de Multas y Faltas
       </h5>
+      <a href="{% url 'penalties:penalty_create' %}"
+         class="btn btn-danger shadow-sm rounded-pill px-4">
+        <i class="bi bi-plus-circle-fill me-2"></i>Nueva Penalización
+      </a>
     </div>
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -66,6 +70,13 @@ Control de Penalizaciones
                                 data-monto="{{ p.valor_multa|floatformat:0 }}"
                                 title="Registrar Pago">
                             <i class="bi bi-cash-stack text-success"></i>
+                        </button>
+                    {% else %}
+                        <button type="button" 
+                                class="btn btn-white btn-sm border-end px-3 disabled text-muted" 
+                                title="Multa ya pagada"
+                                disabled>
+                            <i class="bi bi-cash-stack"></i>
                         </button>
                     {% endif %}
                     {% if request.session.user_rol == 'Admin' %}

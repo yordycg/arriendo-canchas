@@ -1,0 +1,115 @@
+{% extends "penalties/base.html" %}
+
+{% load static %}
+
+{% block title %}
+Nueva Penalización
+{% endblock %}
+
+{% block section_title %}
+Control de Penalizaciones
+{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-xl-8">
+      <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-danger text-white p-3 px-4">
+          <div class="d-flex align-items-center">
+            <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center me-3"
+                 style="width: 50px;
+                        height: 50px">
+              <i class="bi bi-exclamation-triangle-fill fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="mb-0 fw-bold">
+Registrar Nueva Penalización
+              </h5>
+              <p class="mb-0 text-white-50 small">
+Seleccione al usuario infractor y el tipo de falta cometida.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-4 p-md-5 bg-white">
+          <form method="POST" action="{% url 'penalties:penalty_create' %}">
+            {% csrf_token %}
+
+            <div class="row g-4 mb-4">
+              <!-- Selección de Usuario -->
+              <div class="col-md-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">
+Usuario Infractor
+                </label>
+                <select name="usuario_rut"
+                        id="usuario_rut"
+                        class="form-select form-select-lg"
+                        required>
+                  <option value="" selected disabled>
+Buscar y seleccionar usuario...
+                  </option>
+                  {% for u in usuarios %}
+                    <option value="{{ u.rut }}">
+{{ u.rut }} - {{ u.nombre }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Selección de Tipo de Falta -->
+              <div class="col-md-8">
+                <label class="form-label fw-bold small text-muted text-uppercase">
+Tipo de Penalización
+                </label>
+                <select name="tipo_penalizacion_id"
+                        id="tipo_penalizacion_id"
+                        class="form-select form-select-lg"
+                        required>
+                  <option value="" selected disabled>
+Seleccione el tipo de falta...
+                  </option>
+                  {% for t in tipos %}
+                    <option value="{{ t.tipo_penalizacion_id }}">
+{{ t.nombre }} (${{ t.valor_multa|floatformat:0 }})
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Selección de Fecha -->
+              <div class="col-md-4">
+                <label class="form-label fw-bold small text-muted text-uppercase">
+Fecha de Infracción
+                </label>
+                <input type="date"
+                       name="fecha"
+                       id="fecha"
+                       class="form-control form-control-lg"
+                       value="{% now 'Y-m-d' %}"
+                       required>
+              </div>
+            </div>
+
+            <hr class="my-5 border-light">
+
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <p class="text-muted mb-0 small">
+<i class="bi bi-info-circle me-1"></i> Al registrar la penalización, se sumará una falta al contador del usuario automáticamente.
+                </p>
+              </div>
+              <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <a href="{% url 'penalties:penalty_list' %}" class="btn btn-light btn-lg rounded-pill px-4 me-2">Cancelar</a>
+                <button type="submit"
+                        class="btn btn-danger btn-lg rounded-pill px-5 shadow-sm">
+                  <i class="bi bi-check2-circle me-2"></i>Registrar Penalización
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
