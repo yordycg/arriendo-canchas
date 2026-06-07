@@ -308,14 +308,34 @@ def booking_cancel(request, tipo, id):
             )
 
             if minutos_faltantes < umbral and not is_staff:
-                # Aplicar penalización solo si no es staff
+                # Aplicar penalización solo si no es staff (2 = Cancelación tardía)
+                usuario_rut = res["usuario_rut"]
+                
+                # Obtener faltas actuales
+                cursor.execute("SELECT contador_faltas FROM usuarios WHERE rut = %s", [usuario_rut])
+                faltas_actuales = cursor.fetchone()['contador_faltas']
+                
+                # Obtener valor base de Cancelación tardía
+                cursor.execute("SELECT valor_multa FROM tipos_penalizaciones WHERE tipo_penalizacion_id = 2")
+                valor_base = float(cursor.fetchone()['valor_multa'])
+                
+                # Calcular recargo
+                nueva_cantidad_faltas = faltas_actuales + 1
+                recargo = 0.0
+                if nueva_cantidad_faltas >= 5:
+                    recargo = 1.0
+                elif nueva_cantidad_faltas >= 3:
+                    recargo = 0.5
+                
+                monto_final = valor_base + (valor_base * recargo)
+
                 cursor.execute(
                     "UPDATE usuarios SET contador_faltas = contador_faltas + 1 WHERE rut = %s",
-                    [res["usuario_rut"]],
+                    [usuario_rut],
                 )
                 cursor.execute(
-                    "INSERT INTO usuarios_penalizaciones (usuario_rut, tipo_penalizacion_id, fecha, pagada) VALUES (%s, 2, %s, 0)",
-                    [res["usuario_rut"], datetime.now().date()],
+                    "INSERT INTO usuarios_penalizaciones (usuario_rut, tipo_penalizacion_id, monto_cobrado, fecha, pagada) VALUES (%s, 2, %s, %s, 0)",
+                    [usuario_rut, monto_final, datetime.now().date()],
                 )
                 msg = f"Cancelación fuera de plazo ({umbral} min). Se ha aplicado una penalización."
             elif is_staff and minutos_faltantes < umbral:

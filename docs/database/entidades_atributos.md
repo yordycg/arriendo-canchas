@@ -127,6 +127,7 @@ _Tablas Maestras (Lookups)_
 - **usuario_penalizado_id (PK)** (INT)
 - **usuario_rut (FK)** (VARCHAR(12))
 - **tipo_penalizacion_id (FK)** (INT)
+- **monto_cobrado** (DECIMAL(12,2), DEFAULT: 0.00, CHECK >= 0)
 - **fecha** (DATE, DEFAULT: CURRENT_DATE)
 - **pagada** (BOOLEAN, DEFAULT: FALSE)
 - **created_at / updated_at** (TIMESTAMP)

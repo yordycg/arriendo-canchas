@@ -208,6 +208,7 @@ CREATE TABLE usuarios_penalizaciones (
   usuario_penalizado_id INT PRIMARY KEY AUTO_INCREMENT,
   usuario_rut VARCHAR(12) NOT NULL, -- FK usuarios.rut
   tipo_penalizacion_id INT NOT NULL, -- FK tipos_penalizaciones.tipo_penalizacion_id
+  monto_cobrado DECIMAL(12,2) NOT NULL DEFAULT 0.00 CHECK (monto_cobrado >= 0),
   fecha DATE NOT NULL DEFAULT (CURRENT_DATE),
   pagada BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

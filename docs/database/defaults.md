@@ -36,6 +36,7 @@ Valores de configuración y registro transaccional.
 | Tabla | Columna | Valor Default | Descripción |
 | :--- | :--- | :--- | :--- |
 | `usuarios_penalizaciones` | `fecha` | `CURRENT_DATE` | Fecha automática del registro de la falta. |
+| `usuarios_penalizaciones` | `monto_cobrado` | `0.00` | Monto final de la deuda después de aplicar recargos. |
 | `membresias` | `porcentaje_descuento` | `0` | Sin descuento inicial. |
 | `membresias` | `costo_mensual` | `0.00` | Sin costo recurrente inicial. |
 | `tipos_penalizaciones` | `valor_multa` | `0.00` | Monto base para multas. |
