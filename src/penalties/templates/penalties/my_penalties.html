@@ -1,0 +1,102 @@
+{% extends "penalties/base.html" %}
+
+{% load static %}
+
+{% block title %}
+Mis Penalizaciones
+{% endblock title %}
+
+{% block section_title %}
+Mi Estado de Cuenta
+{% endblock section_title %}
+
+{% block content %}
+  <div class="card shadow-sm border-0 rounded-3 mb-4">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center">
+            <!-- Ícono corregido a círculo perfecto -->
+            <div class="bg-warning-subtle rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-3"></i>
+            </div>
+            <div>
+                <h4 class="mb-1 fw-bold">Información de Multas</h4>
+                <p class="text-muted mb-0">Recuerda que si acumulas 5 o más faltas vigentes, no podrás realizar nuevas reservas.</p>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-3">
+    <div class="card-header bg-white py-3 border-bottom">
+      <h5 class="mb-0 fw-bold text-dark">
+        <i class="bi bi-list-task me-2 text-primary"></i>Detalle de Mis Faltas
+      </h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4 py-3 text-uppercase text-muted fw-bold" style="font-size: 0.75rem">Motivo / Tipo</th>
+              <th class="py-3 text-uppercase text-muted fw-bold" style="font-size: 0.75rem">Monto a Pagar</th>
+              <th class="py-3 text-uppercase text-muted fw-bold" style="font-size: 0.75rem">Fecha de Infracción</th>
+              <th class="py-3 text-uppercase text-muted fw-bold text-center" style="font-size: 0.75rem">Estado</th>
+              <th class="py-3 text-uppercase text-muted fw-bold text-center" style="font-size: 0.75rem">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in penalizaciones %}
+              <tr>
+                <td class="ps-4">
+                    <div class="fw-bold text-dark">{{ p.tipo_penalizacion }}</div>
+                </td>
+                <td>
+                    <span class="fw-bold text-danger">${{ p.valor_multa|floatformat:0 }}</span>
+                </td>
+                <td>{{ p.fecha|date:"d/m/Y" }}</td>
+                <td class="text-center">
+                  {% if p.pagada %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+                      <i class="bi bi-check-circle-fill me-1"></i>Pagada
+                    </span>
+                  {% else %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                      <i class="bi bi-exclamation-circle-fill me-1"></i>Pendiente
+                    </span>
+                  {% endif %}
+                </td>
+                <td class="text-center pe-4">
+                    {% if p.pagada %}
+                        <!-- Botón deshabilitado pero visible -->
+                        <button class="btn btn-secondary btn-sm rounded-pill px-3" disabled title="Ya se encuentra pagada">
+                            <i class="bi bi-check2-all me-1"></i>Pagado
+                        </button>
+                    {% else %}
+                        <!-- Botón para pagar (la lógica irá en alert.js) -->
+                        <button class="btn btn-primary btn-sm rounded-pill px-3 btn-pay-client" 
+                                data-id="{{ p.usuario_penalizado_id }}"
+                                data-monto="{{ p.valor_multa|floatformat:0 }}">
+                            <i class="bi bi-credit-card me-1"></i>Pagar
+                        </button>
+                    {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-5">
+                  <i class="bi bi-emoji-smile text-success display-4 d-block mb-3"></i>
+                  <h5 class="text-dark fw-bold">¡Sin Penalizaciones!</h5>
+                  <p class="text-muted">No tienes multas pendientes en el sistema. ¡Sigue así!</p>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block extra_js %}
+<!-- No más scripts inline, todo en alert.js -->
+{% endblock extra_js %}
