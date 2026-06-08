@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.http import HttpResponse
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from database.db import DatabaseManager
 from authentication.decorators import login_required_manual, role_required
 
@@ -294,3 +294,139 @@ def recepcionista_dashboard(request):
 @login_required_manual
 def cliente_dashboard(request):
     return render(request, 'users/dashboards/cliente.html')
+
+
+@login_required_manual
+def profile(request):
+    db = DatabaseManager()
+    user_rut = request.session.get('user_rut')
+    context = {}
+
+    # Obtener datos actuales del usuario (para el GET y para validar pass en POST)
+    try:
+        query_user = """
+            SELECT
+                u.rut, u.nombres, u.apellido_p, u.apellido_m,
+                u.email, u.telefono, u.password,
+                r.nombre as rol, m.nombre as membresia
+            FROM usuarios u
+            JOIN roles r ON u.rol_id = r.rol_id
+            LEFT JOIN membresias m ON u.membresia_id = m.membresia_id
+            WHERE u.rut = %s
+        """
+        user_found = db.get_one(query_user, [user_rut])
+        context = {
+            'usuario': user_found
+        }
+    except Exception as e:
+        print(f"ERROR DB [Cargar Perfil]: {str(e)}")
+
+    if request.method == 'POST':
+        telefono = request.POST.get('telefono')
+        email = request.POST.get('email')
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # VALIDACIÓN 1: Email duplicado en otro usuario
+        try:
+            email_exists = db.get_one(
+                "SELECT rut FROM usuarios WHERE email = %s AND rut != %s",
+                (email, user_rut)
+            )
+            if email_exists:
+                context = {
+                    'sw_alert': {
+                        'type': 'error',
+                        'title': 'Error',
+                        'message': 'Ese correo electrónico ya está en uso por otra cuenta.'
+                    },
+                    'usuario': user_found
+                }
+                return render(request, 'users/profile.html', context)
+        except Exception as e:
+            print(f"ERROR DB [Validar Email]: {str(e)}")
+
+        # VALIDACIÓN 2: Si intenta cambiar password, validar campos
+        if current_password or new_password or confirm_password:
+            if not current_password or not new_password or not confirm_password:
+                context = {
+                    'sw_alert': {
+                        'type': 'warning',
+                        'title': 'Atención',
+                        'message': 'Debe completar todos los campos de contraseña para cambiarla.'
+                    },
+                    'usuario': user_found
+                }
+                return render(request, 'users/profile.html', context)
+
+            if new_password != confirm_password:
+                context = {
+                    'sw_alert': {
+                        'type': 'warning',
+                        'title': 'Atención',
+                        'message': 'Las nuevas contraseñas no coinciden.'
+                    },
+                    'usuario': user_found
+                }
+                return render(request, 'users/profile.html', context)
+
+            if not check_password(current_password, user_found['password']):
+                context = {
+                    'sw_alert': {
+                        'type': 'error',
+                        'title': 'Error',
+                        'message': 'La contraseña actual es incorrecta.'
+                    },
+                    'usuario': user_found
+                }
+                return render(request, 'users/profile.html', context)
+
+            # Actualizar con Password
+            try:
+                hashed_password = make_password(new_password)
+                db.execute(
+                    "UPDATE usuarios SET telefono = %s, email = %s, password = %s WHERE rut = %s",
+                    (telefono, email, hashed_password, user_rut)
+                )
+            except Exception as e:
+                print(f"ERROR DB [Update Perfil Pass]: {str(e)}")
+                context = {
+                    'sw_alert': {
+                        'type': 'error',
+                        'title': 'Error',
+                        'message': 'No se pudo actualizar la contraseña.'
+                    }
+                }
+                return render(request, 'users/profile.html', context)
+        else:
+            # ACTUALIZACIÓN 3: Solo datos básicos (sin password)
+            try:
+                db.execute(
+                    "UPDATE usuarios SET telefono = %s, email = %s WHERE rut = %s",
+                    (telefono, email, user_rut)
+                )
+            except Exception as e:
+                print(f"ERROR DB [Update Perfil Base]: {str(e)}")
+                context = {
+                    'sw_alert': {
+                        'type': 'error',
+                        'title': 'Error',
+                        'message': 'No se pudieron actualizar los datos.'
+                    }
+                }
+                return render(request, 'users/profile.html', context)
+
+        # Actualizar sesión y mostrar mensaje
+        request.session['user_email'] = email
+        context = {
+            'sw_alert': {
+                'type': 'success',
+                'title': 'Perfil Actualizado',
+                'message': 'Tus datos han sido actualizados correctamente.',
+                'redirect': reverse('users:profile')
+            }
+        }
+        return render(request, 'users/profile.html', context)
+
+    return render(request, 'users/profile.html', context)

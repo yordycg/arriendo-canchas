@@ -161,9 +161,10 @@
           </div>
 
           <div class="nav nav-pills flex-column">
-            <a href="#" class="nav-link d-flex align-items-center text-white-50">
-              <i class="bi bi-gear-fill me-3 fs-5"></i>
-              <span>Ajustes</span>
+            <a href="{% url 'users:profile' %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.url_name == 'profile' %}active{% else %}text-white-50{% endif %}">
+              <i class="bi bi-person-gear me-3 fs-5"></i>
+              <span>Mi Perfil</span>
             </a>
           </div>
         </nav>
