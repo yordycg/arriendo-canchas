@@ -13,20 +13,30 @@ Gestión de Membresías
 {% block content %}
   <div class="container-fluid p-0">
     <!-- Header de la sección -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h3 class="fw-bold text-dark mb-1">
-Listado de Planes
+          {% if request.session.user_rol == 'Admin' %}
+            Gestión de Planes
+          {% else %}
+            Planes y Beneficios
+          {% endif %}
         </h3>
         <p class="text-muted small mb-0">
-Administra los niveles de socio y beneficios de descuento del sistema.
+          {% if request.session.user_rol == 'Admin' %}
+            Administra los niveles de socio y beneficios de descuento del sistema.
+          {% else %}
+            Conoce los descuentos y beneficios exclusivos según tu nivel de membresía.
+          {% endif %}
         </p>
       </div>
       <div>
-        <a href="{% url 'memberships:membership_create' %}"
-           class="btn btn-warning fw-bold d-flex align-items-center shadow-sm rounded-pill px-4 text-dark">
-          <i class="bi bi-patch-check-fill me-2"></i> Nuevo Plan
-        </a>
+        {% if request.session.user_rol == 'Admin' %}
+          <a href="{% url 'memberships:membership_create' %}"
+             class="btn btn-warning fw-bold d-flex align-items-center shadow-sm rounded-pill px-4 text-dark">
+            <i class="bi bi-patch-check-fill me-2"></i> Nuevo Plan
+          </a>
+        {% endif %}
       </div>
     </div>
 
@@ -52,10 +62,12 @@ Costo Mensual
                     style="font-size: 0.75rem">
 Estado
                 </th>
-                <th class="pe-4 py-3 text-center text-uppercase text-muted fw-bold"
-                    style="font-size: 0.75rem">
+                {% if request.session.user_rol == 'Admin' %}
+                  <th class="pe-4 py-3 text-center text-uppercase text-muted fw-bold"
+                      style="font-size: 0.75rem">
 Acciones
-                </th>
+                  </th>
+                {% endif %}
               </tr>
             </thead>
             <tbody>
@@ -78,7 +90,7 @@ Acciones
                     </span>
                   </td>
                   <td>
-                    <span class="fw-bold text-success">${{ m.costo_mensual }}</span>
+                    <span class="fw-bold text-success clp-format">{{ m.costo_mensual|floatformat:0 }}</span>
                   </td>
                   <td>
                     {% if m.is_active %}
@@ -93,25 +105,27 @@ Acciones
                       </span>
                     {% endif %}
                   </td>
-                  <td class="text-center pe-3">
-                    <div class="btn-group shadow-sm rounded-3">
-                      <a href="{% url 'memberships:membership_update' m.membresia_id %}"
-                         class="btn btn-white btn-sm border-end px-3"
-                         title="Editar">
-                        <i class="bi bi-pencil-square text-primary"></i>
-                      </a>
-                      <button class="btn btn-white btn-sm px-3 btn-delete-membership"
-                              data-id="{{ m.membresia_id }}"
-                              data-nombre="{{ m.nombre }}"
-                              title="Eliminar">
-                        <i class="bi bi-trash3 text-danger"></i>
-                      </button>
-                    </div>
-                  </td>
+                  {% if request.session.user_rol == 'Admin' %}
+                    <td class="text-center pe-3">
+                      <div class="btn-group shadow-sm rounded-3">
+                        <a href="{% url 'memberships:membership_update' m.membresia_id %}"
+                           class="btn btn-white btn-sm border-end px-3"
+                           title="Editar">
+                          <i class="bi bi-pencil-square text-primary"></i>
+                        </a>
+                        <button class="btn btn-white btn-sm px-3 btn-delete-membership"
+                                data-id="{{ m.membresia_id }}"
+                                data-nombre="{{ m.nombre }}"
+                                title="Eliminar">
+                          <i class="bi bi-trash3 text-danger"></i>
+                        </button>
+                      </div>
+                    </td>
+                  {% endif %}
                 </tr>
               {% empty %}
                 <tr>
-                  <td colspan="5" class="text-center py-5 text-muted">
+                  <td colspan="{% if request.session.user_rol == 'Admin' %}5{% else %}4{% endif %}" class="text-center py-5 text-muted">
 No hay planes registrados.
                   </td>
                 </tr>
@@ -126,4 +140,21 @@ No hay planes registrados.
 
 {% block extra_js %}
   <script src="{% static 'memberships/js/memberships.js' %}"></script>
+  <script>
+    $(document).ready(function() {
+        function formatCLP() {
+            $(".clp-format").each(function() {
+                let text = $(this).text().trim();
+                if (text.includes('$')) return;
+                
+                let value = parseInt(text);
+                if (!isNaN(value)) {
+                    let formatted = new Intl.NumberFormat('de-DE').format(value);
+                    $(this).text("$" + formatted);
+                }
+            });
+        }
+        formatCLP();
+    });
+  </script>
 {% endblock extra_js %}

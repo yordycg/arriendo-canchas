@@ -33,9 +33,12 @@ Mi Perfil de Socio
                   <i class="bi bi-person-fill me-1"></i> CLIENTE
                 </span>
               {% endif %}
-              <h2 class="text-white fw-bold mb-1">
-{{ user_data.nombre_completo }}
+              <h2 class="text-white fw-bold mb-0">
+                {{ user_data.nombres }}
               </h2>
+              <h4 class="text-white-50 fw-normal mb-3">
+                {{ user_data.apellido_p }} {{ user_data.apellido_m }}
+              </h4>
               <p class="text-white-50 mb-4">
                 Membresía:
                 <span class="text-warning fw-bold">{{ user_data.plan_nombre }}</span>
@@ -48,7 +51,7 @@ Mi Perfil de Socio
                 </div>
                 <div class="border-start border-secondary ps-4">
                   <small class="text-white-50 d-block text-uppercase ls-1">Costo Mensual</small>
-                  <span class="text-white fs-3 fw-bold">${{ user_data.costo_mensual }}</span>
+                  <span class="text-white fs-3 fw-bold clp-format">{{ user_data.costo_mensual|floatformat:0 }}</span>
                 </div>
               </div>
             </div>
@@ -129,7 +132,7 @@ Estado
                         <span class="text-primary fw-bold">{{ plan.porcentaje_descuento }}% OFF</span>
                       </td>
                       <td>
-                        <span class="text-muted">${{ plan.costo_mensual }}</span>
+                        <span class="text-muted clp-format">{{ plan.costo_mensual|floatformat:0 }}</span>
                       </td>
                       <td class="text-center pe-3">
                         {% if plan.nombre == user_data.plan_nombre %}
@@ -162,3 +165,23 @@ Para cambiar tu nivel de membresía, por favor contacta con el administrador en 
     </div>
   </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script>
+      $(document).ready(function() {
+          function formatCLP() {
+              $(".clp-format").each(function() {
+                  let text = $(this).text().trim();
+                  if (text.includes('$')) return;
+
+                  let value = parseInt(text);
+                  if (!isNaN(value)) {
+                      let formatted = new Intl.NumberFormat('de-DE').format(value);
+                      $(this).text("$" + formatted);
+                  }
+              });
+          }
+          formatCLP();
+      });
+  </script>
+{% endblock extra_js %}

@@ -162,8 +162,10 @@ def my_benefits(request):
     try:
         # Buscamos al usuario y su membresía
         query_user_plan = """
-            SELECT 
-                CONCAT(u.nombres, ' ', u.apellido_p, ' ', u.apellido_m) as nombre_completo,
+            SELECT
+                u.nombres,
+                u.apellido_p,
+                u.apellido_m,
                 m.nombre as plan_nombre,
                 m.porcentaje_descuento,
                 m.costo_mensual
@@ -176,7 +178,9 @@ def my_benefits(request):
         # Si por alguna razón no tiene membresía (ej. Admin), asignamos valores por defecto
         if not user_data or not user_data.get('plan_nombre'):
             user_data = {
-                'nombre_completo': request.session.get('user_nombres', 'Usuario'),
+                'nombres': request.session.get('user_nombres', 'Usuario'),
+                'apellido_p': '',
+                'apellido_m': '',
                 'plan_nombre': 'Usuario Regular',
                 'porcentaje_descuento': 0,
                 'costo_mensual': 0
@@ -192,6 +196,13 @@ def my_benefits(request):
         }
     except Exception as e:
         print(f"ERROR DB [Mis Beneficios]: {str(e)}")
-        context['error'] = "No pudimos cargar tus beneficios en este momento."
+        context = {
+            'sw_alert': {
+                'type': 'error',
+                'title': 'Error de Conexión',
+                'message': 'No pudimos cargar tus beneficios. Intenta mas tarde.',
+                'redirect': reverse('users:cliente_dash')
+            }
+        }
 
     return render(request, 'memberships/my_benefits.html', context)
