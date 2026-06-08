@@ -1,6 +1,7 @@
 {% extends 'courts/base.html' %}
 
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 Infraestructura
@@ -16,21 +17,31 @@ Gestión de Canchas y Quinchos
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h3 class="fw-bold text-dark mb-1">
-Listado de Infraestructura
+          {% if request.session.user_rol == 'Admin' %}
+            Gestión de Infraestructura
+          {% else %}
+            Nuestras Instalaciones
+          {% endif %}
         </h3>
         <p class="text-muted small mb-0">
-Administra las canchas y quinchos del recinto deportivo.
+          {% if request.session.user_rol == 'Admin' %}
+            Administra las canchas y quinchos del recinto deportivo.
+          {% else %}
+            Explora nuestras canchas y quinchos disponibles para tu próxima actividad.
+          {% endif %}
         </p>
       </div>
       <div class="d-flex gap-2">
-        <a href="{% url 'courts:court_create' %}"
-           class="btn btn-primary d-flex align-items-center shadow-sm">
-          <i class="bi bi-plus-lg me-2"></i> Nueva Cancha
-        </a>
-        <a href="{% url 'courts:pavilion_create' %}"
-           class="btn btn-success d-flex align-items-center shadow-sm">
-          <i class="bi bi-house-add me-2"></i> Nuevo Quincho
-        </a>
+        {% if request.session.user_rol == 'Admin' %}
+          <a href="{% url 'courts:court_create' %}"
+             class="btn btn-primary d-flex align-items-center shadow-sm">
+            <i class="bi bi-plus-lg me-2"></i> Nueva Cancha
+          </a>
+          <a href="{% url 'courts:pavilion_create' %}"
+             class="btn btn-success d-flex align-items-center shadow-sm">
+            <i class="bi bi-house-add me-2"></i> Nuevo Quincho
+          </a>
+        {% endif %}
       </div>
     </div>
 
@@ -121,21 +132,28 @@ Acciones
                         <span class="text-muted fw-semibold" style="font-size: 0.9rem">{{ cancha.tipo_recinto }}</span>
                       </td>
                       <td class="fw-bold text-success">
-${{ cancha.valor_hora }}
+                        <span class="clp-format">{{ cancha.valor_hora|floatformat:0 }}</span>
                       </td>
                       <td class="text-center pe-3">
                         <div class="btn-group shadow-sm rounded-3">
-                          <a href="{% url 'courts:court_update' cancha.cancha_id %}"
+                          <a href="{% url 'bookings:booking_create' %}?recurso_id={{ cancha.cancha_id }}&tipo=Cancha"
                              class="btn btn-white btn-sm border-end px-3"
-                             title="Editar">
-                            <i class="bi bi-pencil-square text-primary"></i>
+                             title="Reservar">
+                            <i class="bi bi-calendar-plus text-success"></i>
                           </a>
-                          <button class="btn btn-white btn-sm px-3 btn-delete-court"
-                                  data-id="{{ cancha.cancha_id }}"
-                                  data-nombre="{{ cancha.nombre }}"
-                                  title="Eliminar">
-                            <i class="bi bi-trash3 text-danger"></i>
-                          </button>
+                          {% if request.session.user_rol == 'Admin' %}
+                            <a href="{% url 'courts:court_update' cancha.cancha_id %}"
+                               class="btn btn-white btn-sm border-end px-3"
+                               title="Editar">
+                              <i class="bi bi-pencil-square text-primary"></i>
+                            </a>
+                            <button class="btn btn-white btn-sm px-3 btn-delete-court"
+                                    data-id="{{ cancha.cancha_id }}"
+                                    data-nombre="{{ cancha.nombre }}"
+                                    title="Eliminar">
+                              <i class="bi bi-trash3 text-danger"></i>
+                            </button>
+                          {% endif %}
                         </div>
                       </td>
                     </tr>
@@ -210,7 +228,7 @@ Acciones
                         {% endif %}
                       </td>
                       <td class="fw-bold text-success">
-${{ quincho.valor_reserva }}
+                        <span class="clp-format">{{ quincho.valor_reserva|floatformat:0 }}</span>
                       </td>
                       <td>
                         {% if quincho.estado == 'Disponible' %}
@@ -237,17 +255,19 @@ ${{ quincho.valor_reserva }}
                              title="Reservar">
                             <i class="bi bi-calendar-plus text-success"></i>
                           </a>
-                          <a href="{% url 'courts:pavilion_update' quincho.quincho_id %}"
-                             class="btn btn-white btn-sm border-end px-3"
-                             title="Editar">
-                            <i class="bi bi-pencil-square text-primary"></i>
-                          </a>
-                          <button class="btn btn-white btn-sm px-3 btn-delete-pavilion"
-                                  data-id="{{ quincho.quincho_id }}"
-                                  data-nombre="{{ quincho.nombre }}"
-                                  title="Eliminar">
-                            <i class="bi bi-trash3 text-danger"></i>
-                          </button>
+                          {% if request.session.user_rol == 'Admin' %}
+                            <a href="{% url 'courts:pavilion_update' quincho.quincho_id %}"
+                               class="btn btn-white btn-sm border-end px-3"
+                               title="Editar">
+                              <i class="bi bi-pencil-square text-primary"></i>
+                            </a>
+                            <button class="btn btn-white btn-sm px-3 btn-delete-pavilion"
+                                    data-id="{{ quincho.quincho_id }}"
+                                    data-nombre="{{ quincho.nombre }}"
+                                    title="Eliminar">
+                              <i class="bi bi-trash3 text-danger"></i>
+                            </button>
+                          {% endif %}
                         </div>
                       </td>
                     </tr>
@@ -270,4 +290,24 @@ No hay quinchos registrados.
 
 {% block extra_js %}
   <script src="{% static 'courts/js/courts.js' %}"></script>
+  <script>
+      $(document).ready(function() {
+          function formatCLP() {
+              $(".clp-format").each(function() {
+                  let text = $(this).text().trim();
+                  // Si ya tiene el signo $, no volver a formatear
+                  if (text.includes('$')) return;
+
+                  let value = parseInt(text);
+                  if (!isNaN(value)) {
+                      let formatted = new Intl.NumberFormat('de-DE').format(value); // formato con puntos
+                      $(this).text("$" + formatted);
+                  }
+              });
+          }
+
+          // Ejecutar al cargar
+          formatCLP();
+      });
+  </script>
 {% endblock extra_js %}

@@ -31,8 +31,30 @@ def role_required(allowed_roles: list):
             # 2. Verificar si su rol está en la lista de permitidos
             user_rol = request.session.get('user_rol')
             if user_rol not in allowed_roles:
-                messages.warning(request, f'Acceso denegado. Se requiere el rol: {", ".join(allowed_roles)}')
-                return redirect('users:user_list')
+                messages.warning(
+                    request, f'Acceso denegado. Se requiere el rol: {", ".join(allowed_roles)}')
+
+                # Redirección Dinámica: Intentar volver al listado de la app actual
+                # Ejemplo: si está en 'courts', intentar ir a 'courts:court_list'
+                app_name = request.resolver_match.app_name
+                if app_name:
+                    # Construir nombre probable de la vista (singular + _list)
+                    singular = app_name[:-1] if app_name.endswith('s') else app_name
+                    target = f"{app_name}:{singular}_list"
+                    try:
+                        from django.urls import reverse
+                        reverse(target)  # Validar que existe
+                        return redirect(target)
+                    except:
+                        pass
+
+                # Fallback: Ir al Dashboard según el rol si lo anterior falla
+                if user_rol == 'Admin':
+                    return redirect('users:admin_dash')
+                elif user_rol == 'Recepcionista':
+                    return redirect('users:recepcionista_dash')
+                else:
+                    return redirect('users:cliente_dash')
 
             return view_func(request, *args, **kwargs)
         return _wrapped_view

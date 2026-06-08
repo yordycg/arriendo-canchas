@@ -171,12 +171,14 @@ def pavilion_create(request):
 def court_update(request, cancha_id):
     db = DatabaseManager()
     context = {}
-    
+
     # Datos para selects
-    tipos_canchas = db.get_all("SELECT tipo_cancha_id, nombre FROM tipos_canchas WHERE is_active = 1")
-    superficies = ['Pasto Sintético', 'Pasto Natural', 'Arcilla', 'Cemento', 'Parquet', 'Baldosa']
+    tipos_canchas = db.get_all(
+        "SELECT tipo_cancha_id, nombre FROM tipos_canchas WHERE is_active = 1")
+    superficies = ['Pasto Sintético', 'Pasto Natural',
+                   'Arcilla', 'Cemento', 'Parquet', 'Baldosa']
     recintos = ['Abierto', 'Semi-techado', 'Cerrado']
-    
+
     def get_dropdown_data():
         return {
             'tipos_canchas': tipos_canchas,
@@ -190,16 +192,17 @@ def court_update(request, cancha_id):
         tipo_superficie = request.POST.get('tipo_superficie')
         tipo_recinto = request.POST.get('tipo_recinto')
         tipo_cancha_id = request.POST.get('tipo_cancha_id')
-        
+
         try:
             query = """
-                UPDATE canchas 
+                UPDATE canchas
                 SET nombre=%s, valor_hora=%s, tipo_superficie=%s, tipo_recinto=%s, tipo_cancha_id=%s
                 WHERE cancha_id=%s
             """
-            params = (nombre, valor_hora, tipo_superficie, tipo_recinto, tipo_cancha_id, cancha_id)
+            params = (nombre, valor_hora, tipo_superficie,
+                      tipo_recinto, tipo_cancha_id, cancha_id)
             db.execute(query, params)
-            
+
             context = {
                 'sw_alert': {
                     'type': 'success',
@@ -209,7 +212,7 @@ def court_update(request, cancha_id):
                 }
             }
             return render(request, 'courts/court_form.html', context)
-            
+
         except Exception as e:
             print(f"ERROR DB [Actualizar Cancha]: {str(e)}")
             context = {
@@ -229,7 +232,8 @@ def court_update(request, cancha_id):
 
     # Metodo GET: Buscar datos actuales
     try:
-        cancha = db.get_one("SELECT * FROM canchas WHERE cancha_id = %s", (cancha_id,))
+        cancha = db.get_one(
+            "SELECT * FROM canchas WHERE cancha_id = %s", (cancha_id,))
         if not cancha:
             return redirect('courts:court_list')
     except Exception as e:
@@ -248,9 +252,10 @@ def court_update(request, cancha_id):
 def pavilion_update(request, quincho_id):
     db = DatabaseManager()
     context = {}
-    
-    estados = db.get_all("SELECT estado_quincho_id, nombre FROM estados_quinchos")
-    
+
+    estados = db.get_all(
+        "SELECT estado_quincho_id, nombre FROM estados_quinchos")
+
     def get_dropdown_data():
         return {'estados': estados}
 
@@ -259,16 +264,17 @@ def pavilion_update(request, quincho_id):
         valor_reserva = request.POST.get('valor_reserva')
         solo_vip = 1 if request.POST.get('solo_vip') == 'on' else 0
         estado_quincho_id = request.POST.get('estado_quincho_id')
-        
+
         try:
             query = """
-                UPDATE quinchos 
+                UPDATE quinchos
                 SET nombre=%s, valor_reserva=%s, solo_vip=%s, estado_quincho_id=%s
                 WHERE quincho_id=%s
             """
-            params = (nombre, valor_reserva, solo_vip, estado_quincho_id, quincho_id)
+            params = (nombre, valor_reserva, solo_vip,
+                      estado_quincho_id, quincho_id)
             db.execute(query, params)
-            
+
             context = {
                 'sw_alert': {
                     'type': 'success',
@@ -278,7 +284,7 @@ def pavilion_update(request, quincho_id):
                 }
             }
             return render(request, 'courts/pavilion_form.html', context)
-            
+
         except Exception as e:
             print(f"ERROR DB [Actualizar Quincho]: {str(e)}")
             context = {
@@ -288,7 +294,7 @@ def pavilion_update(request, quincho_id):
                     'message': 'No se pudieron guardar los cambios.'
                 },
                 'quincho': {
-                    'quincho_id': quincho_id, 'nombre': nombre, 
+                    'quincho_id': quincho_id, 'nombre': nombre,
                     'valor_reserva': valor_reserva, 'solo_vip': solo_vip,
                     'estado_quincho_id': int(estado_quincho_id)
                 },
@@ -298,7 +304,8 @@ def pavilion_update(request, quincho_id):
 
     # Metodo GET: Buscar datos actuales
     try:
-        quincho = db.get_one("SELECT * FROM quinchos WHERE quincho_id = %s", (quincho_id,))
+        quincho = db.get_one(
+            "SELECT * FROM quinchos WHERE quincho_id = %s", (quincho_id,))
         if not quincho:
             return redirect('courts:court_list')
     except Exception as e:
@@ -318,10 +325,11 @@ def court_delete(request, cancha_id):
     try:
         db = DatabaseManager()
         # Soft-delete: marcar como inactivo
-        db.execute("UPDATE canchas SET is_active = 0 WHERE cancha_id = %s", (cancha_id,))
+        db.execute(
+            "UPDATE canchas SET is_active = 0 WHERE cancha_id = %s", (cancha_id,))
     except Exception as e:
         print(f"ERROR DB [Eliminar Cancha]: {str(e)}")
-        
+
     return redirect('courts:court_list')
 
 
@@ -331,8 +339,9 @@ def pavilion_delete(request, quincho_id):
     try:
         db = DatabaseManager()
         # Soft-delete: marcar como inactivo
-        db.execute("UPDATE quinchos SET is_active = 0 WHERE quincho_id = %s", (quincho_id,))
+        db.execute(
+            "UPDATE quinchos SET is_active = 0 WHERE quincho_id = %s", (quincho_id,))
     except Exception as e:
         print(f"ERROR DB [Eliminar Quincho]: {str(e)}")
-        
+
     return redirect(reverse('courts:court_list') + '?tab=pavilions')

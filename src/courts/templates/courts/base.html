@@ -119,13 +119,13 @@
                 <i class="bi bi-star-fill me-3 fs-5"></i>
                 <span>Planes Membresía</span>
               </a>
-
-              <a href="{% url 'courts:court_list' %}"
-                 class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'courts' %}active{% else %}text-white-50{% endif %}">
-                <i class="bi bi-pin-map-fill me-3 fs-5"></i>
-                <span>Canchas / Quinchos</span>
-              </a>
             {% endif %}
+
+            <a href="{% url 'courts:court_list' %}"
+               class="nav-link d-flex align-items-center {% if request.resolver_match.app_name == 'courts' %}active{% else %}text-white-50{% endif %}">
+              <i class="bi bi-pin-map-fill me-3 fs-5"></i>
+              <span>Canchas / Quinchos</span>
+            </a>
 
             {% if request.session.user_rol == 'Cliente' %}
               <a href="{% url 'memberships:my_benefits' %}"
