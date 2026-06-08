@@ -18,8 +18,6 @@ def login_view(request):
             return redirect('users:recepcionista_dash')
         if rol_actual == 'Cliente':
             return redirect('users:cliente_dash')
-        if rol_actual == 'Invitado':
-            return redirect('users:invitado_dash')
 
     if request.method == 'POST':
         # Paso 2: capturar datos del formulario login, y definir variables
@@ -87,6 +85,17 @@ def login_view(request):
                     'type': 'error',
                     'title': 'Error',
                     'message': 'No existe un registro asociado a ese rut/email/contraseña.'
+                }
+            }
+            return render(request, 'authentication/login.html', context)
+
+        # CASO 1.2: usuario es INVITADO, no puede realizar login
+        if user_found and user_found['rol_nombre'] == 'Invitado':
+            context = {
+                'sw_alert': {
+                    'type': 'warning',
+                    'title': 'Acceso Denegado',
+                    'message': 'Las cuentas de tipo Invitado no tienen permisos para acceder al sistema. Hable con un Administrador.'
                 }
             }
             return render(request, 'authentication/login.html', context)
@@ -206,8 +215,6 @@ def login_view(request):
                 return redirect('users:recepcionista_dash')
             if rol_asignado == 'Cliente':
                 return redirect('users:cliente_dash')
-            if rol_asignado == 'Invitado':
-                return redirect('users:invitado_dash')
 
     return render(request, 'authentication/login.html')
 
@@ -228,8 +235,6 @@ def register_view(request):
             return redirect('users:recepcionista_dash')
         if rol_actual == 'Cliente':
             return redirect('users:cliente_dash')
-        if rol_actual == 'Invitado':
-            return redirect('users:invitado_dash')
 
     message = None
     context = {}

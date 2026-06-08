@@ -94,7 +94,7 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar-nav flex-grow-1 overflow-auto py-3">
           <div class="nav nav-pills flex-column mb-3">
-            <a href="{% if request.session.user_rol == 'Admin' %}{% url 'users:admin_dash' %}{% elif request.session.user_rol == 'Recepcionista' %}{% url 'users:recepcionista_dash' %}{% elif request.session.user_rol == 'Cliente' %}{% url 'users:cliente_dash' %}{% else %}{% url 'users:invitado_dash' %}{% endif %}"
+            <a href="{% if request.session.user_rol == 'Admin' %}{% url 'users:admin_dash' %}{% elif request.session.user_rol == 'Recepcionista' %}{% url 'users:recepcionista_dash' %}{% else %}{% url 'users:cliente_dash' %}{% endif %}"
                class="nav-link d-flex align-items-center {% if 'dash' in request.resolver_match.url_name %}active{% else %}text-white-50{% endif %}">
               <i class="bi bi-speedometer2 me-3 fs-5"></i>
               <span>Panel de Inicio</span>

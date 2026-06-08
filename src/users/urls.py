@@ -12,5 +12,4 @@ urlpatterns = [
     path('recepcion-dashboard/', views.recepcionista_dashboard,
          name='recepcionista_dash'),
     path('cliente-dashboard/', views.cliente_dashboard, name='cliente_dash'),
-    path('invitado-dashboard/', views.invitado_dashboard, name='invitado_dash'),
 ]

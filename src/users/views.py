@@ -294,9 +294,3 @@ def recepcionista_dashboard(request):
 @login_required_manual
 def cliente_dashboard(request):
     return render(request, 'users/dashboards/cliente.html')
-
-
-@role_required(['Invitado'])
-@login_required_manual
-def invitado_dashboard(request):
-    return render(request, 'users/dashboards/invitado.html')
