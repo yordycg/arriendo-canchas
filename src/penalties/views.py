@@ -57,14 +57,17 @@ def penalty_create(request):
         try:
             with db.transaction() as cursor:
                 # 1. Obtener el contador de faltas actual del usuario
-                cursor.execute("SELECT contador_faltas FROM usuarios WHERE rut = %s", [usuario_rut])
+                cursor.execute(
+                    "SELECT contador_faltas FROM usuarios WHERE rut = %s", [usuario_rut])
                 usuario_info = cursor.fetchone()
                 faltas_actuales = usuario_info['contador_faltas'] if usuario_info else 0
 
                 # 2. Obtener el valor base de la multa
-                cursor.execute("SELECT valor_multa FROM tipos_penalizaciones WHERE tipo_penalizacion_id = %s", [tipo_id])
+                cursor.execute(
+                    "SELECT valor_multa FROM tipos_penalizaciones WHERE tipo_penalizacion_id = %s", [tipo_id])
                 tipo_info = cursor.fetchone()
-                valor_base = float(tipo_info['valor_multa']) if tipo_info else 0.0
+                valor_base = float(
+                    tipo_info['valor_multa']) if tipo_info else 0.0
 
                 # 3. Calcular el monto final con recargo progresivo
                 nueva_cantidad_faltas = faltas_actuales + 1
@@ -73,7 +76,7 @@ def penalty_create(request):
                     recargo = 1.0  # 100% de recargo
                 elif nueva_cantidad_faltas >= 3:
                     recargo = 0.5  # 50% de recargo
-                
+
                 monto_final = valor_base + (valor_base * recargo)
 
                 # 4. Insertar la penalización
@@ -81,7 +84,7 @@ def penalty_create(request):
                     "INSERT INTO usuarios_penalizaciones (usuario_rut, tipo_penalizacion_id, monto_cobrado, fecha, pagada) VALUES (%s, %s, %s, %s, 0)",
                     [usuario_rut, tipo_id, monto_final, fecha]
                 )
-                
+
                 # 5. Incrementar el contador de faltas del usuario
                 cursor.execute(
                     "UPDATE usuarios SET contador_faltas = contador_faltas + 1 WHERE rut = %s",
@@ -99,22 +102,32 @@ def penalty_create(request):
             return render(request, 'penalties/penalty_form.html', context)
         except Exception as e:
             print(f"ERROR DB [Crear Penalización]: {str(e)}")
-            context['sw_alert'] = {
-                'type': 'error',
-                'title': 'Error',
-                'message': 'No se pudo crear la penalización.'
+            context = {
+                'sw_alert': {
+                    'type': 'error',
+                    'title': 'Error',
+                    'message': 'No se pudo crear la penalización.'
+                }
             }
 
     try:
         # Solo los clientes pueden recibir penalizaciones
         query_usuarios = """
-            SELECT u.rut, CONCAT(u.nombres, ' ', u.apellido_p, ' ', IFNULL(u.apellido_m, '')) as nombre 
+            SELECT u.rut, CONCAT(u.nombres, ' ', u.apellido_p, ' ', IFNULL(u.apellido_m, '')) as nombre
             FROM usuarios u
             JOIN roles r ON u.rol_id = r.rol_id
             WHERE u.is_active = 1 AND r.nombre = 'Cliente'
         """
-        context['usuarios'] = db.get_all(query_usuarios)
-        context['tipos'] = db.get_all("SELECT tipo_penalizacion_id, nombre, valor_multa FROM tipos_penalizaciones")
+
+        usuarios = db.get_all(query_usuarios)
+        tipos = db.get_all(
+            "SELECT tipo_penalizacion_id, nombre, valor_multa FROM tipos_penalizaciones"
+        )
+
+        context = {
+            'usuarios': usuarios,
+            'tipos': tipos
+        }
     except Exception as e:
         print(f"ERROR DB [Cargar Datos Form Penalización]: {str(e)}")
 
@@ -130,7 +143,8 @@ def penalty_pay(request, penalty_id):
 
     try:
         # Verificar permisos y propiedad
-        penalty_info = db.get_one("SELECT usuario_rut FROM usuarios_penalizaciones WHERE usuario_penalizado_id = %s", [penalty_id])
+        penalty_info = db.get_one(
+            "SELECT usuario_rut FROM usuarios_penalizaciones WHERE usuario_penalizado_id = %s", [penalty_id])
         if not penalty_info:
             return redirect('penalties:penalty_list' if user_rol in ['Admin', 'Recepcionista'] else 'penalties:my_penalties')
 
@@ -145,8 +159,9 @@ def penalty_pay(request, penalty_id):
         db.execute(query_pay_penalty, (penalty_id,))
 
         is_staff = user_rol in ['Admin', 'Recepcionista']
-        redirect_url = reverse('penalties:penalty_list') if is_staff else reverse('penalties:my_penalties')
-        
+        redirect_url = reverse('penalties:penalty_list') if is_staff else reverse(
+            'penalties:my_penalties')
+
         context = {
             'penalizaciones': get_penalties_data() if is_staff else db.get_all("""
                 SELECT up.usuario_penalizado_id, tp.nombre as tipo_penalizacion, up.monto_cobrado as valor_multa, up.fecha, up.pagada
@@ -161,10 +176,10 @@ def penalty_pay(request, penalty_id):
                 'redirect': redirect_url
             }
         }
-        
+
         template = 'penalties/penalty_list.html' if is_staff else 'penalties/my_penalties.html'
         return render(request, template, context)
-        
+
     except Exception as e:
         print(f"ERROR DB [Pagar Penalizacion]: {str(e)}")
         is_staff = user_rol in ['Admin', 'Recepcionista']
@@ -192,13 +207,15 @@ def penalty_delete(request, penalty_id):
     context = {}
     try:
         # Obtener el RUT del usuario para descontar la falta
-        rut_result = db.get_one("SELECT usuario_rut FROM usuarios_penalizaciones WHERE usuario_penalizado_id = %s", [penalty_id])
-        
+        rut_result = db.get_one(
+            "SELECT usuario_rut FROM usuarios_penalizaciones WHERE usuario_penalizado_id = %s", [penalty_id])
+
         with db.transaction() as cursor:
-            cursor.execute("DELETE FROM usuarios_penalizaciones WHERE usuario_penalizado_id = %s", [penalty_id])
+            cursor.execute(
+                "DELETE FROM usuarios_penalizaciones WHERE usuario_penalizado_id = %s", [penalty_id])
             if rut_result:
                 cursor.execute(
-                    "UPDATE usuarios SET contador_faltas = GREATEST(0, contador_faltas - 1) WHERE rut = %s", 
+                    "UPDATE usuarios SET contador_faltas = GREATEST(0, contador_faltas - 1) WHERE rut = %s",
                     [rut_result['usuario_rut']]
                 )
 
@@ -236,36 +253,6 @@ def my_penalties(request):
                 up.usuario_penalizado_id,
                 tp.nombre as tipo_penalizacion,
                 up.monto_cobrado as valor_multa,
-                up.fecha,
-                up.pagada
-            FROM usuarios_penalizaciones up
-            JOIN tipos_penalizaciones tp ON up.tipo_penalizacion_id = tp.tipo_penalizacion_id
-            WHERE up.usuario_rut = %s
-            ORDER BY up.fecha DESC
-        """
-        penalties = db.get_all(query, (user_rut,))
-        context = {
-            'penalizaciones': penalties
-        }
-    except Exception as e:
-        print(f"ERROR DB [Mis Penalizaciones]: {str(e)}")
-
-    return render(request, 'penalties/my_penalties.html', context)
-    return render(request, 'penalties/penalty_list.html', context)
-
-
-@login_required_manual
-def my_penalties(request):
-    db = DatabaseManager()
-    user_rut = request.session.get('user_rut')
-    context = {}
-
-    try:
-        query = """
-            SELECT
-                up.usuario_penalizado_id,
-                tp.nombre as tipo_penalizacion,
-                tp.valor_multa,
                 up.fecha,
                 up.pagada
             FROM usuarios_penalizaciones up
