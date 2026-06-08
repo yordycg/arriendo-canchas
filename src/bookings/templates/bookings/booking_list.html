@@ -93,10 +93,10 @@ Acciones
                   </span>
                 </td>
                 <td>
-                  <span class="fw-bold text-success">${{ r.valor_pagado }}</span>
+                  <span class="fw-bold text-success clp-format">{{ r.valor_pagado|floatformat:0 }}</span>
                 </td>
                 <td>
-                  {% if r.estado == 'Confirmada' %}
+                  {% if r.estado == 'Pagada' %}
                     <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">
                       <i class="bi bi-check-circle-fill me-1"></i>{{ r.estado }}
                     </span>
@@ -108,6 +108,10 @@ Acciones
                     <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">
                       <i class="bi bi-x-circle-fill me-1"></i>{{ r.estado }}
                     </span>
+                  {% elif r.estado == 'No Asistida (W.O.)' %}
+                    <span class="badge bg-dark-subtle text-dark border border-dark-subtle px-2 py-1 rounded-pill">
+                      <i class="bi bi-person-x-fill me-1"></i>No Asistió
+                    </span>
                   {% else %}
                     <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-pill">
                                     {{ r.estado }}
@@ -116,14 +120,15 @@ Acciones
                 </td>
                 <td class="text-center pe-3">
                   <div class="btn-group shadow-sm rounded-3">
+                    <!-- BOTÓN VER: Siempre activo -->
                     <button type="button"
                             class="btn btn-white btn-sm border-end px-3 btn-view-booking"
                             data-recurso="{{ r.recurso }}"
                             data-tipo="{{ r.tipo }}"
                             data-fecha="{{ r.fecha|date:'d/m/Y' }}"
                             data-horario="{{ r.hora|time:'H:i' }} - {{ r.hora_fin|time:'H:i' }}"
-                            data-pago="{{ r.valor_pagado }}"
-                            data-base="{{ r.precio_base }}"
+                            data-pago="{{ r.valor_pagado|floatformat:0 }}"
+                            data-base="{{ r.precio_base|floatformat:0 }}"
                             data-estado="{{ r.estado }}"
                             data-usuario="{{ r.nombres }} {{ r.apellido_p }}"
                             data-membresia="{{ r.membresia|default:'Sin Membresía' }}"
@@ -131,37 +136,38 @@ Acciones
                             title="Ver Detalles">
                       <i class="bi bi-eye text-info"></i>
                     </button>
-                    {% if r.estado == 'Pendiente' %}
+
+                    <!-- BOTÓN PAGAR: Solo si está Pendiente -->
+                    <button type="button"
+                            class="btn btn-white btn-sm border-end px-3 {% if r.estado != 'Pendiente' %}disabled text-muted{% else %}btn-pay-booking{% endif %}"
+                            {% if r.estado != 'Pendiente' %}disabled{% endif %}
+                            data-url="{% url 'bookings:booking_pay' r.tipo r.id %}"
+                            data-recurso="{{ r.recurso }}"
+                            data-monto="{{ r.valor_pagado|floatformat:0 }}"
+                            title="Pagar Reserva">
+                      <i class="bi bi-credit-card {% if r.estado == 'Pendiente' %}text-success{% endif %}"></i>
+                    </button>
+
+                    <!-- BOTÓN CANCELAR: Si está Pendiente o Pagada -->
+                    <button type="button"
+                            class="btn btn-white btn-sm border-end px-3 {% if r.estado == 'Cancelada' or r.estado == 'No Asistida (W.O.)' %}disabled text-muted{% else %}btn-cancel-booking{% endif %}"
+                            {% if r.estado == 'Cancelada' or r.estado == 'No Asistida (W.O.)' %}disabled{% endif %}
+                            data-url="{% url 'bookings:booking_cancel' r.tipo r.id %}"
+                            data-recurso="{{ r.recurso }}"
+                            title="Cancelar Reserva">
+                      <i class="bi bi-trash3 {% if r.estado != 'Cancelada' and r.estado != 'No Asistida (W.O.)' %}text-danger{% endif %}"></i>
+                    </button>
+
+                    <!-- BOTÓN NO-SHOW (Solo Staff): Activo si está Pendiente o Pagada -->
+                    {% if request.session.user_rol == 'Admin' or request.session.user_rol == 'Recepcionista' %}
                       <button type="button"
-                              class="btn btn-white btn-sm border-end px-3 btn-pay-booking"
-                              data-url="{% url 'bookings:booking_pay' r.tipo r.id %}"
+                              class="btn btn-white btn-sm px-3 {% if r.estado != 'Pendiente' and r.estado != 'Pagada' %}disabled text-muted{% else %}btn-no-show-booking{% endif %}"
+                              {% if r.estado != 'Pendiente' and r.estado != 'Pagada' %}disabled{% endif %}
+                              data-url="{% url 'bookings:booking_no_show' r.tipo r.id %}"
                               data-recurso="{{ r.recurso }}"
-                              data-monto="{{ r.valor_pagado }}"
-                              title="Pagar Reserva">
-                        <i class="bi bi-credit-card text-success"></i>
-                      </button>
-                    {% else %}
-                      <button type="button"
-                              class="btn btn-white btn-sm border-end px-3 disabled text-muted"
-                              title="No se puede pagar"
-                              disabled>
-                        <i class="bi bi-credit-card"></i>
-                      </button>
-                    {% endif %}
-                    {% if r.estado == 'Confirmada' or r.estado == 'Pendiente' %}
-                      <button type="button"
-                              class="btn btn-white btn-sm px-3 btn-cancel-booking"
-                              data-url="{% url 'bookings:booking_cancel' r.tipo r.id %}"
-                              data-recurso="{{ r.recurso }}"
-                              title="Cancelar Reserva">
-                        <i class="bi bi-trash3 text-danger"></i>
-                      </button>
-                    {% else %}
-                      <button type="button"
-                              class="btn btn-white btn-sm px-3 disabled text-muted"
-                              title="No se puede cancelar"
-                              disabled>
-                        <i class="bi bi-trash3"></i>
+                              data-usuario="{{ r.nombres }} {{ r.apellido_p }}"
+                              title="Registrar No-show">
+                        <i class="bi bi-person-x {% if r.estado == 'Pendiente' or r.estado == 'Pagada' %}text-warning{% endif %}"></i>
                       </button>
                     {% endif %}
                   </div>

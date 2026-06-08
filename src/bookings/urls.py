@@ -12,4 +12,6 @@ urlpatterns = [
          views.booking_cancel, name="booking_cancel"),
     path("pagar/<str:tipo>/<int:id>/",
          views.booking_pay, name="booking_pay"),
+    path("no-show/<str:tipo>/<int:id>/",
+         views.booking_no_show, name="booking_no_show"),
 ]

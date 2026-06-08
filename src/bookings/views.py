@@ -5,10 +5,73 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 
-from authentication.decorators import login_required_manual
+from authentication.decorators import login_required_manual, role_required
 from database.db import DatabaseManager
 
-# Create your views here.
+# ... (rest of imports)
+
+@login_required_manual
+@role_required(['Admin', 'Recepcionista'])
+def booking_no_show(request, tipo, id):
+    """
+    Marca una reserva como No Asistida (ID: 4) y aplica una penalización automática.
+    """
+    db = DatabaseManager()
+    table = "reservas_canchas" if tipo == "Cancha" else "reservas_quinchos"
+    pk_col = "reserva_cancha_id" if tipo == "Cancha" else "reserva_quincho_id"
+
+    try:
+        # 1. Obtener la reserva y el usuario
+        res = db.get_one(f"SELECT usuario_rut, fecha FROM {table} WHERE {pk_col} = %s", [id])
+        if not res:
+            return redirect('bookings:booking_list')
+
+        usuario_rut = res['usuario_rut']
+
+        with db.transaction() as cursor:
+            # 2. Cambiar estado de la reserva a 'No Asistida' (ID 4)
+            cursor.execute(f"UPDATE {table} SET estado_id = 4 WHERE {pk_col} = %s", [id])
+
+            # 3. Obtener faltas actuales del usuario
+            cursor.execute("SELECT contador_faltas FROM usuarios WHERE rut = %s", [usuario_rut])
+            faltas_actuales = cursor.fetchone()['contador_faltas']
+
+            # 4. Obtener valor base de multa por No-show (ID 1)
+            cursor.execute("SELECT valor_multa FROM tipos_penalizaciones WHERE tipo_penalizacion_id = 1")
+            valor_base = float(cursor.fetchone()['valor_multa'])
+
+            # 5. Calcular recargo progresivo
+            nueva_cantidad_faltas = faltas_actuales + 1
+            recargo = 0.0
+            if nueva_cantidad_faltas >= 5:
+                recargo = 1.0  # 100%
+            elif nueva_cantidad_faltas >= 3:
+                recargo = 0.5  # 50%
+            
+            monto_final = valor_base + (valor_base * recargo)
+
+            # 6. Registrar la penalización
+            cursor.execute(
+                "INSERT INTO usuarios_penalizaciones (usuario_rut, tipo_penalizacion_id, monto_cobrado, fecha, pagada) VALUES (%s, 1, %s, %s, 0)",
+                [usuario_rut, monto_final, datetime.now().date()]
+            )
+
+            # 7. Incrementar contador de faltas del usuario
+            cursor.execute("UPDATE usuarios SET contador_faltas = contador_faltas + 1 WHERE rut = %s", [usuario_rut])
+
+        return render(request, 'bookings/booking_list.html', {
+            'reservas': get_bookings_data(request),
+            'sw_alert': {
+                'type': 'success',
+                'title': 'No Asistencia Registrada',
+                'message': f'La reserva ha sido marcada como No Asistida. Se aplicó una multa de ${monto_final:,.0f} al usuario.',
+                'redirect': reverse('bookings:booking_list')
+            }
+        })
+
+    except Exception as e:
+        print(f"ERROR DB [No-show]: {str(e)}")
+        return redirect('bookings:booking_list')
 
 
 def get_bookings_data(request):

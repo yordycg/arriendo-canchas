@@ -1,4 +1,21 @@
 $(document).ready(function () {
+  // Formateo CLP
+  function formatCLP() {
+    $(".clp-format").each(function () {
+      let element = $(this);
+      let text = element.text().trim();
+      let numericValue = text.replace(/[^\d]/g, "");
+      if (numericValue !== "") {
+        let value = parseInt(numericValue);
+        if (!isNaN(value)) {
+          let formatted = new Intl.NumberFormat("de-DE").format(value);
+          element.text("$" + formatted);
+        }
+      }
+    });
+  }
+  formatCLP();
+
   const $recursoSelector = $("#recurso_selector");
   const $fechaInput = $("#fecha");
   const $duracionSelect = $("#duracion");
@@ -210,6 +227,28 @@ $(document).ready(function () {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Sí, cancelar",
+      cancelButtonText: "Volver",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
+    });
+  });
+
+  // Lógica para No-show
+  $(document).on("click", ".btn-no-show-booking", function () {
+    const url = $(this).data("url");
+    const recurso = $(this).data("recurso");
+    const usuario = $(this).data("usuario");
+
+    Swal.fire({
+      title: "¿Registrar Inasistencia?",
+      html: `Vas a marcar como <strong>No Asistida</strong> la reserva de <strong>${usuario}</strong> en <strong>${recurso}</strong>.<br><br><span class="text-danger small"><i class="bi bi-exclamation-triangle"></i> Esto generará una multa automática y sumará una falta al usuario.</span>`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#f39c12",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Confirmar No-show",
       cancelButtonText: "Volver",
     }).then((result) => {
       if (result.isConfirmed) {
