@@ -1,53 +1,64 @@
 $(document).ready(function() {
-    // Función para obtener y mostrar el clima
     function loadWeather() {
-        // Mostrar estado de carga (opcional, ya está por defecto en el HTML)
-        $('#weather-temp').text('...');
-        $('#weather-state').text('Cargando...');
+        const lat = -37.4697;
+        const lon = -72.3539;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`;
 
         $.ajax({
-            url: 'https://api.gael.cloud/general/public/clima',
+            url: url,
             type: 'GET',
             dataType: 'json',
             success: function(data) {
-                // Filtrar los datos para encontrar la estación de Concepción
-                const concepcionWeather = data.find(function(station) {
-                    return station.Estacion === 'Concepción';
-                });
+                if (data && data.current_weather) {
+                    const current = data.current_weather;
+                    
+                    // Actualizar Temperatura
+                    $('#weather-temp').html(`${Math.round(current.temperature)}&deg;C`);
+                    
+                    // Actualizar Viento (En vez de humedad, ya que Open-Meteo current lo da más fácil)
+                    $('#weather-humidity').text(`${current.windspeed} km/h`);
+                    
+                    // Hora de actualización
+                    const now = new Date();
+                    const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                    $('#weather-time').text(timeStr);
 
-                if (concepcionWeather) {
-                    // Actualizar el DOM con los datos recibidos
-                    $('#weather-temp').html(`${concepcionWeather.Temp}&deg;C`);
-                    $('#weather-state').text(concepcionWeather.Estado);
-                    $('#weather-humidity').text(`${concepcionWeather.Humedad}%`);
-                    $('#weather-time').text(concepcionWeather.HoraUpdate);
-                    
-                    // Cambiar icono según el estado (básico)
-                    const state = concepcionWeather.Estado.toLowerCase();
-                    let iconClass = 'bi-cloud-sun'; // Default
-                    if (state.includes('despejado')) {
-                        iconClass = 'bi-sun text-warning';
-                    } else if (state.includes('lluvia') || state.includes('chubascos')) {
-                        iconClass = 'bi-cloud-rain text-info';
-                    } else if (state.includes('nublado')) {
-                        iconClass = 'bi-clouds text-secondary';
+                    // Interpretar Código de Clima WMO
+                    const code = current.weathercode;
+                    let stateText = "Despejado";
+                    let iconClass = "bi-sun text-warning";
+
+                    if (code >= 1 && code <= 3) {
+                        stateText = "Parcialmente Nublado";
+                        iconClass = "bi-cloud-sun text-primary";
+                    } else if (code >= 45 && code <= 48) {
+                        stateText = "Neblina";
+                        iconClass = "bi-cloud-fog text-secondary";
+                    } else if (code >= 51 && code <= 67) {
+                        stateText = "Lluvia";
+                        iconClass = "bi-cloud-rain text-info";
+                    } else if (code >= 71 && code <= 77) {
+                        stateText = "Nieve";
+                        iconClass = "bi-cloud-snow text-light";
+                    } else if (code >= 80 && code <= 82) {
+                        stateText = "Chubascos";
+                        iconClass = "bi-cloud-drizzle text-info";
+                    } else if (code >= 95) {
+                        stateText = "Tormenta Eléctrica";
+                        iconClass = "bi-cloud-lightning-rain text-dark";
                     }
-                    
+
+                    $('#weather-state').text(stateText);
                     $('#weather-icon').removeClass().addClass(`bi ${iconClass} display-4`);
 
-                } else {
-                    $('#weather-state').text('No disponible');
-                    $('#weather-temp').text('--');
                 }
             },
             error: function(xhr, status, error) {
-                console.error("Error al obtener el clima:", error);
+                console.error("Error al obtener el clima de Los Ángeles:", error);
                 $('#weather-state').text('Error de conexión');
-                $('#weather-temp').text('--');
             }
         });
     }
 
-    // Cargar clima al iniciar
     loadWeather();
 });
