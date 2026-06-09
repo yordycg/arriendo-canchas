@@ -2,7 +2,19 @@ from django.shortcuts import render
 from database.db import DatabaseManager
 from authentication.decorators import login_required_manual, role_required
 
+from django.http import JsonResponse
+
 # Create your views here.
+
+
+@login_required_manual
+def session_keep_alive(request):
+    """
+    Vista AJAX para refrescar la sesión del usuario.
+    - Accede a la session, y Django la marca como modificada y actualiza el 'expire_date'
+    """
+    request.session['last_touch'] = str(datetime.now())
+    return JsonResponse({'status': 'ok'})
 
 
 @role_required(['Admin'])

@@ -142,6 +142,11 @@ USE_I18N = True
 USE_TZ = True
 
 
+# Configuración de Sesiones
+SESSION_COOKIE_AGE = 300  # 5 minutos para pruebas | producción 900 (15)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_SAVE_EVERY_REQUEST = True  # cada clic refresque la session
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
