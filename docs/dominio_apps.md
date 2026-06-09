@@ -13,32 +13,34 @@ Cada aplicación (`app`) de Django en este proyecto es dueña absoluta de su "Do
 
 A continuación, se detalla la responsabilidad exclusiva de cada aplicación:
 
-### 1. 🟢 App `users` (Dominio de Identidad)
+### 1. 🔘 App `core` (Dominio de Soporte y Orquestación)
+*   **Responsabilidad:** ¿Cómo se ve el sistema y cómo se mantienen las sesiones?
+*   **Límites:** Centraliza el diseño base (`base.html`), las librerías CSS/JS compartidas y los Dashboards. Controla la seguridad por inactividad y garantiza que el sistema sea consistente visualmente.
+
+### 2. 🟢 App `users` (Dominio de Identidad)
 *   **Responsabilidad:** ¿Quién eres y qué permiso tienes?
-*   **Límites:** Gestiona el registro, la autenticación (Login/Logout), el hashing de contraseñas, los roles (Admin, Cliente, etc.) y los estados básicos (Activo, Bloqueado).
-*   **Lo que NO hace:** No calcula descuentos, no sabe cuántas faltas tiene un usuario, ni sabe qué canchas ha arrendado.
+*   **Límites:** Gestiona el perfil del usuario (RUT, Nombre, Email), su estado administrativo y su rol.
+*   **Lo que NO hace:** No gestiona el flujo de Login (eso es de `authentication`) ni calcula descuentos de membresía.
 
-### 2. 🟡 App `memberships` (Dominio de Privilegios)
+### 3. 🟡 App `memberships` (Dominio de Privilegios)
 *   **Responsabilidad:** ¿Qué beneficios tienes según tu nivel?
-*   **Límites:** Gestiona los tipos de planes (VIP, Socio, Normal), los porcentajes de descuento y los costos mensuales. Es dueña de la interfaz "Mis Beneficios" donde el cliente ve su estado.
-*   **Lo que NO hace:** No gestiona el perfil base del usuario. Solo se asocia a un RUT para otorgar la regla de negocio del descuento.
+*   **Límites:** Gestiona los tipos de planes y los descuentos globales. Es dueña de la interfaz "Mis Beneficios" donde el cliente ve su estado de socio.
 
-### 3. 🔵 App `courts` (Dominio de Infraestructura)
+### 4. 🔵 App `courts` (Dominio de Infraestructura)
 *   **Responsabilidad:** ¿Dónde se juega y cuánto cuesta la hora base?
-*   **Límites:** Mantiene el catálogo físico del recinto (Canchas, Quinchos, Superficies). Define el valor bruto por hora antes de cualquier descuento.
-*   **Lo que NO hace:** No sabe si la cancha está ocupada en un horario específico (eso es una transacción, no infraestructura).
+*   **Límites:** Mantiene el catálogo físico del recinto (**Canchas y Quinchos**). Define el valor bruto antes de cualquier descuento.
 
-### 4. 🔴 App `bookings` (Dominio Transaccional) - *Corazón del Sistema*
+### 5. 🔴 App `bookings` (Dominio Transaccional) - *Corazón del Sistema*
 *   **Responsabilidad:** ¿Quién reservó qué, cuándo y cuánto pagó finalmente?
-*   **Límites:** Coordina la relación entre un Usuario (`users`), una Infraestructura (`courts`) y un Horario.
-*   **Interacción con otros dominios:** Al momento de cobrar, `bookings` le "pregunta" a `memberships` qué descuento aplicar sobre el precio base que dictó `courts`.
+*   **Límites:** Coordina la relación entre un Usuario, una Infraestructura y un Horario.
+*   **Interacción:** Al momento de cobrar, `bookings` consulta a `memberships` para aplicar el descuento correspondiente.
 
-### 5. 🟠 App `penalties` (Dominio de Consecuencias)
+### 6. 🟠 App `penalties` (Dominio de Consecuencias)
 *   **Responsabilidad:** ¿Quién no cumplió las reglas y qué castigo recibe?
-*   **Límites:** Registra los "No-shows" (inasistencias) leyendo el historial de `bookings`, calcula multas progresivas y es capaz de emitir una orden para cambiar el estado de un usuario en la app `users` (ej. a "Bloqueado").
+*   **Límites:** Registra inasistencias (**No-shows**) y calcula multas progresivas. Es capaz de bloquear a un usuario si acumula demasiadas deudas.
 
 ## 💡 Resumen Práctico
 
 > *"A `users` no le importa cuánto cuesta ser VIP, solo sabe que tienes la etiqueta VIP.*
-> *A `memberships` no le importa cuándo reservaste una cancha, solo sabe que por ser VIP te debe descontar un 15%.*
-> *A `bookings` no le importa cómo te llamas ni tu contraseña, solo junta tu ID con una cancha y calcula tu total."*
+> *A `core` no le importa qué reservaste, solo le importa que sigas activo para no cerrar tu sesión.*
+> *A `bookings` no le importa cómo te llamas, solo junta tu ID con una cancha y calcula tu total."*
