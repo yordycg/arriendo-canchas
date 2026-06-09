@@ -46,7 +46,7 @@ _Tablas que no poseen llaves foráneas para mantener desacoplamiento o por reque
 
 | Tabla               | Descripción                                                                                               |
 | :------------------ | :-------------------------------------------------------------------------------------------------------- |
-| **auditoria_login** | Registra intentos de acceso. No usa FK para permitir el registro de usuarios inexistentes o eliminados. |
+| **auditoria_login** | Registra intentos de acceso. No usa FK para permitir el registro de usuarios inexistentes o eliminados. Incluye una restricción técnica (**CHECK**) para validar los estados `'Correcto'` e `'Incorrecto'`. |
 
 ## 5. Resumen de Integridad Referencial (FKs)
 

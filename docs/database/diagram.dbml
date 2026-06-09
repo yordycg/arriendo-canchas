@@ -1,4 +1,4 @@
-// Diagrama de la Base de Datos: Arriendo de Canchas
+// Diagrama de la Base de Datos: Arriendo de Canchas (Sincronizado con 01_schema.sql)
 
 Table estados_usuarios {
   estado_usuario_id int [pk, increment]
@@ -186,26 +186,26 @@ Table auditoria_login {
   created_at timestamp [default: `CURRENT_TIMESTAMP`]
 }
 
-// Relaciones
-Ref: canchas.tipo_cancha_id > tipos_canchas.tipo_cancha_id
-Ref: torneos.tipo_cancha_id > tipos_canchas.tipo_cancha_id
-Ref: usuarios.estado_usuario_id > estados_usuarios.estado_usuario_id
-Ref: usuarios.rol_id > roles.rol_id
-Ref: usuarios.membresia_id > membresias.membresia_id
-Ref: quinchos.estado_quincho_id > estados_quinchos.estado_quincho_id
-Ref: reservas_canchas.estado_id > estados_reservas.estado_reserva_id
-Ref: reservas_canchas.cancha_id > canchas.cancha_id
-Ref: reservas_canchas.usuario_rut > usuarios.rut
-Ref: reservas_quinchos.estado_id > estados_reservas.estado_reserva_id
-Ref: reservas_quinchos.quincho_id > quinchos.quincho_id
-Ref: reservas_quinchos.usuario_rut > usuarios.rut
-Ref: equipos.capitan_id > usuarios.rut
-Ref: equipos_usuarios.equipo_id > equipos.equipo_id
-Ref: equipos_usuarios.usuario_rut > usuarios.rut
-Ref: partidos.torneo_id > torneos.torneo_id
-Ref: partidos.equipo_1_id > equipos.equipo_id
-Ref: partidos.equipo_2_id > equipos.equipo_id
-Ref: partidos.reserva_cancha_id > reservas_canchas.reserva_cancha_id
-Ref: partidos.equipo_perdedor_id > equipos.equipo_id
-Ref: usuarios_penalizaciones.usuario_rut > usuarios.rut
-Ref: usuarios_penalizaciones.tipo_penalizacion_id > tipos_penalizaciones.tipo_penalizacion_id
+// Relaciones con Integridad Referencial
+Ref: canchas.tipo_cancha_id > tipos_canchas.tipo_cancha_id [delete: restrict]
+Ref: torneos.tipo_cancha_id > tipos_canchas.tipo_cancha_id [delete: restrict]
+Ref: usuarios.estado_usuario_id > estados_usuarios.estado_usuario_id [delete: restrict]
+Ref: usuarios.rol_id > roles.rol_id [delete: restrict]
+Ref: usuarios.membresia_id > membresias.membresia_id [delete: restrict]
+Ref: quinchos.estado_quincho_id > estados_quinchos.estado_quincho_id [delete: restrict]
+Ref: reservas_canchas.estado_id > estados_reservas.estado_reserva_id [delete: restrict]
+Ref: reservas_canchas.cancha_id > canchas.cancha_id [delete: restrict]
+Ref: reservas_canchas.usuario_rut > usuarios.rut [delete: restrict]
+Ref: reservas_quinchos.estado_id > estados_reservas.estado_reserva_id [delete: restrict]
+Ref: reservas_quinchos.quincho_id > quinchos.quincho_id [delete: restrict]
+Ref: reservas_quinchos.usuario_rut > usuarios.rut [delete: restrict]
+Ref: equipos.capitan_id > usuarios.rut [delete: restrict]
+Ref: equipos_usuarios.equipo_id > equipos.equipo_id [delete: restrict]
+Ref: equipos_usuarios.usuario_rut > usuarios.rut [delete: restrict]
+Ref: partidos.torneo_id > torneos.torneo_id [delete: restrict]
+Ref: partidos.equipo_1_id > equipos.equipo_id [delete: restrict]
+Ref: partidos.equipo_2_id > equipos.equipo_id [delete: restrict]
+Ref: partidos.reserva_cancha_id > reservas_canchas.reserva_cancha_id [delete: restrict]
+Ref: partidos.equipo_perdedor_id > equipos.equipo_id [delete: restrict]
+Ref: usuarios_penalizaciones.usuario_rut > usuarios.rut [delete: restrict]
+Ref: usuarios_penalizaciones.tipo_penalizacion_id > tipos_penalizaciones.tipo_penalizacion_id [delete: restrict]
