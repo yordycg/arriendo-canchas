@@ -22,37 +22,38 @@ Gestione el ingreso de jugadores y pagos presenciales.
 
     <div class="row g-4 mb-4">
       <div class="col-12">
-         <div class="row g-4">
-            <!-- Card: Registro Rápido -->
-            <div class="col-lg-8">
-              <div class="card border-0 shadow-sm rounded-4 h-100">
-                <div class="card-header bg-success text-white py-3 border-0">
-                  <h6 class="fw-bold mb-0">
-                    <i class="bi bi-person-check me-2"></i>Check-in Express
-                  </h6>
-                </div>
-                <div class="card-body p-4">
-                  <label class="form-label small fw-bold text-muted">
+        <div class="row g-4">
+          <!-- Card: Registro Rápido -->
+          <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+              <div class="card-header bg-success text-white py-3 border-0">
+                <h6 class="fw-bold mb-0">
+                  <i class="bi bi-person-check me-2"></i>Check-in Express
+                </h6>
+              </div>
+              <div class="card-body p-4">
+                <label class="form-label small fw-bold text-muted">
       BUSCAR POR RUT
-                  </label>
-                  <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="11.111.111-1">
-                    <button class="btn btn-success">
-                      <i class="bi bi-search"></i>
-                    </button>
-                  </div>
-                  <p class="small text-muted">
-      Confirme la llegada de los jugadores de forma rápida.
-                  </p>
+                </label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="11.111.111-1">
+                  <button class="btn btn-success">
+                    <i class="bi bi-search"></i>
+                  </button>
                 </div>
+                <p class="small text-muted">
+      Confirme la llegada de los jugadores de forma rápida.
+                </p>
               </div>
             </div>
+          </div>
 
-            <!-- Card: API Clima -->
-            <div class="col-lg-4">
-              {% include 'core/dashboards/weather_widget.html' %}
-            </div>
-         </div>
+          <!-- Card: API Clima -->
+          <div class="col-lg-4">
+{% include 'core/dashboards/weather_widget.html' %}
+
+          </div>
+        </div>
       </div>
     </div>
 
@@ -69,53 +70,71 @@ Gestione el ingreso de jugadores y pagos presenciales.
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr class="small text-muted text-uppercase">
-                            <th>Hora</th>
-                            <th>Cliente</th>
-                            <th>Recurso</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for r in reservas_hoy %}
-                        <tr>
-                            <td class="fw-bold text-dark">{{ r.hora }}</td>
-                            <td>{{ r.cliente }}</td>
-                            <td><span class="badge bg-white text-dark border shadow-none">{{ r.recurso }}</span></td>
-                            <td>
-                                <small class="text-muted fw-bold">
-                                    {% if r.tipo == 'Cancha' %}
-                                        <i class="bi bi-sport text-success me-1"></i>CANCHA
-                                    {% else %}
-                                        <i class="bi bi-house-door text-info me-1"></i>QUINCHO
-                                    {% endif %}
-                                </small>
-                            </td>
-                            <td>
-                                {% if r.estado_reserva_id == 1 %}
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3">
-                                        <i class="bi bi-clock-history me-1"></i>{{ r.estado }}
-                                    </span>
-                                {% else %}
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">
-                                        <i class="bi bi-check2-circle me-1"></i>{{ r.estado }}
-                                    </span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center py-5">
-                                <i class="bi bi-calendar-x text-muted display-6 d-block mb-3"></i>
-                                <p class="text-muted mb-0">No hay reservas programadas para lo que queda de hoy.</p>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr class="small text-muted text-uppercase">
+                    <th>
+Hora
+                    </th>
+                    <th>
+Cliente
+                    </th>
+                    <th>
+Recurso
+                    </th>
+                    <th>
+Tipo
+                    </th>
+                    <th>
+Estado
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for r in reservas_hoy %}
+                    <tr>
+                      <td class="fw-bold text-dark">
+{{ r.hora }}
+                      </td>
+                      <td>
+{{ r.cliente }}
+                      </td>
+                      <td>
+                        <span class="badge bg-white text-dark border shadow-none">{{ r.recurso }}</span>
+                      </td>
+                      <td>
+                        <small class="text-muted fw-bold">
+                          {% if r.tipo == 'Cancha' %}
+                            <i class="bi bi-sport text-success me-1"></i>CANCHA
+                          {% else %}
+                            <i class="bi bi-house-door text-info me-1"></i>QUINCHO
+                          {% endif %}
+                        </small>
+                      </td>
+                      <td>
+                        {% if r.estado_reserva_id == 1 %}
+                          <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3">
+                            <i class="bi bi-clock-history me-1"></i>{{ r.estado }}
+                          </span>
+                        {% else %}
+                          <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">
+                            <i class="bi bi-check2-circle me-1"></i>{{ r.estado }}
+                          </span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="5" class="text-center py-5">
+                        <i class="bi bi-calendar-x text-muted display-6 d-block mb-3"></i>
+                        <p class="text-muted mb-0">
+No hay reservas programadas para lo que queda de hoy.
+                        </p>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -125,5 +144,5 @@ Gestione el ingreso de jugadores y pagos presenciales.
 {% endblock content %}
 
 {% block extra_js %}
-<script src="{% static 'users/js/weather.js' %}"></script>
+  <script src="{% static 'core/js/weather.js' %}"></script>
 {% endblock extra_js %}

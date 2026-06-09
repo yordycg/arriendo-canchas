@@ -27,7 +27,9 @@ Aquí tienes un resumen del estado global del complejo deportivo.
         <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
           <div class="d-flex align-items-center">
             <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width: 55px; height: 55px; min-width: 55px;">
+                 style="width: 55px;
+                        height: 55px;
+                        min-width: 55px">
               <i class="bi bi-people-fill fs-4"></i>
             </div>
             <div>
@@ -44,7 +46,9 @@ Aquí tienes un resumen del estado global del complejo deportivo.
         <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
           <div class="d-flex align-items-center">
             <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width: 55px; height: 55px; min-width: 55px;">
+                 style="width: 55px;
+                        height: 55px;
+                        min-width: 55px">
               <i class="bi bi-calendar-check-fill fs-4"></i>
             </div>
             <div>
@@ -61,7 +65,9 @@ Aquí tienes un resumen del estado global del complejo deportivo.
         <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
           <div class="d-flex align-items-center">
             <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width: 55px; height: 55px; min-width: 55px;">
+                 style="width: 55px;
+                        height: 55px;
+                        min-width: 55px">
               <i class="bi bi-currency-dollar fs-4"></i>
             </div>
             <div>
@@ -78,7 +84,9 @@ ${{ total_ingresos|floatformat:0 }}
         <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
           <div class="d-flex align-items-center">
             <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width: 55px; height: 55px; min-width: 55px;">
+                 style="width: 55px;
+                        height: 55px;
+                        min-width: 55px">
               <i class="bi bi-exclamation-octagon-fill fs-4"></i>
             </div>
             <div>
@@ -135,7 +143,8 @@ Gestiona canchas y quinchos.
 
       <!-- Card: API Clima -->
       <div class="col-lg-4">
-        {% include 'core/dashboards/weather_widget.html' %}
+{% include 'core/dashboards/weather_widget.html' %}
+
       </div>
     </div>
   </div>
@@ -158,5 +167,5 @@ Gestiona canchas y quinchos.
 {% endblock content %}
 
 {% block extra_js %}
-<script src="{% static 'users/js/weather.js' %}"></script>
+  <script src="{% static 'core/js/weather.js' %}"></script>
 {% endblock extra_js %}

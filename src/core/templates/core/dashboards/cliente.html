@@ -23,7 +23,8 @@ Bienvenido a tu Club
     <div class="row g-4">
       <!-- Card: API Clima (Estratégico para canchas) -->
       <div class="col-lg-4">
-        {% include 'core/dashboards/weather_widget.html' %}
+{% include 'core/dashboards/weather_widget.html' %}
+
       </div>
 
       <!-- Card: Membresía y Estado -->
@@ -54,31 +55,36 @@ Membresía activa y al día.
 Siguiente Turno
             </h6>
             {% if proxima_reserva %}
-                <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-calendar-check fs-2 me-3"></i>
-                    <div>
-                        <h5 class="fw-bold mb-0">{{ proxima_reserva.recurso }}</h5>
-                        <small class="text-white-50">{{ proxima_reserva.fecha|date:"d M" }} a las {{ proxima_reserva.hora }}</small>
-                    </div>
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-calendar-check fs-2 me-3"></i>
+                <div>
+                  <h5 class="fw-bold mb-0">
+{{ proxima_reserva.recurso }}
+                  </h5>
+                  <small class="text-white-50">{{ proxima_reserva.fecha|date:"d M" }} a las {{ proxima_reserva.hora }}</small>
                 </div>
-                <p class="small text-white-50 mt-2 mb-4">
-                    <i class="bi bi-info-circle me-1"></i> Recuerda llegar 10 minutos antes.
-                </p>
-                <a href="{% url 'bookings:booking_list' %}" class="btn btn-white btn-sm rounded-pill px-4 fw-bold text-primary">
+              </div>
+              <p class="small text-white-50 mt-2 mb-4">
+                <i class="bi bi-info-circle me-1"></i> Recuerda llegar 10 minutos antes.
+              </p>
+              <a href="{% url 'bookings:booking_list' %}"
+                 class="btn btn-white btn-sm rounded-pill px-4 fw-bold text-primary">
                     Ver Detalles
-                </a>
+              </a>
             {% else %}
-                <div class="d-flex align-items-center mb-3">
-                    <i class="bi bi-calendar-x fs-2 me-3"></i>
-                    <div>
-                        <h5 class="fw-bold mb-0">Sin reservas</h5>
-                        <small class="text-white-50">¡Anímate a jugar!</small>
-                    </div>
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-calendar-x fs-2 me-3"></i>
+                <div>
+                  <h5 class="fw-bold mb-0">
+Sin reservas
+                  </h5>
+                  <small class="text-white-50">¡Anímate a jugar!</small>
                 </div>
-                <a href="{% url 'bookings:booking_create' %}"
-                   class="btn btn-white btn-sm rounded-pill px-4 mt-2 fw-bold text-primary">
+              </div>
+              <a href="{% url 'bookings:booking_create' %}"
+                 class="btn btn-white btn-sm rounded-pill px-4 mt-2 fw-bold text-primary">
                   Reservar Ahora
-                </a>
+              </a>
             {% endif %}
           </div>
         </div>
@@ -110,7 +116,8 @@ Siguiente Turno
           </a>
         </div>
         <div class="col-md-4">
-          <a href="{% url 'penalties:my_penalties' %}" class="text-decoration-none">
+          <a href="{% url 'penalties:my_penalties' %}"
+             class="text-decoration-none">
             <div class="card border shadow-none rounded-4 p-3 text-center hover-bg-light transition-all cursor-pointer">
               <i class="bi bi-person-lines-fill fs-3 text-danger mb-2 d-block"></i>
               <h6 class="fw-bold mb-0 small">
@@ -155,5 +162,5 @@ Siguiente Turno
 {% endblock content %}
 
 {% block extra_js %}
-<script src="{% static 'users/js/weather.js' %}"></script>
+  <script src="{% static 'core/js/weather.js' %}"></script>
 {% endblock extra_js %}
