@@ -4,9 +4,11 @@ USE arriendo_canchas_db;
 -- Usuarios (Admin, VIP, Socio, Invitado)
 INSERT INTO usuarios (rut, nombres, apellido_p, sexo, email, password, estado_usuario_id, rol_id, membresia_id) VALUES
 ('11.111.111-1', 'Admin', 'Sistema', 'M', 'admin@canchas.cl', 'pbkdf2_sha256$1200000$mWXtlqjGMJxFRgegXHz7G6$YD5sf87t7AMvX6WW66cp9njhZe7IT6In2WnnWVxJkp4=', 1, 1, NULL),
+('17.744.333-2', 'Recepcionista', 'Pruebas', 'F', 'recepcion@canchas.cl', 'pbkdf2_sha256$1200000$mWXtlqjGMJxFRgegXHz7G6$YD5sf87t7AMvX6WW66cp9njhZe7IT6In2WnnWVxJkp4=', 1, 2, NULL),
 ('22.222.222-2', 'Juan', 'Perez', 'M', 'juan@gmail.com', 'pbkdf2_sha256$1200000$mWXtlqjGMJxFRgegXHz7G6$YD5sf87t7AMvX6WW66cp9njhZe7IT6In2WnnWVxJkp4=', 1, 3, 2),
 ('33.333.333-3', 'Maria', 'Soto', 'F', 'maria@outlook.com', 'pbkdf2_sha256$1200000$mWXtlqjGMJxFRgegXHz7G6$YD5sf87t7AMvX6WW66cp9njhZe7IT6In2WnnWVxJkp4=', 1, 3, 3),
-('44.444.444-4', 'Pedro', 'Invitado', 'M', NULL, NULL, 1, 4, 1); -- Usuario invitado para torneos
+('44.444.444-4', 'Pedro', 'Invitado', 'M', NULL, NULL, 1, 4, 1);
+ -- Usuario invitado para torneos
 
 -- Canchas
 INSERT INTO canchas (nombre, valor_hora, tipo_superficie, tipo_recinto, tipo_cancha_id) VALUES
