@@ -242,6 +242,7 @@ def penalty_delete(request, penalty_id):
 
 
 @login_required_manual
+@role_required(['Cliente'])
 def my_penalties(request):
     db = DatabaseManager()
     user_rut = request.session.get('user_rut')

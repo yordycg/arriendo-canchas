@@ -37,24 +37,29 @@ def role_required(allowed_roles: list):
                 # Redirección Dinámica: Intentar volver al listado de la app actual
                 # Ejemplo: si está en 'courts', intentar ir a 'courts:court_list'
                 app_name = request.resolver_match.app_name
+                current_view = request.resolver_match.view_name
+                
                 if app_name:
                     # Construir nombre probable de la vista (singular + _list)
                     singular = app_name[:-1] if app_name.endswith('s') else app_name
                     target = f"{app_name}:{singular}_list"
-                    try:
-                        from django.urls import reverse
-                        reverse(target)  # Validar que existe
-                        return redirect(target)
-                    except:
-                        pass
+                    
+                    # EVITAR BUCLE: No redirigir si el target es la misma vista actual
+                    if target != current_view:
+                        try:
+                            from django.urls import reverse
+                            reverse(target)  # Validar que existe
+                            return redirect(target)
+                        except:
+                            pass
 
                 # Fallback: Ir al Dashboard según el rol si lo anterior falla
                 if user_rol == 'Admin':
-                    return redirect('users:admin_dash')
+                    return redirect('core:admin_dash')
                 elif user_rol == 'Recepcionista':
-                    return redirect('users:recepcionista_dash')
+                    return redirect('core:recepcion_dash')
                 else:
-                    return redirect('users:cliente_dash')
+                    return redirect('core:cliente_dash')
 
             return view_func(request, *args, **kwargs)
         return _wrapped_view

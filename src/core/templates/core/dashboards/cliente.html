@@ -1,4 +1,4 @@
-{% extends 'users/base.html' %}
+{% extends "core/base.html" %}
 
 {% load static %}
 
@@ -23,7 +23,7 @@ Bienvenido a tu Club
     <div class="row g-4">
       <!-- Card: API Clima (Estratégico para canchas) -->
       <div class="col-lg-4">
-        {% include 'users/dashboards/weather_widget.html' %}
+        {% include 'core/dashboards/weather_widget.html' %}
       </div>
 
       <!-- Card: Membresía y Estado -->

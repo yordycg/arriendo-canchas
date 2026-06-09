@@ -1,4 +1,4 @@
-{% extends "memberships/base.html" %}
+{% extends "core/base.html" %}
 
 {% load static %}
 
@@ -141,6 +141,7 @@ Costo Mensual (CLP)
                  class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
               <button type="submit"
                       class="btn btn-warning rounded-pill px-4 shadow-sm fw-bold">
+                <i class="bi bi-check2-circle me-2"></i>
                 {% if membresia %}
 Guardar Cambios
                 {% else %}

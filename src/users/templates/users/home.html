@@ -1,4 +1,4 @@
-{% extends "users/base.html" %}
+{% extends "core/base.html" %}
 
 {% load static %}
 
@@ -16,10 +16,12 @@ Gestión de Usuarios
       <h5 class="mb-0 fw-bold text-dark">
         <i class="bi bi-person-lines-fill me-2 text-primary"></i>Usuarios Registrados
       </h5>
-      <a href="{% url 'users:user_create' %}"
-         class="btn btn-primary shadow-sm rounded-pill px-4">
-        <i class="bi bi-person-plus-fill me-2"></i>Nuevo Usuario
-      </a>
+      {% if request.session.user_rol == 'Admin' %}
+        <a href="{% url 'users:user_create' %}"
+           class="btn btn-primary shadow-sm rounded-pill px-4">
+          <i class="bi bi-person-plus-fill me-2"></i>Nuevo Usuario
+        </a>
+      {% endif %}
     </div>
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -126,38 +128,54 @@ Acciones
                 </td>
                 <td class="text-center pe-3">
                   <div class="btn-group shadow-sm rounded-3">
-                    <a href="{% url 'users:user_update' u.rut %}"
-                       class="btn btn-white btn-sm border-end px-3"
-                       title="Editar">
-                      <i class="bi bi-pencil-square text-primary"></i>
-                    </a>
-                    <a href="#"
-                       class="btn btn-white btn-sm border-end px-3 btn-more"
-                       data-rut="{{ u.rut }}"
-                       data-nombres="{{ u.nombres }}"
-                       data-apellidos="{{ u.apellido_p }} {{ u.apellido_m }}"
-                       data-sexo="{% if u.sexo == 'M' %}Masculino{% elif u.sexo == 'F' %}Femenino{% else %}Otro{% endif %}"
-                       data-telefono="{{ u.telefono|default:'No registrado' }}"
-                       data-email="{{ u.email }}"
-                       data-estado="{{ u.estado_usuario }}"
-                       data-rol="{{ u.rol }}"
-                       data-membresia="{{ u.membresia|default:'Sin Membresía' }}"
-                       title="Ver Detalles">
-                      <i class="bi bi-eye text-info"></i>
-                    </a>
+                    <!-- BOTÓN VER: Siempre activo -->
                     <button type="button"
-                            class="btn btn-white btn-sm px-3 btn-delete"
+                            class="btn btn-white btn-sm border-end px-3 btn-more"
                             data-rut="{{ u.rut }}"
-                            data-nombre="{{ u.nombres }} {{ u.apellido_p }}"
-                            title="Eliminar">
-                      <i class="bi bi-trash3 text-danger"></i>
+                            data-nombres="{{ u.nombres }}"
+                            data-apellidos="{{ u.apellido_p }} {{ u.apellido_m }}"
+                            data-sexo="{% if u.sexo == 'M' %}Masculino{% elif u.sexo == 'F' %}Femenino{% else %}Otro{% endif %}"
+                            data-telefono="{{ u.telefono|default:'No registrado' }}"
+                            data-email="{{ u.email }}"
+                            data-estado="{{ u.estado_usuario }}"
+                            data-rol="{{ u.rol }}"
+                            data-membresia="{{ u.membresia|default:'Sin Membresía' }}"
+                            title="Ver Detalles">
+                      <i class="bi bi-eye text-info"></i>
                     </button>
+
+                    <!-- BOTONES EDITAR Y ELIMINAR: Solo para Admin -->
+                    {% if request.session.user_rol == 'Admin' %}
+                      <a href="{% url 'users:user_update' u.rut %}"
+                         class="btn btn-white btn-sm border-end px-3"
+                         title="Editar">
+                        <i class="bi bi-pencil-square text-primary"></i>
+                      </a>
+                      <button type="button"
+                              class="btn btn-white btn-sm px-3 btn-delete"
+                              data-rut="{{ u.rut }}"
+                              data-nombre="{{ u.nombres }} {{ u.apellido_p }}"
+                              title="Eliminar">
+                        <i class="bi bi-trash3 text-danger"></i>
+                      </button>
+                    {% else %}
+                      <button type="button"
+                              class="btn btn-white btn-sm border-end px-3 disabled text-muted"
+                              title="Acceso restringido">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button type="button"
+                              class="btn btn-white btn-sm px-3 disabled text-muted"
+                              title="Acceso restringido">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    {% endif %}
                   </div>
                 </td>
               </tr>
             {% empty %}
               <tr>
-                <td colspan="6" class="text-center py-5">
+                <td colspan="7" class="text-center py-5">
                   <i class="bi bi-people text-muted display-4 d-block mb-3"></i>
                   <p class="text-muted">
 No hay usuarios registrados en el sistema.

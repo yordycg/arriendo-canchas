@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "memberships",
     "bookings",
     "penalties",
+    "core",
 ]
 
 MIDDLEWARE = [

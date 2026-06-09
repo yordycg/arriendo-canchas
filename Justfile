@@ -60,6 +60,13 @@ db-shell:
 
 # --- DJANGO DEVELOPMENT (Inside Container) ---
 
+# Crea una nueva aplicación con permisos de usuario correctos
+startapp name:
+    @echo "🛠️ Creando aplicación '{{name}}'..."
+    docker compose exec app python manage.py startapp {{name}} src/{{name}}
+    sudo chown -R $(id -u):$(id -g) src/{{name}}
+    @echo "✅ Aplicación '{{name}}' creada exitosamente en src/{{name}}."
+
 # Crea nuevas migraciones basadas en los modelos
 mm:
     docker compose exec app python manage.py makemigrations

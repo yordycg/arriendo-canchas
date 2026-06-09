@@ -13,11 +13,11 @@ def login_view(request):
         # Redireccionar según ROL:
         rol_actual = request.session.get('user_rol')
         if rol_actual == 'Admin':
-            return redirect('users:admin_dash')
+            return redirect('core:admin_dash')
         if rol_actual == 'Recepcionista':
-            return redirect('users:recepcionista_dash')
+            return redirect('core:recepcion_dash')
         if rol_actual == 'Cliente':
-            return redirect('users:cliente_dash')
+            return redirect('core:cliente_dash')
 
     if request.method == 'POST':
         # Paso 2: capturar datos del formulario login, y definir variables
@@ -210,11 +210,11 @@ def login_view(request):
             # Dependiendo del ROL redireccionar al dashboard/vista respectiva
             rol_asignado = user_found['rol_nombre']
             if rol_asignado == 'Admin':
-                return redirect('users:admin_dash')
+                return redirect('core:admin_dash')
             if rol_asignado == 'Recepcionista':
-                return redirect('users:recepcionista_dash')
+                return redirect('core:recepcion_dash')
             if rol_asignado == 'Cliente':
-                return redirect('users:cliente_dash')
+                return redirect('core:cliente_dash')
 
     return render(request, 'authentication/login.html')
 
@@ -230,11 +230,11 @@ def register_view(request):
         # Redireccionar segun ROL:
         rol_actual = request.session.get('user_rol')
         if rol_actual == 'Admin':
-            return redirect('users:admin_dash')
+            return redirect('core:admin_dash')
         if rol_actual == 'Recepcionista':
-            return redirect('users:recepcionista_dash')
+            return redirect('core:recepcion_dash')
         if rol_actual == 'Cliente':
-            return redirect('users:cliente_dash')
+            return redirect('core:cliente_dash')
 
     message = None
     context = {}

@@ -1,4 +1,4 @@
-{% extends "penalties/base.html" %}
+{% extends "core/base.html" %}
 
 {% load static %}
 
@@ -33,7 +33,7 @@ Seleccione al usuario infractor y el tipo de falta cometida.
         </div>
         <div class="card-body p-4 p-md-5 bg-white">
           <form method="POST" action="{% url 'penalties:penalty_create' %}">
-            {% csrf_token %}
+{% csrf_token %}
 
             <div class="row g-4 mb-4">
               <!-- Selección de Usuario -->
@@ -95,11 +95,10 @@ Fecha de Infracción
             <div class="row align-items-center">
               <div class="col-md-6">
                 <p class="text-muted mb-0 small">
-<i class="bi bi-info-circle me-1"></i> Al registrar la penalización, se sumará una falta al contador del usuario automáticamente.
+                  <i class="bi bi-info-circle me-1"></i> Al registrar la penalización, se sumará una falta al contador del usuario automáticamente.
                 </p>
               </div>
               <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <a href="{% url 'penalties:penalty_list' %}" class="btn btn-light btn-lg rounded-pill px-4 me-2">Cancelar</a>
                 <button type="submit"
                         class="btn btn-danger btn-lg rounded-pill px-5 shadow-sm">
                   <i class="bi bi-check2-circle me-2"></i>Registrar Penalización

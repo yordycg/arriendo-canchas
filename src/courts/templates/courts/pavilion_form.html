@@ -1,4 +1,4 @@
-{% extends 'courts/base.html' %}
+{% extends "core/base.html" %}
 
 {% load static %}
 
@@ -157,6 +157,7 @@ Restricción Solo para VIP/Socios
                  class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
               <button type="submit"
                       class="btn btn-success rounded-pill px-4 shadow-sm text-white">
+                <i class="bi bi-check2-circle me-2"></i>
                 {% if quincho %}
 Guardar Cambios
                 {% else %}

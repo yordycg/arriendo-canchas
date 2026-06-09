@@ -1,4 +1,4 @@
-{% extends 'memberships/base.html' %}
+{% extends "core/base.html" %}
 
 {% load static %}
 
@@ -166,22 +166,3 @@ Para cambiar tu nivel de membresía, por favor contacta con el administrador en 
   </div>
 {% endblock content %}
 
-{% block extra_js %}
-  <script>
-      $(document).ready(function() {
-          function formatCLP() {
-              $(".clp-format").each(function() {
-                  let text = $(this).text().trim();
-                  if (text.includes('$')) return;
-
-                  let value = parseInt(text);
-                  if (!isNaN(value)) {
-                      let formatted = new Intl.NumberFormat('de-DE').format(value);
-                      $(this).text("$" + formatted);
-                  }
-              });
-          }
-          formatCLP();
-      });
-  </script>
-{% endblock extra_js %}

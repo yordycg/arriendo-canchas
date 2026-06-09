@@ -1,4 +1,4 @@
-{% extends 'courts/base.html' %}
+{% extends "core/base.html" %}
 
 {% load static %}
 {% load humanize %}
@@ -290,24 +290,4 @@ No hay quinchos registrados.
 
 {% block extra_js %}
   <script src="{% static 'courts/js/courts.js' %}"></script>
-  <script>
-      $(document).ready(function() {
-          function formatCLP() {
-              $(".clp-format").each(function() {
-                  let text = $(this).text().trim();
-                  // Si ya tiene el signo $, no volver a formatear
-                  if (text.includes('$')) return;
-
-                  let value = parseInt(text);
-                  if (!isNaN(value)) {
-                      let formatted = new Intl.NumberFormat('de-DE').format(value); // formato con puntos
-                      $(this).text("$" + formatted);
-                  }
-              });
-          }
-
-          // Ejecutar al cargar
-          formatCLP();
-      });
-  </script>
 {% endblock extra_js %}

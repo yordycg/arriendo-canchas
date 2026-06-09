@@ -27,4 +27,5 @@ urlpatterns = [
     path('memberships/', include('memberships.urls')),
     path('bookings/', include('bookings.urls')),
     path('penalties/', include('penalties.urls')),
+    path('core/', include('core.urls')),
 ]

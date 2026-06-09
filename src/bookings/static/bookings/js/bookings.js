@@ -1,21 +1,4 @@
 $(document).ready(function () {
-  // Formateo CLP
-  function formatCLP() {
-    $(".clp-format").each(function () {
-      let element = $(this);
-      let text = element.text().trim();
-      let numericValue = text.replace(/[^\d]/g, "");
-      if (numericValue !== "") {
-        let value = parseInt(numericValue);
-        if (!isNaN(value)) {
-          let formatted = new Intl.NumberFormat("de-DE").format(value);
-          element.text("$" + formatted);
-        }
-      }
-    });
-  }
-  formatCLP();
-
   const $recursoSelector = $("#recurso_selector");
   const $fechaInput = $("#fecha");
   const $duracionSelect = $("#duracion");

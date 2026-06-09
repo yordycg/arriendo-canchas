@@ -154,6 +154,7 @@ def membership_delete(request, membresia_id):
 
 
 @login_required_manual
+@role_required(['Cliente'])
 def my_benefits(request):
     db = DatabaseManager()
     rut = request.session.get('user_rut')

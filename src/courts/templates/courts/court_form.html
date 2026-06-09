@@ -1,4 +1,4 @@
-{% extends 'courts/base.html' %}
+{% extends "core/base.html" %}
 
 {% load static %}
 
@@ -183,6 +183,7 @@ Valor por Hora (CLP)
               <a href="{% url 'courts:court_list' %}"
                  class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
               <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <i class="bi bi-check2-circle me-2"></i>
                 {% if cancha %}
 Guardar Cambios
                 {% else %}
