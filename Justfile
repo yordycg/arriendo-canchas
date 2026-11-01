@@ -69,4 +69,16 @@ db-reset:
 # Formatea el código
 format:
     @docker compose exec app djlint . --reformat --indent 2 --ignore "H021,H030,H031,D018"
-    @npx prettier --write "**/static/**/*.{js,css}" "README.md" "TODO.md"
+    @npx prettier --write "**/static/**/*.{js,css}" "README.md" "TASKS.md"
+
+# Verifica formato sin modificar archivos
+lint:
+    @docker compose exec app djlint . --check --indent 2 --ignore "H021,H030,H031,D018"
+    @npx prettier --check "**/static/**/*.{js,css}" "README.md" "TASKS.md"
+
+# Ejecuta la suite de tests (vacía hasta cerrar F1.3)
+test *args:
+    @docker compose exec app python manage.py test {{args}}
+
+# Gate previo a commit: lint + tests
+check: lint test
