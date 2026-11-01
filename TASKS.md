@@ -8,7 +8,7 @@
 
 - **Release vigente:** `v1.0-academica` — estado congelado, sin tests.
 - **Fase activa:** F0 — Higiene y línea base.
-- **Próxima acción:** F0.1.
+- **Próxima acción:** F0.4.
 - **Objetivo de `v2.0`:** núcleo reescrito y defendible, tests verdes en CI, demo desplegada, caso de estudio publicado.
 
 ## Convenciones
@@ -29,7 +29,7 @@
 
 **Criterio de salida:** `main` refleja el estado real con tag, no hay referencias rotas, el README no expone credenciales, y `just check` existe (aunque la suite esté vacía).
 
-- [ ] **F0.1** [V] Tag `v1.0-academica` en `develop` y fast-forward de `main` (`git push origin develop:main`). Desde aquí, `main` solo recibe `v2.0`.
+- [x] **F0.1** [V] Tag `v1.0-academica` en `develop` y fast-forward de `main` (`git push origin develop:main`). Desde aquí, `main` solo recibe `v2.0`.
 - [x] **F0.2** [V] `AGENTS.md` creado; `GEMINI.md` eliminado.
 - [x] **F0.3** [V] `TASKS.md` creado y `Justfile` corregido (`TODO.md` → `TASKS.md`).
 - [ ] **F0.4** [V] `requirements.txt`: separar runtime de desarrollo (`requirements-dev.txt`: djlint, pre-commit, prettier). Documentar en README.
