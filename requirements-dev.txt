@@ -1,0 +1,32 @@
+# Dependencias de desarrollo. Incluye el runtime completo.
+# Uso local (LSP, lint, hooks): pip install -r requirements-dev.txt
+# Prettier no es un paquete de pip: se ejecuta con npx, ver README.
+
+-r requirements.txt
+
+# --- Lint de plantillas HTML ---
+djlint==1.36.4
+
+# --- Hooks de git ---
+pre_commit==4.6.0
+
+# --- Dependencias transitivas fijadas para builds reproducibles ---
+cfgv==3.5.0
+click==8.3.3
+colorama==0.4.6
+cssbeautifier==1.15.4
+distlib==0.4.0
+EditorConfig==0.17.1
+filelock==3.29.0
+identify==2.6.19
+jsbeautifier==1.15.4
+json5==0.14.0
+nodeenv==1.10.0
+pathspec==1.1.1
+platformdirs==4.9.6
+python-discovery==1.9.0
+PyYAML==6.0.3
+regex==2026.4.4
+six==1.17.0
+tqdm==4.67.3
+virtualenv==21.3.0

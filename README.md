@@ -68,10 +68,37 @@ cp .env.example .env
 # Ajusta DB_HOST=localhost y DB_PORT=3306 en tu .env
 
 # 3. Instalar Dependencias
-pip install -r requirements.txt
+pip install -r requirements.txt       # runtime
+pip install -r requirements-dev.txt   # runtime + herramientas (desarrollo)
 
 # 4. Iniciar Servidor
 python manage.py runserver
+```
+
+---
+
+## Herramientas de Desarrollo
+
+La ejecución vive en el contenedor; el lint y los hooks viven en tu máquina. Las dependencias están separadas justamente para que la imagen no cargue herramientas de desarrollo.
+
+| Archivo                | Contenido                                    | Dónde se instala      |
+| :--------------------- | :------------------------------------------- | :-------------------- |
+| `requirements.txt`     | Django, PyMySQL, python-dotenv y transitivas | Imagen (`Dockerfile`) |
+| `requirements-dev.txt` | Todo lo anterior + `djlint` y `pre-commit`   | Host (`just setup`)   |
+
+`just lint` y `just format` no necesitan el contenedor: usan `.venv/bin/djlint` y `npx prettier`. `just test` sí lo necesita, porque levanta MySQL.
+
+`just` detecta el gestor de contenedores disponible (`podman` o `docker`). Para forzar uno:
+
+```bash
+COMPOSE=docker just up
+```
+
+`prettier` no es un paquete de Python: `just lint` lo invoca con `npx`, así que requiere Node.js instalado.
+
+```bash
+npx prettier --version   # confirma que prettier está disponible
+pre-commit install       # activa los hooks de .pre-commit-config.yaml
 ```
 
 ---
