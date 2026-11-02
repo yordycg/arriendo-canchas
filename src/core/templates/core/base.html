@@ -79,11 +79,13 @@
       <aside id="sidebar" class="bg-dark d-flex flex-column shadow-lg">
 
         <!-- Sidebar Header (Logo) -->
-        <a href="{% if request.session.user_rol == 'Admin' %}{% url 'core:admin_dash' %}{% elif request.session.user_rol == 'Recepcionista' %}{% url 'core:recepcion_dash' %}{% else %}{% url 'core:cliente_dash' %}{% endif %}" 
+        <a href="{% if request.session.user_rol == 'Admin' %}{% url 'core:admin_dash' %}{% elif request.session.user_rol == 'Recepcionista' %}{% url 'core:recepcion_dash' %}{% else %}{% url 'core:cliente_dash' %}{% endif %}"
            class="d-flex align-items-center px-4 border-bottom border-secondary border-opacity-25 text-decoration-none"
-           style="height: 70px; min-height: 70px">
+           style="height: 70px;
+                  min-height: 70px">
           <div class="bg-primary rounded-circle p-2 me-2 shadow-sm d-flex align-items-center justify-content-center"
-               style="width: 38px; height: 38px">
+               style="width: 38px;
+                      height: 38px">
             <i class="bi bi-calendar-check-fill text-white fs-5"></i>
           </div>
           <span class="text-white fw-bold fs-5 mb-0">CanchasApp</span>
@@ -94,11 +96,11 @@
           <div class="text-uppercase text-white-50 px-4 mb-3 small fw-bold"
                style="letter-spacing: 1px;
                       font-size: 0.65rem">
-                {% if request.session.user_rol == 'Admin' or request.session.user_rol == 'Recepcionista' %}
+            {% if request.session.user_rol == 'Admin' or request.session.user_rol == 'Recepcionista' %}
                     Administración
-                {% else %}
+            {% else %}
                     Menú Principal
-                {% endif %}
+            {% endif %}
           </div>
 
           <div class="nav nav-pills flex-column">
