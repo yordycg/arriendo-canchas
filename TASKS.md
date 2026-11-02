@@ -8,7 +8,7 @@
 
 - **Release vigente:** `v1.0-academica` — estado congelado, sin tests.
 - **Fase activa:** F0 — Higiene y línea base.
-- **Próxima acción:** F0.4.
+- **Próxima acción:** F0.5.
 - **Objetivo de `v2.0`:** núcleo reescrito y defendible, tests verdes en CI, demo desplegada, caso de estudio publicado.
 
 ## Convenciones
@@ -32,7 +32,7 @@
 - [x] **F0.1** [V] Tag `v1.0-academica` en `develop` y fast-forward de `main` (`git push origin develop:main`). Desde aquí, `main` solo recibe `v2.0`.
 - [x] **F0.2** [V] `AGENTS.md` creado; `GEMINI.md` eliminado.
 - [x] **F0.3** [V] `TASKS.md` creado y `Justfile` corregido (`TODO.md` → `TASKS.md`).
-- [ ] **F0.4** [V] `requirements.txt`: separar runtime de desarrollo (`requirements-dev.txt`: djlint, pre-commit, prettier). Documentar en README.
+- [x] **F0.4** [V] `requirements.txt`: separar runtime de desarrollo (`requirements-dev.txt`: djlint, pre-commit). Prettier no es paquete pip: queda documentado como dependencia de Node vía `npx`. Documentado en README.
 - [ ] **F0.5** [R] README: retirar la tabla de credenciales con contraseña compartida. Reemplazar por "los datos de prueba viven en `03_dev_data.sql`" y, si se necesita, una nota de entorno local.
 - [ ] **F0.6** [R] README: añadir sección **Origen y estado** ("v1 académica construida con asistencia de IA; v2 en curso: núcleo reescrito con tests"). Una línea honesta, sin dramatismo.
 - [ ] **F0.7** [V] `.pre-commit-config.yaml`: agregar hook local de `just test` cuando F1.3 exista. Pintar con `pre-commit install`.
@@ -48,7 +48,7 @@
 
 **Criterio de salida:** tres ADR escritas por Yordy, esquema auditado tabla por tabla, `just test` ejecuta una suite real contra una base con el esquema cargado.
 
-- [ ] **F1.1** [R] **ADR-0001 — Estrategia de acceso a datos.** Esqueleto en `docs/templates/adr.md`. Decidir SQL manual, ORM o híbrido *unmanaged*, con su costo explícito. Requisito del ramo: SQL manual para el núcleo.
+- [ ] **F1.1** [R] **ADR-0001 — Estrategia de acceso a datos.** Esqueleto en `docs/templates/adr.md`. Decidir SQL manual, ORM o híbrido _unmanaged_, con su costo explícito. Requisito del ramo: SQL manual para el núcleo.
 - [ ] **F1.2** [R] **Auditoría del esquema, tabla por tabla.** Para cada una de las 18 tablas: qué representa, por qué existe, qué constraint la protege y qué regla de `docs/database/reglas.md` implementa. Validar las reglas en prosa (¿por qué 7 días? ¿por qué 30% VIP? ¿por qué 5 faltas?) contra `docs/requerimientos.md`.
 - [ ] **F1.3** [R] **ADR-0002 — Estrategia de tests.** El problema: `manage.py test` crea la base de test desde las migraciones de Django, y las 7 apps tienen las migraciones vacías; el esquema vive en `01_schema.sql`. Sin resolver esto, ningún test puede correr. Opciones a evaluar: (a) fixture que carga `01_schema.sql`; (b) migrar el dominio a migraciones de Django; (c) modelos `managed = False` como espejo del esquema.
 - [ ] **F1.4** [R] **ADR-0003 — Modelo de datos y normalización.** Qué se mantiene del esquema actual y qué cambia: tipos de dinero (`DECIMAL`), `UNIQUE` para sobrecupo, índices para las consultas de disponibilidad, `CHECK` de integridad horaria.
